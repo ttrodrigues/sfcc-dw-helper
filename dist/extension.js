@@ -68,15 +68,15 @@ class Sidebar {
                     //@ts-ignore
                     const rootFolder = vscode.workspace.workspaceFolders[0].uri.path;
                     const path = `${rootFolder}/dw.json`;
-                    const pathFormatted = path.substring(1);
+                    //const pathFormatted = path.substring(1)
                     //@ts-ignore
-                    const json = JSON.parse(fs.readFileSync(pathFormatted));
-                    console.log(json);
-                    console.log(json.hostname);
-                    webviewView.webview.postMessage({
-                        type: 'json',
-                        value: json,
-                    });
+                    const readJson = JSON.parse(fs.readFileSync(path));
+                    //console.log(readJson)
+                    //console.log(json.hostname)
+                    // webviewView.webview.postMessage({
+                    //   type: 'json',
+                    //   value: json,
+                    // });
                     return;
                 }
             }
@@ -92,6 +92,15 @@ class Sidebar {
         const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out/compiled", "vscode.css"));
         // Use a nonce to only allow a specific script to be run.
         const nonce = (0, getNonce_1.getNonce)();
+        //@ts-ignore
+        const rootFolder = vscode.workspace.workspaceFolders[0].uri.path;
+        const path = `${rootFolder}/dw.json`;
+        //@ts-ignore
+        const readJson = JSON.parse(fs.readFileSync(path));
+        const initUsername = readJson.username;
+        const initPassword = readJson.password;
+        const initHostname = readJson.hostname;
+        const initCodeversion = readJson.codeVersion;
         return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
@@ -108,14 +117,20 @@ class Sidebar {
 			</head>
       <script nonce="${nonce}">
         const tsvscode = acquireVsCodeApi();
+        const initUsername = "${initUsername}";
+        const initPassword = "${initPassword}";
+        const initHostname = "${initHostname}";
+        const initCodeversion = "${initCodeversion}";
       </script>
       <body>
-				<script nonce="${nonce}" src="${scriptUri}"></script>
+				<script nonce="${nonce}" src="${scriptUri}">
+        </script>
 			</body>
 			</html>`;
     }
 }
 exports.Sidebar = Sidebar;
+//const initJson = "${readJson}";
 
 
 /***/ }),
@@ -197,7 +212,6 @@ class ErrorSidebar {
                         writeFileSync(path, JSON.stringify(jsonContent, null, 2), "utf8");
                         vscode.window.showInformationMessage(`Created a ${data.value} on this project folder`);
                         vscode.commands.executeCommand("workbench.action.reloadWindow");
-                        //workbench.action.webview.reloadWebviewAction
                     }
                     catch (error) {
                         vscode.window.showErrorMessage(`Error when creating ${data.value} file: `, error);
@@ -293,7 +307,7 @@ async function activate(context) {
     //let currentPanel: vscode.WebviewPanel | undefined = undefined;
     if (file.length > 0) {
         context.subscriptions.push(vscode.window.registerWebviewViewProvider("sfcc-dw-helper-sidebar", sidebar));
-        let path = file[0].fsPath;
+        //let path:string = file[0].fsPath;
         //@ts-ignore
         //currentPanel.webview.postMessage({type:"jsonPath", value:path});
     }

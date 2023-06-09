@@ -26,27 +26,28 @@
 //add in onMount
     import { onMount } from 'svelte';
     //attach a function to onMount
-    onMount(() => {
-        tsvscode.postMessage({
-            type: 'init-view',
-            value: true
-        });
-    });
-   
+    // onMount(() => {
+    //     tsvscode.postMessage({
+    //         type: 'init-view',
+    //         value: true
+    //     });         
+    //     }
+    // )
     
-    export async function preload() {
-        const response = await this.fetch('videoslist.json');
-        const responseJson = await response.json();
-        return {
-            videos: responseJson
-        }
-    }
+    
+    // export async function preload() {
+    //     const response = await this.fetch('videoslist.json');
+    //     const responseJson = await response.json();
+    //     return {
+    //         videos: responseJson
+    //     }
+    // }
 
 
 
     
-    let hostnameInput:any = document.getElementById('hostname');                 
-    hostnameInput.innerText = json?.hostname; 
+    //let hostnameInput:any = document.getElementById('hostname');                 
+    //console.log(hostnameInput);
 
 
    
@@ -70,7 +71,7 @@
             "code-version": codeversion
           };
 
-        console.log(jsonContent);
+        //console.log(jsonContent);
         
         tsvscode.postMessage({
             type: 'onChangeFile',
@@ -78,8 +79,19 @@
         });
     }
 
+    
+
+//@ts-ignore
+    console.log(initUsername);
+    //@ts-ignore
+    console.log(initPassword);
+    //@ts-ignore
+    console.log(initHostname);
+    //@ts-ignore
+    console.log(initCodeversion);
 
 
+   
 
 
     // function windowMessage(event: any) {
@@ -101,7 +113,8 @@
     // }
 
    
-
+    
+   
 
 
 </script>

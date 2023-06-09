@@ -59,11 +59,9 @@ export class ErrorSidebar implements vscode.WebviewViewProvider {
             writeFileSync(path, JSON.stringify(jsonContent, null, 2), "utf8");
             vscode.window.showInformationMessage(`Created a ${data.value} on this project folder`);
             vscode.commands.executeCommand("workbench.action.reloadWindow");
-            //workbench.action.webview.reloadWebviewAction
           } catch (error: any) {
             vscode.window.showErrorMessage(`Error when creating ${data.value} file: `, error);            
           }         
-
           break;
         }
       }

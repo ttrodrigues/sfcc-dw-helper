@@ -22,7 +22,7 @@ export async function activate(context: vscode.ExtensionContext) {
       )
     );
     
-    let path:string = file[0].fsPath;
+    //let path:string = file[0].fsPath;
     
     //@ts-ignore
     //currentPanel.webview.postMessage({type:"jsonPath", value:path});

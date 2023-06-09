@@ -6,13 +6,13 @@ import * as fs from 'fs';
 export class Sidebar implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
-
+  
   
   constructor(private readonly _extensionUri: vscode.Uri) {}
   
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
-
+    
 
     webviewView.webview.options = {
       // Allow scripts in the webview
@@ -64,24 +64,23 @@ export class Sidebar implements vscode.WebviewViewProvider {
             return;
           } 
           
-
           //@ts-ignore
           const rootFolder = vscode.workspace.workspaceFolders[0].uri.path
           const path = `${rootFolder}/dw.json`; 
 
-          const pathFormatted = path.substring(1)
+          //const pathFormatted = path.substring(1)
 
           //@ts-ignore
-          const json = JSON.parse(fs.readFileSync(pathFormatted));
+          const readJson = JSON.parse(fs.readFileSync(path));
          
-          console.log(json)
-          console.log(json.hostname)
+          //console.log(readJson)
+          //console.log(json.hostname)
 
           
-          webviewView.webview.postMessage({
-            type: 'json',
-            value: json,
-          });
+          // webviewView.webview.postMessage({
+          //   type: 'json',
+          //   value: json,
+          // });
 
           return;
       }
@@ -110,6 +109,19 @@ export class Sidebar implements vscode.WebviewViewProvider {
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce();
 
+
+    //@ts-ignore
+    const rootFolder = vscode.workspace.workspaceFolders[0].uri.path
+    const path = `${rootFolder}/dw.json`; 
+    //@ts-ignore
+    const readJson = JSON.parse(fs.readFileSync(path));
+    const initUsername = readJson.username;
+    const initPassword = readJson.password;
+    const initHostname = readJson.hostname;
+    const initCodeversion = readJson.codeVersion;
+
+
+
     return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
@@ -128,10 +140,16 @@ export class Sidebar implements vscode.WebviewViewProvider {
 			</head>
       <script nonce="${nonce}">
         const tsvscode = acquireVsCodeApi();
+        const initUsername = "${initUsername}";
+        const initPassword = "${initPassword}";
+        const initHostname = "${initHostname}";
+        const initCodeversion = "${initCodeversion}";
       </script>
       <body>
-				<script nonce="${nonce}" src="${scriptUri}"></script>
+				<script nonce="${nonce}" src="${scriptUri}">
+        </script>
 			</body>
 			</html>`;
   }
 }
+//const initJson = "${readJson}";
