@@ -114,11 +114,16 @@ export class Sidebar implements vscode.WebviewViewProvider {
     const rootFolder = vscode.workspace.workspaceFolders[0].uri.path
     const path = `${rootFolder}/dw.json`; 
     //@ts-ignore
-    const readJson = JSON.parse(fs.readFileSync(path));
+    const initialJson = JSON.parse(fs.readFileSync(path));
+
+const stringifyJson = JSON.stringify(initialJson);
+const formattedJson = stringifyJson.replace('code-version', 'codeversion');
+const readJson = JSON.parse(formattedJson);
+
     const initUsername = readJson.username;
     const initPassword = readJson.password;
     const initHostname = readJson.hostname;
-    const initCodeversion = readJson.codeVersion;
+    const initCodeversion = readJson.codeversion;
 
 
 
