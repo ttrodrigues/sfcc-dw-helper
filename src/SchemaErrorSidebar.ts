@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
-import { formatJson } from "./helpers/helpers";
 
-export class Sidebar implements vscode.WebviewViewProvider {
+export class SchemaErrorSidebar implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
   
@@ -38,23 +37,41 @@ export class Sidebar implements vscode.WebviewViewProvider {
           break;
         }
 
-        case "onChangeFile": {
+        case "fixJsonFile": {
+          // if (!data.value) {
+          //   return;
+          // } 
+
+          // const { writeFileSync } = require("fs");
+
+          // //@ts-ignore
+          // const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath
+          // const path = `${rootFolder}/dw.json`; 
+
+          // try {
+          //   writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
+          //   webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+          // } catch (error: any) {
+          //   vscode.window.showErrorMessage(`Error when updating dw.json file: `, error);            
+          // }  
+          
           if (!data.value) {
             return;
-          } 
-
+          }
+                    
           const { writeFileSync } = require("fs");
 
           //@ts-ignore
           const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath
-          const path = `${rootFolder}/dw.json`; 
-
+          const path = `${rootFolder}/dw.json`;
+          
           try {
             writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
-            webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+            vscode.window.showInformationMessage(`The dw.json file was been fixed!`);
+            vscode.commands.executeCommand("workbench.action.reloadWindow");
           } catch (error: any) {
-            vscode.window.showErrorMessage(`Error when updating dw.json file: `, error);            
-          }         
+            vscode.window.showErrorMessage(`Error on fixing the dw.json file: `, error);            
+          }      
 
           break;
         }
@@ -72,10 +89,10 @@ export class Sidebar implements vscode.WebviewViewProvider {
       vscode.Uri.joinPath(this._extensionUri, "out/compiled", "reset.css")
     );
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "out/compiled", "sidebar.js")
+      vscode.Uri.joinPath(this._extensionUri, "out/compiled", "schemaerrorsidebar.js")
     );
     const styleMainUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "out/compiled", "sidebar.css")
+      vscode.Uri.joinPath(this._extensionUri, "out/compiled", "schemaerrorsidebar.css")
     );
     const styleVSCodeUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "out/compiled", "vscode.css")
@@ -83,13 +100,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
 
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce();
-    const readJson:any = formatJson();
-
-    const initUsername:string = readJson.username;
-    const initPassword:string = readJson.password;
-    const initHostname:string = readJson.hostname;
-    const initCodeversion:string = readJson.codeversion;
-
+    
     const htmlContent:string = `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -108,10 +119,6 @@ export class Sidebar implements vscode.WebviewViewProvider {
     </head>
     <script nonce="${nonce}">
       const tsvscode = acquireVsCodeApi();
-      const initUsername ="${initUsername}";
-      const initPassword ="${initPassword}";
-      const initHostname ="${initHostname}";
-      const initCodeversion ="${initCodeversion}";
     </script>
     <body>
       <script nonce="${nonce}" src="${scriptUri}">

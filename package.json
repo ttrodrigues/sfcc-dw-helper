@@ -84,6 +84,7 @@
   "dependencies": {
     "btoa": "^1.2.1",
     "date-fns": "^2.16.1",
+    "jsonschema": "^1.4.1",
     "node-fetch": "^2.6.1",
     "polka": "^0.5.2",
     "reconnecting-websocket": "^4.4.0"

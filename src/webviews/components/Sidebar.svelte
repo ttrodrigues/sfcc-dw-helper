@@ -1,67 +1,32 @@
 <script lang="ts">
-
-
-    //@ts-ignore    
-    // -> import item from 'd:\\Treino\\Wells Validar NIF\\dw.json';
-
-    // let jsonPath: string;
-
-    // document.addEventListener('DOMContentLoaded', (function () {
-
-    // window.addEventListener('message', event => {
-    //     const message = event; // The JSON data our extension sent
-    //     switch (message.type) {
-    //         case 'dataJsonCommand':
-    //             jsonPath = message.data;
-    //             break;
-    //         }
-    //     }) 
-    // }))
-
-
-    //@ts-ignore    
-    //import item from jsonPath;
-
-
-//add in onMount
+    
+    // @ts-nocheck
+    
     import { onMount } from 'svelte';
-    //attach a function to onMount
-    // onMount(() => {
-    //     tsvscode.postMessage({
-    //         type: 'init-view',
-    //         value: true
-    //     });         
-    //     }
-    // )
+    import ShowIcon from './ShowIcon.svelte'
+    import HideIcon from './HideIcon.svelte'
     
-    
-    // export async function preload() {
-    //     const response = await this.fetch('videoslist.json');
-    //     const responseJson = await response.json();
-    //     return {
-    //         videos: responseJson
-    //     }
-    // }
-
-
-
-    
-    //let hostnameInput:any = document.getElementById('hostname');                 
-    //console.log(hostnameInput);
-
-
-   
     // To change the visibility of password field
-    let isPasswordVisible: boolean = false;     
+    let isPasswordVisible:boolean = false;     
+       
+    onMount(() => {
+        const hostnameInput:HTMLElement = document.getElementById('hostname');
+        const usernameInput:HTMLElement = document.getElementById('userName');
+        const passwordInput:HTMLElement = document.getElementById('password');
+        const codeversionInput:HTMLElement = document.getElementById('codeVersion');
 
+        usernameInput?.value = initUsername;
+        passwordInput?.value = initPassword;
+        hostnameInput?.value = initHostname;
+        codeversionInput?.value = initCodeversion;
+
+        }
+    );
+   
     const changeJsonFile = () => {
-        //@ts-ignore
         const hostname:string = document.getElementById('hostname')?.value;
-        //@ts-ignore
         const username:string = document.getElementById('userName')?.value;
-        //@ts-ignore
         const password:string = document.getElementById('password')?.value;
-        //@ts-ignore
         const codeversion:string = document.getElementById('codeVersion')?.value;
 
         const jsonContent = {
@@ -69,9 +34,7 @@
             "username": username,
             "password": password,
             "code-version": codeversion
-          };
-
-        //console.log(jsonContent);
+        };
         
         tsvscode.postMessage({
             type: 'onChangeFile',
@@ -79,48 +42,10 @@
         });
     }
 
-    
-
-//@ts-ignore
-    console.log(initUsername);
-    //@ts-ignore
-    console.log(initPassword);
-    //@ts-ignore
-    console.log(initHostname);
-    //@ts-ignore
-    console.log(initCodeversion);
-
-
-   
-
-
-    // function windowMessage(event: any) {
-    //     const message = event.value; // The json data that the extension sent
-    //     switch (message.type) {
-    //         case 'json':
-    //             if (!message.value) {
-    //                 return;
-    //             } 
-
-    //             let json = message.value;
-
-    //             let hostnameInput:any = document.getElementById('hostname'); 
-                
-    //             hostnameInput.innerText = json.hostname;
-
-    //             return;
-    //     }
-    // }
-
-   
-    
-   
-
-
 </script>
 
 <style>
-    * {
+    :global(body) {
         font-family: Segoe WPC,Segoe UI,sans-serif;
         font-size: 13px;
     }
@@ -147,7 +72,7 @@
         height: 28px;      
     }
 
-    button:hover{
+    button:hover {
         background-color: var(--vscode-button-hoverBackground);
     }
 
@@ -192,29 +117,28 @@
 
 <div id="main">
 
-    <div>Hostname</div>
-    <input on:change={()=>{
-        changeJsonFile();
-    }} type="text" id="hostname">
-
-    <div>Code Version</div>
-    <input on:change={()=>{
-        changeJsonFile();
-    }} type="text" id="codeVersion">
-
-    <div>User Name</div>
-    <input on:change={()=>{
-        changeJsonFile();
-    }} type="text" id="userName">
-
-    <div>Password</div>
-    <input on:change={()=>{
-        changeJsonFile();
-    }} type={isPasswordVisible ? "text" : "password"} id="password">
-
-    <button on:click={()=>{
-        isPasswordVisible = !isPasswordVisible;
-    }} id="btnSeePassword" class="monaco-button monaco-text-button">{isPasswordVisible ? "Hide" : "Show"}</button>
-
+        <div>Hostname</div>
+        <input on:change={()=>{
+            changeJsonFile();
+        }} type="text" id="hostname">
+    
+        <div>Code Version</div>
+        <input on:change={()=>{
+            changeJsonFile();
+        }} type="text" id="codeVersion">
+    
+        <div>User Name</div>
+        <input on:change={()=>{
+            changeJsonFile();
+        }} type="text" id="userName">
+    
+        <div>Password</div>
+        <input on:change={()=>{
+            changeJsonFile();
+        }} type={isPasswordVisible ? "text" : "password"} id="password">
+    
+        <button on:click={()=>{
+            isPasswordVisible = !isPasswordVisible;
+        }} id="btnSeePassword" class="monaco-button monaco-text-button">{isPasswordVisible ? 'Hide' : 'Show'}</button>
+             
 </div>
-

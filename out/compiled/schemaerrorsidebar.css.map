@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "file": "schemaerrorsidebar.css",
+  "sources": [
+    "SchemaErrorSidebar.svelte"
+  ],
+  "sourcesContent": [
+    "<script lang=\"ts\">\"use strict\";\n// @ts-nocheck\nconst fixJsonFile = () => {\n    const jsonContent = {\n        \"hostname\": \"hostname\",\n        \"username\": \"username\",\n        \"password\": \"password\",\n        \"code-version\": \"code-version\"\n    };\n    tsvscode.postMessage({\n        type: 'fixJsonFile',\n        value: jsonContent\n    });\n};\n</script>\r\n\r\n<style>\r\n    :global(body) {\r\n        font-family: Segoe WPC,Segoe UI,sans-serif;\r\n        font-size: 13px;\r\n    }\r\n\r\n    button {\r\n        color: var(--vscode-button-foreground); \r\n        background-color: var(--vscode-button-background);\r\n        border: 1px solid var(--vscode-button-border,transparent);\r\n        cursor: pointer;\r\n        box-sizing: border-box;  \r\n        height: 28px;      \r\n    }\r\n\r\n    button:hover {\r\n        background-color: var(--vscode-button-hoverBackground);\r\n    }\r\n\r\n    button:focus{\r\n        outline-offset: -1px;\r\n        outline-color: var(--vscode-focusBorder);\r\n    }\r\n    \r\n    div#main{\r\n       margin-top: 10px; \r\n    }\r\n\r\n    #btnFix {\r\n       margin-top: 20px; \r\n       width: 100%;\r\n    }\r\n    \r\n</style>\r\n\r\n<div id=\"main\">\r\n           \r\n    <p>Detected a dw.json file with a schema error!</p>\r\n    <p>The properties names are incorrect or not in string format.</p>\r\n\r\n    <!-- svelte-ignore missing-declaration -->\r\n    <button on:click={()=>{\r\n        fixJsonFile();\r\n    }} id=\"btnFix\" class=\"monaco-button monaco-text-button\">Fix the dw.json</button>\r\n\r\n</div>"
+  ],
+  "names": [],
+  "mappings": "AAiBY,IAAI,AAAE,CAAC,AACX,WAAW,CAAE,KAAK,CAAC,GAAG,CAAC,KAAK,CAAC,EAAE,CAAC,UAAU,CAC1C,SAAS,CAAE,IAAI,AACnB,CAAC,AAED,MAAM,cAAC,CAAC,AACJ,KAAK,CAAE,IAAI,0BAA0B,CAAC,CACtC,gBAAgB,CAAE,IAAI,0BAA0B,CAAC,CACjD,MAAM,CAAE,GAAG,CAAC,KAAK,CAAC,IAAI,sBAAsB,CAAC,WAAW,CAAC,CACzD,MAAM,CAAE,OAAO,CACf,UAAU,CAAE,UAAU,CACtB,MAAM,CAAE,IAAI,AAChB,CAAC,AAED,oBAAM,MAAM,AAAC,CAAC,AACV,gBAAgB,CAAE,IAAI,+BAA+B,CAAC,AAC1D,CAAC,AAED,oBAAM,MAAM,CAAC,AACT,cAAc,CAAE,IAAI,CACpB,aAAa,CAAE,IAAI,oBAAoB,CAAC,AAC5C,CAAC,AAED,GAAG,mBAAK,CAAC,AACN,UAAU,CAAE,IAAI,AACnB,CAAC,AAED,OAAO,cAAC,CAAC,AACN,UAAU,CAAE,IAAI,CAChB,KAAK,CAAE,IAAI,AACd,CAAC"
+}

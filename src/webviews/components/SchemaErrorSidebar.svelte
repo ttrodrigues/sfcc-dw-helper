@@ -1,5 +1,22 @@
 <script lang="ts">
     
+    // @ts-nocheck
+    
+    const fixJsonFile = () => {
+        const jsonContent = {
+            "hostname": "hostname",
+            "username": "username",
+            "password": "password",
+            "code-version": "code-version"
+        };
+        
+        tsvscode.postMessage({
+            type: 'fixJsonFile',
+            value: jsonContent
+        });
+    }
+
+
 </script>
 
 <style>
@@ -17,7 +34,7 @@
         height: 28px;      
     }
 
-    button:hover{
+    button:hover {
         background-color: var(--vscode-button-hoverBackground);
     }
 
@@ -25,29 +42,26 @@
         outline-offset: -1px;
         outline-color: var(--vscode-focusBorder);
     }
-
-    #btnCreate {
-       margin-top: 20px; 
-       width: 100%;
+    
+    div#main{
+       margin-top: 10px; 
     }
 
-    div#error{
-       margin-top: 10px;
+    #btnFix {
+       margin-top: 20px; 
+       width: 100%;
     }
     
 </style>
 
-<div id="error">
-
-    <div>This folder do not has a dw.json file or is not a SFCC project!</div>
-    <div>Please click on bellow button to create one.</div>
+<div id="main">
+           
+    <p>Detected a dw.json file with a schema error!</p>
+    <p>The properties names are incorrect or not in string format.</p>
 
     <!-- svelte-ignore missing-declaration -->
     <button on:click={()=>{
-        tsvscode.postMessage({
-            type: 'onCreateFile',
-            value: 'dw.json'
-        });
-    }} id="btnCreate" class="monaco-button monaco-text-button">Create a dw.json</button>
+        fixJsonFile();
+    }} id="btnFix" class="monaco-button monaco-text-button">Fix the dw.json</button>
 
 </div>
