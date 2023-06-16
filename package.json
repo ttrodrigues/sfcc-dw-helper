@@ -42,7 +42,7 @@
     "vscode:prepublish": "npm run package",
     "compile": "webpack --config ./webpack.config.js",
     "watch": "concurrently \"rollup -c -w\" \"webpack --watch --config ./webpack.config.cjs\"",
-    "package": "concurrently \"rollup -c -w\" \"",
+    "package": "webpack --mode production --devtool hidden-source-map",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
