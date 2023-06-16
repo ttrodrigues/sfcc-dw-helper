@@ -3,7 +3,7 @@
   "displayName": "SFCC DW Helper",
   "publisher": "ttrodrigues",
   "description": "Helper for dw.json file usage to connect to an SFCC environment",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "Open source",
   "icon": "/media/icon.png",
   "engines": {
