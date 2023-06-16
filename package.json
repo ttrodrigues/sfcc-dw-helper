@@ -1,8 +1,11 @@
 {
   "name": "sfcc-dw-helper",
   "displayName": "SFCC DW Helper",
+  "publisher": "ttrodrigues",
   "description": "Helper for dw.json file usage to connect to an SFCC environment",
   "version": "0.0.1",
+  "license": "Open source",
+  "icon": "/media/icon.png",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -88,5 +91,9 @@
     "node-fetch": "^2.6.1",
     "polka": "^0.5.2",
     "reconnecting-websocket": "^4.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ttrodrigues/sfcc-dw-helper.git"
   }
 }
