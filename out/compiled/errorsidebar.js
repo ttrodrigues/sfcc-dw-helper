@@ -370,10 +370,10 @@ var app = (function () {
     const file = "src/webviews/components/ErrorSidebar.svelte";
 
     function create_fragment(ctx) {
-    	let div2;
-    	let div0;
+    	let div;
+    	let p0;
     	let t1;
-    	let div1;
+    	let p1;
     	let t3;
     	let button;
     	let mounted;
@@ -381,34 +381,34 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div2 = element("div");
-    			div0 = element("div");
-    			div0.textContent = "This folder do not has a dw.json file or is not a SFCC project!";
+    			div = element("div");
+    			p0 = element("p");
+    			p0.textContent = "This folder do not has a dw.json file or is not a SFCC project!";
     			t1 = space();
-    			div1 = element("div");
-    			div1.textContent = "Please click on bellow button to create one.";
+    			p1 = element("p");
+    			p1.textContent = "Please click on bellow button to create one.";
     			t3 = space();
     			button = element("button");
     			button.textContent = "Create a dw.json";
-    			add_location(div0, file, 40, 4, 823);
-    			add_location(div1, file, 41, 4, 903);
+    			add_location(p0, file, 40, 4, 823);
+    			add_location(p1, file, 41, 4, 899);
     			attr_dev(button, "id", "btnCreate");
     			attr_dev(button, "class", "monaco-button monaco-text-button svelte-1iq7y8q");
-    			add_location(button, file, 44, 4, 1014);
-    			attr_dev(div2, "id", "error");
-    			attr_dev(div2, "class", "svelte-1iq7y8q");
-    			add_location(div2, file, 38, 0, 799);
+    			add_location(button, file, 44, 4, 1006);
+    			attr_dev(div, "id", "error");
+    			attr_dev(div, "class", "svelte-1iq7y8q");
+    			add_location(div, file, 38, 0, 799);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div2, anchor);
-    			append_dev(div2, div0);
-    			append_dev(div2, t1);
-    			append_dev(div2, div1);
-    			append_dev(div2, t3);
-    			append_dev(div2, button);
+    			insert_dev(target, div, anchor);
+    			append_dev(div, p0);
+    			append_dev(div, t1);
+    			append_dev(div, p1);
+    			append_dev(div, t3);
+    			append_dev(div, button);
 
     			if (!mounted) {
     				dispose = listen_dev(button, "click", /*click_handler*/ ctx[0], false, false, false);
@@ -419,7 +419,7 @@ var app = (function () {
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div2);
+    			if (detaching) detach_dev(div);
     			mounted = false;
     			dispose();
     		}

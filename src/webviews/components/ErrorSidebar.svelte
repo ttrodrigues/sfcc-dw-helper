@@ -39,8 +39,8 @@
 
 <div id="error">
 
-    <div>This folder do not has a dw.json file or is not a SFCC project!</div>
-    <div>Please click on bellow button to create one.</div>
+    <p>This folder do not has a dw.json file or is not a SFCC project!</p>
+    <p>Please click on bellow button to create one.</p>
 
     <!-- svelte-ignore missing-declaration -->
     <button on:click={()=>{
