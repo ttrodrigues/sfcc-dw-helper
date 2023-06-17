@@ -56,8 +56,8 @@ export class ErrorSidebar implements vscode.WebviewViewProvider {
 
           try {
             writeFileSync(path, JSON.stringify(jsonContent, null, 2), "utf8");
-            vscode.window.showInformationMessage(`Created a ${data.value} on this project folder`);
             vscode.commands.executeCommand("workbench.action.reloadWindow");
+            vscode.window.showInformationMessage(`Created a ${data.value} on this project folder`);
           } catch (error: any) {
             vscode.window.showErrorMessage(`Error when creating ${data.value} file: `, error);            
           }         
@@ -88,6 +88,9 @@ export class ErrorSidebar implements vscode.WebviewViewProvider {
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce();
 
+    //@ts-ignore
+    const isWorkspaceOpen:boolean = !!vscode.workspace.workspaceFolders;
+
     return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
@@ -106,6 +109,7 @@ export class ErrorSidebar implements vscode.WebviewViewProvider {
 			</head>
       <script nonce="${nonce}">
         const tsvscode = acquireVsCodeApi();
+        const isWorkspaceOpen = ${isWorkspaceOpen};
       </script>
       <body>
 				<script nonce="${nonce}" src="${scriptUri}"></script>

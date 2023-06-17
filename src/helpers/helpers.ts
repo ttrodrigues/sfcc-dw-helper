@@ -35,10 +35,10 @@ export function validateJson (json:any) {
 
 export function defaultJson () {   
     //@ts-ignore
-    const rootFolder = vscode.workspace.workspaceFolders[0].uri.path
+    const rootFolder:string = vscode.workspace.workspaceFolders[0].uri.fsPath
     const path = `${rootFolder}/dw.json`; 
     //@ts-ignore
-    const initialJson = JSON.parse(fs.readFileSync(path));
+    const initialJson:any = JSON.parse(fs.readFileSync(path));
 
     return initialJson;
 }

@@ -169,7 +169,7 @@ function validateJson(json) {
 exports.validateJson = validateJson;
 function defaultJson() {
     //@ts-ignore
-    const rootFolder = vscode.workspace.workspaceFolders[0].uri.path;
+    const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
     const path = `${rootFolder}/dw.json`;
     //@ts-ignore
     const initialJson = JSON.parse(fs.readFileSync(path));
@@ -2067,8 +2067,8 @@ class ErrorSidebar {
                     };
                     try {
                         writeFileSync(path, JSON.stringify(jsonContent, null, 2), "utf8");
-                        vscode.window.showInformationMessage(`Created a ${data.value} on this project folder`);
                         vscode.commands.executeCommand("workbench.action.reloadWindow");
+                        vscode.window.showInformationMessage(`Created a ${data.value} on this project folder`);
                     }
                     catch (error) {
                         vscode.window.showErrorMessage(`Error when creating ${data.value} file: `, error);
@@ -2088,6 +2088,8 @@ class ErrorSidebar {
         const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out/compiled", "vscode.css"));
         // Use a nonce to only allow a specific script to be run.
         const nonce = (0, getNonce_1.getNonce)();
+        //@ts-ignore
+        const isWorkspaceOpen = !!vscode.workspace.workspaceFolders;
         return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
@@ -2104,6 +2106,7 @@ class ErrorSidebar {
 			</head>
       <script nonce="${nonce}">
         const tsvscode = acquireVsCodeApi();
+        const isWorkspaceOpen = ${isWorkspaceOpen};
       </script>
       <body>
 				<script nonce="${nonce}" src="${scriptUri}"></script>
@@ -2152,19 +2155,6 @@ class SchemaErrorSidebar {
                     break;
                 }
                 case "fixJsonFile": {
-                    // if (!data.value) {
-                    //   return;
-                    // } 
-                    // const { writeFileSync } = require("fs");
-                    // //@ts-ignore
-                    // const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath
-                    // const path = `${rootFolder}/dw.json`; 
-                    // try {
-                    //   writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
-                    //   webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
-                    // } catch (error: any) {
-                    //   vscode.window.showErrorMessage(`Error when updating dw.json file: `, error);            
-                    // }  
                     if (!data.value) {
                         return;
                     }
@@ -2174,8 +2164,8 @@ class SchemaErrorSidebar {
                     const path = `${rootFolder}/dw.json`;
                     try {
                         writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
-                        vscode.window.showInformationMessage(`The dw.json file was been fixed!`);
                         vscode.commands.executeCommand("workbench.action.reloadWindow");
+                        vscode.window.showInformationMessage(`The dw.json file was been fixed!`);
                     }
                     catch (error) {
                         vscode.window.showErrorMessage(`Error on fixing the dw.json file: `, error);

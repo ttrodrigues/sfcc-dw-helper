@@ -376,6 +376,12 @@ var app = (function () {
     	let p1;
     	let t3;
     	let button;
+
+    	let t4_value = (/*isBtnDisabled*/ ctx[0]
+    	? "Create a dw.json disabled for missing workspace"
+    	: "Create a dw.json") + "";
+
+    	let t4;
     	let mounted;
     	let dispose;
 
@@ -386,18 +392,19 @@ var app = (function () {
     			p0.textContent = "This folder do not has a dw.json file or is not a SFCC project!";
     			t1 = space();
     			p1 = element("p");
-    			p1.textContent = "Please click on bellow button to create one.";
+    			p1.textContent = "If you already have a workspace open, please click on bellow button to create anew dw.json file. Otherwise,the button will be disabled until a workspace has been open.";
     			t3 = space();
     			button = element("button");
-    			button.textContent = "Create a dw.json";
-    			add_location(p0, file, 40, 4, 823);
-    			add_location(p1, file, 41, 4, 899);
+    			t4 = text(t4_value);
+    			add_location(p0, file, 46, 4, 936);
+    			add_location(p1, file, 47, 4, 1012);
     			attr_dev(button, "id", "btnCreate");
-    			attr_dev(button, "class", "monaco-button monaco-text-button svelte-1iq7y8q");
-    			add_location(button, file, 44, 4, 1006);
+    			attr_dev(button, "class", "monaco-button monaco-text-button svelte-1szg92t");
+    			button.disabled = /*isBtnDisabled*/ ctx[0];
+    			add_location(button, file, 50, 4, 1242);
     			attr_dev(div, "id", "error");
-    			attr_dev(div, "class", "svelte-1iq7y8q");
-    			add_location(div, file, 38, 0, 799);
+    			attr_dev(div, "class", "svelte-1szg92t");
+    			add_location(div, file, 44, 0, 912);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -409,9 +416,10 @@ var app = (function () {
     			append_dev(div, p1);
     			append_dev(div, t3);
     			append_dev(div, button);
+    			append_dev(button, t4);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*click_handler*/ ctx[0], false, false, false);
+    				dispose = listen_dev(button, "click", /*click_handler*/ ctx[1], false, false, false);
     				mounted = true;
     			}
     		},
@@ -436,9 +444,13 @@ var app = (function () {
     	return block;
     }
 
-    function instance($$self, $$props) {
+    function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('ErrorSidebar', slots, []);
+
+    	// @ts-nocheck
+    	let isBtnDisabled = !isWorkspaceOpen;
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
@@ -449,7 +461,17 @@ var app = (function () {
     		tsvscode.postMessage({ type: 'onCreateFile', value: 'dw.json' });
     	};
 
-    	return [click_handler];
+    	$$self.$capture_state = () => ({ isBtnDisabled });
+
+    	$$self.$inject_state = $$props => {
+    		if ('isBtnDisabled' in $$props) $$invalidate(0, isBtnDisabled = $$props.isBtnDisabled);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [isBtnDisabled, click_handler];
     }
 
     class ErrorSidebar extends SvelteComponentDev {

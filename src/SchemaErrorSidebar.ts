@@ -38,23 +38,6 @@ export class SchemaErrorSidebar implements vscode.WebviewViewProvider {
         }
 
         case "fixJsonFile": {
-          // if (!data.value) {
-          //   return;
-          // } 
-
-          // const { writeFileSync } = require("fs");
-
-          // //@ts-ignore
-          // const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath
-          // const path = `${rootFolder}/dw.json`; 
-
-          // try {
-          //   writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
-          //   webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
-          // } catch (error: any) {
-          //   vscode.window.showErrorMessage(`Error when updating dw.json file: `, error);            
-          // }  
-          
           if (!data.value) {
             return;
           }
@@ -67,8 +50,8 @@ export class SchemaErrorSidebar implements vscode.WebviewViewProvider {
           
           try {
             writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
-            vscode.window.showInformationMessage(`The dw.json file was been fixed!`);
             vscode.commands.executeCommand("workbench.action.reloadWindow");
+            vscode.window.showInformationMessage(`The dw.json file was been fixed!`);
           } catch (error: any) {
             vscode.window.showErrorMessage(`Error on fixing the dw.json file: `, error);            
           }      

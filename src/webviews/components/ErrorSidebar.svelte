@@ -1,5 +1,7 @@
 <script lang="ts">
-    
+    // @ts-nocheck
+    let isBtnDisabled:boolean = !isWorkspaceOpen;
+
 </script>
 
 <style>
@@ -26,6 +28,10 @@
         outline-color: var(--vscode-focusBorder);
     }
 
+    button:disabled{
+        cursor:not-allowed;
+    }
+
     #btnCreate {
        margin-top: 20px; 
        width: 100%;
@@ -40,7 +46,7 @@
 <div id="error">
 
     <p>This folder do not has a dw.json file or is not a SFCC project!</p>
-    <p>Please click on bellow button to create one.</p>
+    <p>If you already have a workspace open, please click on bellow button to create anew dw.json file. Otherwise,the button will be disabled until a workspace has been open.</p>
 
     <!-- svelte-ignore missing-declaration -->
     <button on:click={()=>{
@@ -48,6 +54,6 @@
             type: 'onCreateFile',
             value: 'dw.json'
         });
-    }} id="btnCreate" class="monaco-button monaco-text-button">Create a dw.json</button>
+    }} id="btnCreate" class="monaco-button monaco-text-button" disabled={isBtnDisabled}>{isBtnDisabled ? "Create a dw.json disabled for missing workspace" : "Create a dw.json"}</button>
 
 </div>
