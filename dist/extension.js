@@ -17,7 +17,7 @@ exports.Sidebar = void 0;
 const vscode = __webpack_require__(1);
 const getNonce_1 = __webpack_require__(3);
 const helpers_1 = __webpack_require__(4);
-const constants_1 = __webpack_require__(14);
+const constants_1 = __webpack_require__(12);
 class Sidebar {
     constructor(_extensionUri) {
         this._extensionUri = _extensionUri;
@@ -2041,6 +2041,22 @@ module.exports.scan = function scan(base, schema){
 
 /***/ }),
 /* 12 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Constants = void 0;
+var Constants;
+(function (Constants) {
+    Constants.PROPHET_ID_NAME = 'SqrTT.prophet';
+    Constants.COMMAND_CLEAN_UPLOAD = 'extension.prophet.command.clean.upload';
+    Constants.COMMAND_DISABLE_UPLOAD = 'extension.prophet.command.disable.upload';
+    Constants.COMMAND_ENABLE_UPLOAD = 'extension.prophet.command.enable.upload';
+})(Constants = exports.Constants || (exports.Constants = {}));
+
+
+/***/ }),
+/* 13 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -2143,7 +2159,7 @@ exports.ErrorSidebar = ErrorSidebar;
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -2238,22 +2254,6 @@ class SchemaErrorSidebar {
 exports.SchemaErrorSidebar = SchemaErrorSidebar;
 
 
-/***/ }),
-/* 14 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Constants = void 0;
-var Constants;
-(function (Constants) {
-    Constants.PROPHET_ID_NAME = 'SqrTT.prophet';
-    Constants.COMMAND_CLEAN_UPLOAD = 'extension.prophet.command.clean.upload';
-    Constants.COMMAND_DISABLE_UPLOAD = 'extension.prophet.command.disable.upload';
-    Constants.COMMAND_ENABLE_UPLOAD = 'extension.prophet.command.enable.upload';
-})(Constants = exports.Constants || (exports.Constants = {}));
-
-
 /***/ })
 /******/ 	]);
 /************************************************************************/
@@ -2293,8 +2293,8 @@ exports.deactivate = exports.activate = void 0;
 // Import the module and reference it with the alias vscode in your code below
 const vscode = __webpack_require__(1);
 const Sidebar_1 = __webpack_require__(2);
-const ErrorSidebar_1 = __webpack_require__(12);
-const SchemaErrorSidebar_1 = __webpack_require__(13);
+const ErrorSidebar_1 = __webpack_require__(13);
+const SchemaErrorSidebar_1 = __webpack_require__(14);
 const helpers_1 = __webpack_require__(4);
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
