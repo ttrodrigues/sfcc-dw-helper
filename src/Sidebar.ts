@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
 import { formatJson } from "./helpers/helpers";
+import { Constants } from "./helpers/constants"
 
 export class Sidebar implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
@@ -58,6 +59,36 @@ export class Sidebar implements vscode.WebviewViewProvider {
 
           break;
         }
+
+        case "onCleanUpload": {
+          if (!data.value) {
+            return;
+          } 
+
+          vscode.commands.executeCommand(Constants.COMMAND_CLEAN_UPLOAD);
+
+          break;
+        }
+
+        case "onDisableUpload": {
+          if (!data.value) {
+            return;
+          } 
+          
+          vscode.commands.executeCommand(Constants.COMMAND_DISABLE_UPLOAD);
+
+          break;
+        }
+
+        case "onEnableUpload": {
+          if (!data.value) {
+            return;
+          } 
+          
+          vscode.commands.executeCommand(Constants.COMMAND_ENABLE_UPLOAD);
+
+          break;
+        }
         
       }
     });
@@ -90,6 +121,9 @@ export class Sidebar implements vscode.WebviewViewProvider {
     const initHostname:string = readJson.hostname;
     const initCodeversion:string = readJson.codeversion;
 
+    const allExtensions: readonly any[] = vscode.extensions.all;
+    const isProphetInstall = allExtensions.some(e => e.id === Constants.PROPHET_ID_NAME);
+
     const htmlContent:string = `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -112,6 +146,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
       const initPassword ="${initPassword}";
       const initHostname ="${initHostname}";
       const initCodeversion ="${initCodeversion}";
+      const isProphetInstall = ${isProphetInstall};
     </script>
     <body>
       <script nonce="${nonce}" src="${scriptUri}">

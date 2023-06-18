@@ -17,6 +17,7 @@ exports.Sidebar = void 0;
 const vscode = __webpack_require__(1);
 const getNonce_1 = __webpack_require__(3);
 const helpers_1 = __webpack_require__(4);
+const constants_1 = __webpack_require__(14);
 class Sidebar {
     constructor(_extensionUri) {
         this._extensionUri = _extensionUri;
@@ -62,6 +63,27 @@ class Sidebar {
                     }
                     break;
                 }
+                case "onCleanUpload": {
+                    if (!data.value) {
+                        return;
+                    }
+                    vscode.commands.executeCommand(constants_1.Constants.COMMAND_CLEAN_UPLOAD);
+                    break;
+                }
+                case "onDisableUpload": {
+                    if (!data.value) {
+                        return;
+                    }
+                    vscode.commands.executeCommand(constants_1.Constants.COMMAND_DISABLE_UPLOAD);
+                    break;
+                }
+                case "onEnableUpload": {
+                    if (!data.value) {
+                        return;
+                    }
+                    vscode.commands.executeCommand(constants_1.Constants.COMMAND_ENABLE_UPLOAD);
+                    break;
+                }
             }
         });
     }
@@ -80,6 +102,8 @@ class Sidebar {
         const initPassword = readJson.password;
         const initHostname = readJson.hostname;
         const initCodeversion = readJson.codeversion;
+        const allExtensions = vscode.extensions.all;
+        const isProphetInstall = allExtensions.some(e => e.id === constants_1.Constants.PROPHET_ID_NAME);
         const htmlContent = `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -100,6 +124,7 @@ class Sidebar {
       const initPassword ="${initPassword}";
       const initHostname ="${initHostname}";
       const initCodeversion ="${initCodeversion}";
+      const isProphetInstall = ${isProphetInstall};
     </script>
     <body>
       <script nonce="${nonce}" src="${scriptUri}">
@@ -2211,6 +2236,22 @@ class SchemaErrorSidebar {
     }
 }
 exports.SchemaErrorSidebar = SchemaErrorSidebar;
+
+
+/***/ }),
+/* 14 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Constants = void 0;
+var Constants;
+(function (Constants) {
+    Constants.PROPHET_ID_NAME = 'SqrTT.prophet';
+    Constants.COMMAND_CLEAN_UPLOAD = 'extension.prophet.command.clean.upload';
+    Constants.COMMAND_DISABLE_UPLOAD = 'extension.prophet.command.disable.upload';
+    Constants.COMMAND_ENABLE_UPLOAD = 'extension.prophet.command.enable.upload';
+})(Constants = exports.Constants || (exports.Constants = {}));
 
 
 /***/ })

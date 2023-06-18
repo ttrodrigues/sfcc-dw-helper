@@ -375,13 +375,15 @@ var app = (function () {
     	let t1;
     	let p1;
     	let t3;
+    	let p2;
+    	let t5;
     	let button;
 
-    	let t4_value = (/*isBtnDisabled*/ ctx[0]
+    	let t6_value = (/*isBtnDisabled*/ ctx[0]
     	? "Create a dw.json disabled for missing workspace"
     	: "Create a dw.json") + "";
 
-    	let t4;
+    	let t6;
     	let mounted;
     	let dispose;
 
@@ -392,19 +394,23 @@ var app = (function () {
     			p0.textContent = "This folder do not has a dw.json file or is not a SFCC project!";
     			t1 = space();
     			p1 = element("p");
-    			p1.textContent = "If you already have a workspace open, please click on bellow button to create anew dw.json file. Otherwise,the button will be disabled until a workspace has been open.";
+    			p1.textContent = "If you already have a workspace open, please click on bellow button to create anew dw.json file.";
     			t3 = space();
+    			p2 = element("p");
+    			p2.textContent = "Otherwise,the button will be disabled until a workspace has been open.";
+    			t5 = space();
     			button = element("button");
-    			t4 = text(t4_value);
-    			add_location(p0, file, 46, 4, 936);
-    			add_location(p1, file, 47, 4, 1012);
+    			t6 = text(t6_value);
+    			add_location(p0, file, 47, 4, 962);
+    			add_location(p1, file, 48, 4, 1038);
+    			add_location(p2, file, 49, 4, 1147);
     			attr_dev(button, "id", "btnCreate");
-    			attr_dev(button, "class", "monaco-button monaco-text-button svelte-1szg92t");
+    			attr_dev(button, "class", "monaco-button monaco-text-button svelte-t2p5b1");
     			button.disabled = /*isBtnDisabled*/ ctx[0];
-    			add_location(button, file, 50, 4, 1242);
+    			add_location(button, file, 53, 4, 1282);
     			attr_dev(div, "id", "error");
-    			attr_dev(div, "class", "svelte-1szg92t");
-    			add_location(div, file, 44, 0, 912);
+    			attr_dev(div, "class", "svelte-t2p5b1");
+    			add_location(div, file, 45, 0, 938);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -415,8 +421,10 @@ var app = (function () {
     			append_dev(div, t1);
     			append_dev(div, p1);
     			append_dev(div, t3);
+    			append_dev(div, p2);
+    			append_dev(div, t5);
     			append_dev(div, button);
-    			append_dev(button, t4);
+    			append_dev(button, t6);
 
     			if (!mounted) {
     				dispose = listen_dev(button, "click", /*click_handler*/ ctx[1], false, false, false);

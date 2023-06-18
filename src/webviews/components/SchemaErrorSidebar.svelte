@@ -44,7 +44,8 @@
     }
     
     div#main{
-       margin-top: 10px; 
+       margin-top: 10px;
+       min-width: 350px;
     }
 
     #btnFix {
