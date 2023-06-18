@@ -11,13 +11,19 @@ The main commands **Clean Project/Upload All**, **Enable Upload** and **Disable 
 
 ## Features
 Edition of **dw.json** directly on the sidebar
-
 ![](/media/edit_json.png)
 
 
 Possibility of hide and show the **password** field
 
-<video autoplay loop muted playsinline>
-  <source src="/media/password_show_hide.webm" type="video/webm">
-</video>
 
+The three **Prophet** commands present on sidebar, without requiring the execution of these commands by the **Command Palette** of **VS Code**. 
+![](/media/prophet_commands.png)
+
+
+JSON schema validation at start of the extension activation, when the sidebar **SFCC DW Helper** icon is clicked for the first time on a **VS Code** window.
+![](/media/schema_validation.png)
+
+
+## Next developments
+* Possibility to save the hostname and  codeversion introduced by user, with a small dropdown for selections of the last 10 items. 
