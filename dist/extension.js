@@ -166,7 +166,7 @@ const vscode = __webpack_require__(1);
 const fs = __webpack_require__(5);
 function formatJson() {
     //@ts-ignore
-    const rootFolder = vscode.workspace.workspaceFolders[0].uri.path;
+    const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
     const path = `${rootFolder}/dw.json`;
     //@ts-ignore
     const initialJson = JSON.parse(fs.readFileSync(path));

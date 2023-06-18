@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 export function formatJson () {   
     //@ts-ignore
-    const rootFolder = vscode.workspace.workspaceFolders[0].uri.path
+    const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath
     const path = `${rootFolder}/dw.json`; 
     //@ts-ignore
     const initialJson = JSON.parse(fs.readFileSync(path));
