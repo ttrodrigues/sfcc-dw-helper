@@ -32,7 +32,7 @@ Edition of **dw.json** directly on the sidebar
 
 Possibility of hide and show the **password** field
 
-<video src="./media/password_show_hide.mp4" controls="controls" style="max-width: 730px;">
+<video src="./media/password_show_hide_webm.webm" controls="controls" style="max-width: 730px;">
 </video>
 
 &nbsp;
