@@ -12,10 +12,10 @@ The extension validates the mandatory fields that the **dw.json** require to con
 
 |Field |Required|Is Validated?|
 |-----|:------:|:------:|
-|hostname|:white_check_mark:      |:white_check_mark:    |
-|code-version  |:white_check_mark:     |:white_check_mark:   |
-|username  |:white_check_mark:     |:white_check_mark:   |
-|password  |:white_check_mark:     |:white_check_mark:   |
+|hostname|![](/media/svg_checkmark_green.png)    |![](/media/svg_checkmark_green.png)      |
+|code-version  |![](/media/svg_checkmark_green.png)       |![](/media/svg_checkmark_green.png)     |
+|username  |![](/media/svg_checkmark_green.png)       |![](/media/svg_checkmark_green.png)     |
+|password  |![](/media/svg_checkmark_green.png)       |![](/media/svg_checkmark_green.png)     |
 
 The main commands **Clean Project/Upload All**, **Enable Upload** and **Disable Upload**, are present on the sidebar, for quick execution of them.
 
