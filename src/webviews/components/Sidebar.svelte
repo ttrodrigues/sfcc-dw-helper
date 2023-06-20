@@ -3,12 +3,21 @@
     // @ts-nocheck
     
     import { onMount } from 'svelte';
-    import ShowIcon from './ShowIcon.svelte'
-    import HideIcon from './HideIcon.svelte'
+    import ShowIcon from './ShowIcon.svelte';
+    import HideIcon from './HideIcon.svelte';
 
     let componentSelected:svelteHTML = ShowIcon;
 
     let isProphetInstalled:boolean;
+
+    let isToShowDevBuildBtn:boolean;
+    let textCommandDevBuildBtn:string;
+    let textLayoutDevBuildBtn:string;
+
+    let isToShowPrdBuildBtn:boolean;
+    let textCommandPrdBuildBtn:string;
+    let textLayoutPrdBuildBtn:string;
+
     
     // To change the visibility of password field
     let isPasswordVisible:boolean = false;   
@@ -25,6 +34,12 @@
         codeversionInput?.value = initCodeversion;
         
         isProphetInstalled = isProphetInstall;
+        isToShowDevBuildBtn = showDevBuildBtn;
+        textCommandDevBuildBtn = commandDevBuildBtn;
+        isToShowPrdBuildBtn = showPrdBuildBtn 
+        textCommandPrdBuildBtn = commandPrdBuildBtn;
+        textLayoutDevBuildBtn = textDevBuildBtn;
+        textLayoutPrdBuildBtn = textPrdBuildBtn;
     }
     );
     
@@ -67,6 +82,13 @@
             value: true
         });
     }
+
+    const clickBtnBuild = (option) => {
+        tsvscode.postMessage({
+            type: 'onBuild',
+            value: option
+        });
+    }
     
     function buttonClick() {
         isPasswordVisible = !isPasswordVisible;
@@ -100,7 +122,7 @@
         border: 1px solid var(--vscode-button-border,transparent);
         cursor: pointer;
         box-sizing: border-box;  
-        height: 28px;      
+        height: 28px;
     }
 
     button:hover {
@@ -114,7 +136,8 @@
     
     div#main{
        margin-top: 10px; 
-       min-width: 350px;
+       min-width: 250px;
+       padding-right: 20px;
     }
     #hostname {
        margin-top: 5px; 
@@ -126,25 +149,25 @@
        margin-top: 5px; 
        margin-bottom: 20px; 
        width: 100%;
-       max-width: 180px;
+       max-width: 200px;
     }
     #userName {
        margin-top: 5px; 
        margin-bottom: 20px; 
        width: 100%;
-       max-width: 180px; 
+       max-width: 200px; 
     }
     #password {
        margin-top: 5px; 
        margin-bottom: 20px; 
        width: 100%;
-       max-width: 180px;
+       max-width: 200px;
     }
     
     #btnSvg {
        width: 28px;
        height: 28px;
-       left: 205px;
+       left: 225px;
        position: absolute;
        color: transparent;
        background-color: transparent;
@@ -158,6 +181,23 @@
     #prophetBtn {
         margin-top: 20px; 
         margin-bottom: 20px; 
+    }
+    
+    #commandsBtn {
+        margin-top: 20px; 
+        margin-bottom: 20px; 
+    }
+
+    .btn-prophet {
+        width: 100%;
+        min-width: 250px;
+        margin-top: 10px;
+    }
+
+    .btn-build {
+        width: 100%;
+        min-width: 250px;
+        margin-top: 10px;
     }
 
 </style>       
@@ -192,18 +232,41 @@
         </div>
 
         {#if isProphetInstalled}
+            <div id="commandsBtn">
+                {#if isToShowDevBuildBtn}
+                    <div>
+                        <button on:click={()=>{
+                            clickBtnBuild(textCommandDevBuildBtn);
+                        }} class="btn-build monaco-button monaco-text-button">{textLayoutDevBuildBtn}</button>
+                    </div>
+                {/if}
+
+                {#if isToShowPrdBuildBtn}
+                    <div>
+                        <button on:click={()=>{
+                            clickBtnBuild(textCommandPrdBuildBtn);
+                        }} class="btn-build monaco-button monaco-text-button">{textLayoutPrdBuildBtn}</button>
+                    </div>
+                {/if}
+            </div>
             <div id="prophetBtn">
-                <button on:click={()=>{
-                    clickBtnCleanUpload();
-                }}>Clean Project</button>
+                <div>
+                    <button on:click={()=>{
+                        clickBtnCleanUpload();
+                    }} class="btn-prophet monaco-button monaco-text-button">Clean Project / Upload All</button>                    
+                </div>
 
-                <button on:click={()=>{
-                    clickBtnEnableUpload();
-                }}>Enable Upload</button>
+                <div>
+                    <button on:click={()=>{
+                        clickBtnEnableUpload();
+                    }} class="btn-prophet monaco-button monaco-text-button">Enable Upload</button>
+                </div>
 
-                <button on:click={()=>{
-                    clickBtnDisableUpload();
-                }}>Disable Upload</button>
+                <div>
+                    <button on:click={()=>{
+                        clickBtnDisableUpload();
+                    }} class="btn-prophet monaco-button monaco-text-button">Disable Upload</button>
+                </div>
             </div>
         {/if}
 

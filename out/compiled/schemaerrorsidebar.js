@@ -390,14 +390,14 @@ var app = (function () {
     			t3 = space();
     			button = element("button");
     			button.textContent = "Fix the dw.json";
-    			add_location(p0, file, 54, 4, 1165);
-    			add_location(p1, file, 55, 4, 1222);
+    			add_location(p0, file, 61, 4, 1292);
+    			add_location(p1, file, 62, 4, 1349);
     			attr_dev(button, "id", "btnFix");
-    			attr_dev(button, "class", "monaco-button monaco-text-button svelte-v6jp60");
-    			add_location(button, file, 58, 4, 1344);
+    			attr_dev(button, "class", "monaco-button monaco-text-button btn svelte-1s0vzgm");
+    			add_location(button, file, 65, 4, 1471);
     			attr_dev(div, "id", "main");
-    			attr_dev(div, "class", "svelte-v6jp60");
-    			add_location(div, file, 52, 0, 1131);
+    			attr_dev(div, "class", "svelte-1s0vzgm");
+    			add_location(div, file, 59, 0, 1258);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");

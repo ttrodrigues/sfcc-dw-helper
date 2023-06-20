@@ -30,6 +30,18 @@ class Sidebar {
             localResourceRoots: [this._extensionUri],
         };
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+        // Listener to changes in configuration options
+        vscode.workspace.onDidChangeConfiguration(event => {
+            const affectedEnableDevBuildBtn = event.affectsConfiguration("sfcc-dw-helper.enableDevBuildBtn");
+            const affectedEnablePrdBuildBtn = event.affectsConfiguration("sfcc-dw-helper.enablePrdBuildBtn");
+            const affectedCommandDevBuildBtn = event.affectsConfiguration("sfcc-dw-helper.commandDevBuildBtn");
+            const affectedCommandPrdBuildBtn = event.affectsConfiguration("sfcc-dw-helper.commandPrdBuildBtn");
+            const affectedTextDevBuildBtn = event.affectsConfiguration("sfcc-dw-helper.textDevBuildBtn");
+            const affectedTextPrdBuildBtn = event.affectsConfiguration("sfcc-dw-helper.textPrdBuildBtn");
+            if (affectedEnableDevBuildBtn || affectedEnablePrdBuildBtn || affectedCommandDevBuildBtn || affectedCommandPrdBuildBtn || affectedTextDevBuildBtn || affectedTextPrdBuildBtn) {
+                webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+            }
+        });
         webviewView.webview.onDidReceiveMessage(async (data) => {
             switch (data.type) {
                 case "onInfo": {
@@ -84,6 +96,15 @@ class Sidebar {
                     vscode.commands.executeCommand(constants_1.Constants.COMMAND_ENABLE_UPLOAD);
                     break;
                 }
+                case "onBuild": {
+                    if (!data.value) {
+                        return;
+                    }
+                    const terminal = vscode.window.createTerminal(constants_1.Constants.TERMINAL_NAME);
+                    terminal.sendText(data.value);
+                    terminal.show();
+                    break;
+                }
             }
         });
     }
@@ -97,13 +118,25 @@ class Sidebar {
         const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out/compiled", "vscode.css"));
         // Use a nonce to only allow a specific script to be run.
         const nonce = (0, getNonce_1.getNonce)();
+        // Get the value of each json field of the file 
         const readJson = (0, helpers_1.formatJson)();
         const initUsername = readJson.username;
         const initPassword = readJson.password;
         const initHostname = readJson.hostname;
         const initCodeversion = readJson.codeversion;
+        // Check if Prophet extension is installed
         const allExtensions = vscode.extensions.all;
         const isProphetInstall = allExtensions.some(e => e.id === constants_1.Constants.PROPHET_ID_NAME);
+        // Check if the button for run Development compiler should be visible or not
+        const enableDevBuildBtn = vscode.workspace.getConfiguration('sfcc-dw-helper').enableDevBuildBtn;
+        const commandDevBuildBtn = vscode.workspace.getConfiguration('sfcc-dw-helper').commandDevBuildBtn;
+        const textDevBuildBtn = vscode.workspace.getConfiguration('sfcc-dw-helper').textDevBuildBtn;
+        const showDevBuildBtn = !!(enableDevBuildBtn && commandDevBuildBtn.length && textDevBuildBtn);
+        // Check if the button for run Production compiler should be visible or not
+        const enablePrdBuildBtn = vscode.workspace.getConfiguration('sfcc-dw-helper').enablePrdBuildBtn;
+        const commandPrdBuildBtn = vscode.workspace.getConfiguration('sfcc-dw-helper').commandPrdBuildBtn;
+        const textPrdBuildBtn = vscode.workspace.getConfiguration('sfcc-dw-helper').textPrdBuildBtn;
+        const showPrdBuildBtn = !!(enablePrdBuildBtn && commandPrdBuildBtn.length && textPrdBuildBtn);
         const htmlContent = `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -125,6 +158,12 @@ class Sidebar {
       const initHostname ="${initHostname}";
       const initCodeversion ="${initCodeversion}";
       const isProphetInstall = ${isProphetInstall};
+      const showDevBuildBtn = ${showDevBuildBtn};
+      const commandDevBuildBtn = "${commandDevBuildBtn}";
+      const showPrdBuildBtn = ${showPrdBuildBtn};
+      const commandPrdBuildBtn = "${commandPrdBuildBtn}";
+      const textDevBuildBtn = "${textDevBuildBtn}";
+      const textPrdBuildBtn = "${textPrdBuildBtn}";
     </script>
     <body>
       <script nonce="${nonce}" src="${scriptUri}">
@@ -2052,6 +2091,7 @@ var Constants;
     Constants.COMMAND_CLEAN_UPLOAD = 'extension.prophet.command.clean.upload';
     Constants.COMMAND_DISABLE_UPLOAD = 'extension.prophet.command.disable.upload';
     Constants.COMMAND_ENABLE_UPLOAD = 'extension.prophet.command.enable.upload';
+    Constants.TERMINAL_NAME = 'Build Prophet';
 })(Constants = exports.Constants || (exports.Constants = {}));
 
 

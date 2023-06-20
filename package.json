@@ -3,7 +3,7 @@
   "displayName": "SFCC DW Helper",
   "publisher": "ttrodrigues",
   "description": "Helper for dw.json file usage to connect to an SFCC environment",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "license": "Open source",
   "icon": "/media/icon.png",
   "engines": {
@@ -36,6 +36,44 @@
           "contextualTitle": "SFCC DW Helper"
         }
       ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "SFCC DW Helper",
+      "properties": {
+        "sfcc-dw-helper.enableDevBuildBtn": {
+                "type": "boolean",
+                "default": false,
+                "markdownDescription": "Enable/Disable the button on sidebar with custom command for build code in **Development** compiler"
+        },
+        "sfcc-dw-helper.enablePrdBuildBtn": {
+                "type": "boolean",
+                "default": false,
+                "markdownDescription": "Enable/Disable the button on sidebar with custom command for build code in **Production** compiler"
+        },
+        "sfcc-dw-helper.commandDevBuildBtn": {
+          "type": "string",
+          "default": null,
+          "markdownDescription": "Command for build code in **Development** compiler"
+        },
+        "sfcc-dw-helper.commandPrdBuildBtn": {
+          "type": "string",
+          "default": null,
+          "markdownDescription": "Command for build code in **Production** compiler"
+        },
+        "sfcc-dw-helper.textDevBuildBtn": {
+          "type": "string",
+          "default": null,
+          "markdownDescription": "Text for the build code button in **Development** compiler",
+          "maxLength": 25
+        },
+        "sfcc-dw-helper.textPrdBuildBtn": {
+          "type": "string",
+          "default": null,
+          "markdownDescription": "Text for the build code button in **Production** compiler",
+          "maxLength": 25
+        }
+      }
     }
   },
   "scripts": {

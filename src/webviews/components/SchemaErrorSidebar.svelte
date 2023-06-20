@@ -44,13 +44,20 @@
     }
     
     div#main{
-       margin-top: 10px;
-       min-width: 350px;
+       margin-top: 10px; 
+       min-width: 250px;
+       padding-right: 20px;
     }
 
     #btnFix {
        margin-top: 20px; 
        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        min-width: 250px;
+        margin-top: 10px;
     }
     
 </style>
@@ -63,6 +70,6 @@
     <!-- svelte-ignore missing-declaration -->
     <button on:click={()=>{
         fixJsonFile();
-    }} id="btnFix" class="monaco-button monaco-text-button">Fix the dw.json</button>
+    }} id="btnFix" class="monaco-button monaco-text-button btn">Fix the dw.json</button>
 
 </div>

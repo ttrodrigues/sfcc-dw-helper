@@ -22,6 +22,20 @@ export class Sidebar implements vscode.WebviewViewProvider {
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
+    // Listener to changes in configuration options
+    vscode.workspace.onDidChangeConfiguration(event => {
+      const affectedEnableDevBuildBtn:boolean = event.affectsConfiguration("sfcc-dw-helper.enableDevBuildBtn");
+      const affectedEnablePrdBuildBtn:boolean = event.affectsConfiguration("sfcc-dw-helper.enablePrdBuildBtn");
+      const affectedCommandDevBuildBtn:boolean = event.affectsConfiguration("sfcc-dw-helper.commandDevBuildBtn");
+      const affectedCommandPrdBuildBtn:boolean = event.affectsConfiguration("sfcc-dw-helper.commandPrdBuildBtn");
+      const affectedTextDevBuildBtn:boolean = event.affectsConfiguration("sfcc-dw-helper.textDevBuildBtn");
+      const affectedTextPrdBuildBtn:boolean = event.affectsConfiguration("sfcc-dw-helper.textPrdBuildBtn");
+        
+      if (affectedEnableDevBuildBtn || affectedEnablePrdBuildBtn || affectedCommandDevBuildBtn || affectedCommandPrdBuildBtn || affectedTextDevBuildBtn || affectedTextPrdBuildBtn) {
+        webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);   
+      }
+    })
+
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
         case "onInfo": {
@@ -89,7 +103,19 @@ export class Sidebar implements vscode.WebviewViewProvider {
 
           break;
         }
-        
+
+        case "onBuild": {
+          if (!data.value) {
+            return;
+          } 
+
+          const terminal = vscode.window.createTerminal(Constants.TERMINAL_NAME);
+
+          terminal.sendText(data.value);
+          terminal.show();
+
+          break;
+        }        
       }
     });
   }
@@ -114,15 +140,29 @@ export class Sidebar implements vscode.WebviewViewProvider {
 
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce();
-    const readJson:any = formatJson();
 
+    // Get the value of each json field of the file 
+    const readJson:any = formatJson();
     const initUsername:string = readJson.username;
     const initPassword:string = readJson.password;
     const initHostname:string = readJson.hostname;
     const initCodeversion:string = readJson.codeversion;
 
+    // Check if Prophet extension is installed
     const allExtensions: readonly any[] = vscode.extensions.all;
     const isProphetInstall = allExtensions.some(e => e.id === Constants.PROPHET_ID_NAME);
+
+    // Check if the button for run Development compiler should be visible or not
+    const enableDevBuildBtn:boolean = vscode.workspace.getConfiguration('sfcc-dw-helper').enableDevBuildBtn;
+    const commandDevBuildBtn:string = vscode.workspace.getConfiguration('sfcc-dw-helper').commandDevBuildBtn;
+    const textDevBuildBtn:string = vscode.workspace.getConfiguration('sfcc-dw-helper').textDevBuildBtn;
+    const showDevBuildBtn:boolean = !!(enableDevBuildBtn && commandDevBuildBtn.length && textDevBuildBtn);
+
+    // Check if the button for run Production compiler should be visible or not
+    const enablePrdBuildBtn:boolean = vscode.workspace.getConfiguration('sfcc-dw-helper').enablePrdBuildBtn;
+    const commandPrdBuildBtn:string = vscode.workspace.getConfiguration('sfcc-dw-helper').commandPrdBuildBtn;
+    const textPrdBuildBtn:string = vscode.workspace.getConfiguration('sfcc-dw-helper').textPrdBuildBtn;
+    const showPrdBuildBtn:boolean = !!(enablePrdBuildBtn && commandPrdBuildBtn.length && textPrdBuildBtn);
 
     const htmlContent:string = `<!DOCTYPE html>
     <html lang="en">
@@ -147,6 +187,12 @@ export class Sidebar implements vscode.WebviewViewProvider {
       const initHostname ="${initHostname}";
       const initCodeversion ="${initCodeversion}";
       const isProphetInstall = ${isProphetInstall};
+      const showDevBuildBtn = ${showDevBuildBtn};
+      const commandDevBuildBtn = "${commandDevBuildBtn}";
+      const showPrdBuildBtn = ${showPrdBuildBtn};
+      const commandPrdBuildBtn = "${commandPrdBuildBtn}";
+      const textDevBuildBtn = "${textDevBuildBtn}";
+      const textPrdBuildBtn = "${textPrdBuildBtn}";
     </script>
     <body>
       <script nonce="${nonce}" src="${scriptUri}">

@@ -38,8 +38,15 @@
     }
 
     div#error{
-       margin-top: 10px;
-       min-width: 350px;
+       margin-top: 10px; 
+       min-width: 250px;
+       padding-right: 20px;
+    }
+
+    .btn {
+        width: 100%;
+        min-width: 250px;
+        margin-top: 10px;
     }
     
 </style>
@@ -57,6 +64,6 @@
             type: 'onCreateFile',
             value: 'dw.json'
         });
-    }} id="btnCreate" class="monaco-button monaco-text-button" disabled={isBtnDisabled}>{isBtnDisabled ? "Create a dw.json disabled for missing workspace" : "Create a dw.json"}</button>
+    }} id="btnCreate" class="monaco-button monaco-text-button btn" disabled={isBtnDisabled}>{isBtnDisabled ? "Create a dw.json disabled for missing workspace" : "Create a dw.json"}</button>
 
 </div>
