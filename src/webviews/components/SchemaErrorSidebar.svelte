@@ -58,6 +58,7 @@
         width: 100%;
         min-width: 250px;
         margin-top: 10px;
+        max-width: 350px;
     }
     
 </style>
