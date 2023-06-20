@@ -19,6 +19,8 @@ The extension validates the mandatory fields that the **dw.json** require to con
 
 The main commands **Clean Project/Upload All**, **Enable Upload** and **Disable Upload**, are present on the sidebar, for quick execution of them.
 
+For simplify the work of the developers, it's possible to enable until two custom buttons, configured on settings on section **SFCC DW Helper**. These buttons will only run terminal commands.
+
 &nbsp;
 
 &nbsp;
@@ -32,7 +34,7 @@ Edition of **dw.json** directly on the sidebar
 
 Possibility of hide and show the **password** field
 
-![](/media/password_show_hide_gif.gif)
+![](/media/password_feature.png)
 
 &nbsp;
 
@@ -45,6 +47,15 @@ The three **Prophet** commands present on sidebar, without requiring the executi
 JSON schema validation at start of the extension activation, when the sidebar **SFCC DW Helper** icon is clicked for the first time on a **VS Code** window. It check if all fields are of **string type** and if the field name is the correct. 
 
 ![](/media/schema_validation.png)
+
+&nbsp;
+
+Possibility to render until two buttons, for building code, per example, with custom label text and custom terminal commands, all configured on **Settings**, on **SFCC DW Helper** section.
+
+The button only will be rendering if the toggle is enabled and both text fields fulfilled.
+
+![](/media/settings_options.png)
+
 
 &nbsp;
 
