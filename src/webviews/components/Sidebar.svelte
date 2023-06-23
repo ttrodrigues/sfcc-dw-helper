@@ -18,6 +18,11 @@
     let textCommandPrdBuildBtn:string;
     let textLayoutPrdBuildBtn:string;
 
+    let codeversionConstant:string;
+    let hostnameConstant:string;
+
+
+
     
     // To change the visibility of password field
     let isPasswordVisible:boolean = false;   
@@ -40,6 +45,8 @@
         textCommandPrdBuildBtn = commandPrdBuildBtn;
         textLayoutDevBuildBtn = textDevBuildBtn;
         textLayoutPrdBuildBtn = textPrdBuildBtn;
+        codeversionConstant = codeversion;
+        hostnameConstant = hostname;
     }
     );
     
@@ -87,6 +94,20 @@
         tsvscode.postMessage({
             type: 'onBuild',
             value: option
+        });
+    }
+
+    const changeProperty = (input:string) => {        
+        tsvscode.postMessage({
+            type: 'onChangeProperty',
+            value: input
+        });
+    }
+
+    const clickBtnHistory = (property:string) => {
+        tsvscode.postMessage({
+            type: 'onShowQuickPick',
+            value: property
         });
     }
     
@@ -207,8 +228,9 @@
 <div id="main">
 
         <div>Hostname</div>
-        <input on:change={()=>{
+        <input on:change={(e)=>{
             changeJsonFile();
+            changeProperty(e.target.value);
         }} type="text" id="hostname">
     
         <div>Code Version</div>
@@ -272,4 +294,8 @@
             </div>
         {/if}
 
+        <button on:click={()=>{
+            clickBtnHistory(hostnameConstant);
+        }} class="btn-prophet monaco-button monaco-text-button">TESTE</button>
+    
 </div>

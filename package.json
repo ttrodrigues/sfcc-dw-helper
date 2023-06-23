@@ -72,6 +72,16 @@
           "default": null,
           "markdownDescription": "Text for the build code button in **Production** compiler",
           "maxLength": 25
+        },
+        "sfcc-dw-helper.hostnameHistory": {
+          "type": "array",
+          "default": null,
+          "markdownDescription": "History of last 10 introduced **hotsname**"
+        },
+        "sfcc-dw-helper.codeversionHistory": {
+          "type": "array",
+          "default": null,
+          "markdownDescription": "History of last 10 introduced **code version**"
         }
       }
     }

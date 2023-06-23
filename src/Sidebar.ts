@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
-import { formatJson } from "./helpers/helpers";
+import { formatJson, quickPick, updateProperty } from "./helpers/helpers";
 import { Constants } from "./helpers/constants"
 
 export class Sidebar implements vscode.WebviewViewProvider {
@@ -115,7 +115,55 @@ export class Sidebar implements vscode.WebviewViewProvider {
           terminal.show();
 
           break;
-        }        
+        }    
+
+        case "onChangeProperty": {
+          if (!data.value) {
+            return;
+          }  
+          
+          updateProperty(data.value);       
+
+          break;
+        }
+        
+        case "onShowQuickPick": {
+          if (!data.value) {
+            return;
+          } 
+
+          let items:any;
+          let titleText:string;
+
+
+          switch (data.value) {
+            case Constants.HOSTNAME: {
+              titleText = Constants.QUICKPICK_TITLE_HOSTNAME;
+              items = vscode.workspace.getConfiguration('sfcc-dw-helper').hostnameHistory;
+              
+              quickPick(items, titleText);
+              
+              break;
+            }
+              
+          
+            // case Constants.CODEVERSION: {
+
+
+            //   break;
+            // }
+            
+          }
+
+
+           
+            
+
+
+          break;
+
+          
+        }   
       }
     });
   }
@@ -164,6 +212,10 @@ export class Sidebar implements vscode.WebviewViewProvider {
     const textPrdBuildBtn:string = vscode.workspace.getConfiguration('sfcc-dw-helper').textPrdBuildBtn;
     const showPrdBuildBtn:boolean = !!(enablePrdBuildBtn && commandPrdBuildBtn.length && textPrdBuildBtn);
 
+    // History property names
+    const hostname:string = Constants.HOSTNAME;
+    const codeversion:string = Constants.CODEVERSION;
+
     const htmlContent:string = `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -193,6 +245,9 @@ export class Sidebar implements vscode.WebviewViewProvider {
       const commandPrdBuildBtn = "${commandPrdBuildBtn}";
       const textDevBuildBtn = "${textDevBuildBtn}";
       const textPrdBuildBtn = "${textPrdBuildBtn}";
+      const hostname = "${hostname}";
+      const codeversion = "${codeversion}";
+
     </script>
     <body>
       <script nonce="${nonce}" src="${scriptUri}">

@@ -105,6 +105,32 @@ class Sidebar {
                     terminal.show();
                     break;
                 }
+                case "onChangeProperty": {
+                    if (!data.value) {
+                        return;
+                    }
+                    (0, helpers_1.updateProperty)(data.value);
+                    break;
+                }
+                case "onShowQuickPick": {
+                    if (!data.value) {
+                        return;
+                    }
+                    let items;
+                    let titleText;
+                    switch (data.value) {
+                        case constants_1.Constants.HOSTNAME: {
+                            titleText = constants_1.Constants.QUICKPICK_TITLE_HOSTNAME;
+                            items = vscode.workspace.getConfiguration('sfcc-dw-helper').hostnameHistory;
+                            (0, helpers_1.quickPick)(items, titleText);
+                            break;
+                        }
+                        // case Constants.CODEVERSION: {
+                        //   break;
+                        // }
+                    }
+                    break;
+                }
             }
         });
     }
@@ -137,6 +163,9 @@ class Sidebar {
         const commandPrdBuildBtn = vscode.workspace.getConfiguration('sfcc-dw-helper').commandPrdBuildBtn;
         const textPrdBuildBtn = vscode.workspace.getConfiguration('sfcc-dw-helper').textPrdBuildBtn;
         const showPrdBuildBtn = !!(enablePrdBuildBtn && commandPrdBuildBtn.length && textPrdBuildBtn);
+        // History property names
+        const hostname = constants_1.Constants.HOSTNAME;
+        const codeversion = constants_1.Constants.CODEVERSION;
         const htmlContent = `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -164,6 +193,9 @@ class Sidebar {
       const commandPrdBuildBtn = "${commandPrdBuildBtn}";
       const textDevBuildBtn = "${textDevBuildBtn}";
       const textPrdBuildBtn = "${textPrdBuildBtn}";
+      const hostname = "${hostname}";
+      const codeversion = "${codeversion}";
+
     </script>
     <body>
       <script nonce="${nonce}" src="${scriptUri}">
@@ -200,7 +232,7 @@ exports.getNonce = getNonce;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.defaultJson = exports.validateJson = exports.formatJson = void 0;
+exports.updateProperty = exports.quickPick = exports.defaultJson = exports.validateJson = exports.formatJson = void 0;
 const vscode = __webpack_require__(1);
 const fs = __webpack_require__(5);
 function formatJson() {
@@ -240,6 +272,44 @@ function defaultJson() {
     return initialJson;
 }
 exports.defaultJson = defaultJson;
+async function quickPick(items, title) {
+    return new Promise((resolve) => {
+        const quickPick = vscode.window.createQuickPick();
+        quickPick.items = items.map((item) => ({ label: item }));
+        quickPick.title = title;
+        // quickPick.onDidChangeValue(() => {
+        //     // INJECT user values into proposed values
+        //     if (!items.includes(quickPick.value)) quickPick.items = [quickPick.value, ...items].map(label => ({ label }))
+        // })
+        quickPick.onDidAccept(() => {
+            const selection = quickPick.activeItems[0];
+            resolve(selection.label);
+            quickPick.hide();
+        });
+        quickPick.show();
+    });
+}
+exports.quickPick = quickPick;
+async function updateProperty(inputText) {
+    const currentProperty = vscode.workspace.getConfiguration('sfcc-dw-helper').hostnameHistory;
+    let newProperty = [];
+    let isRepeated;
+    if (currentProperty === null) {
+        newProperty.push(inputText);
+    }
+    else {
+        newProperty.push(...currentProperty);
+        isRepeated = newProperty.some((e) => e === inputText);
+        if (!isRepeated) {
+            newProperty.push(inputText);
+            if (currentProperty.length > 9) {
+                newProperty.shift();
+            }
+        }
+    }
+    await vscode.workspace.getConfiguration().update('sfcc-dw-helper.hostnameHistory', newProperty, vscode.ConfigurationTarget.Global);
+}
+exports.updateProperty = updateProperty;
 
 
 /***/ }),
@@ -2092,6 +2162,12 @@ var Constants;
     Constants.COMMAND_DISABLE_UPLOAD = 'extension.prophet.command.disable.upload';
     Constants.COMMAND_ENABLE_UPLOAD = 'extension.prophet.command.enable.upload';
     Constants.TERMINAL_NAME = 'Build Prophet';
+    Constants.QUICKPICK_TITLE_HOSTNAME = 'Choose the Hostname:';
+    Constants.QUICKPICK_TITLE_CODEVERSON = 'Choose the Code Version:';
+    Constants.HOSTNAME_HISTORY_PROPERTY = 'sfcc-dw-helper.hostnameHistory';
+    Constants.CODEVERSION_HISTORY_PROPERTY = 'sfcc-dw-helper.codeversionHistory';
+    Constants.HOSTNAME = 'hostname';
+    Constants.CODEVERSION = 'codeversion';
 })(Constants = exports.Constants || (exports.Constants = {}));
 
 
