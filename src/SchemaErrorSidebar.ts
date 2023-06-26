@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
+import { jsonPath } from "./helpers/helpers";
+import { Constants } from "./helpers/constants"
 
 export class SchemaErrorSidebar implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
@@ -44,16 +46,14 @@ export class SchemaErrorSidebar implements vscode.WebviewViewProvider {
                     
           const { writeFileSync } = require("fs");
 
-          //@ts-ignore
-          const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath
-          const path = `${rootFolder}/dw.json`;
+          const path = jsonPath();
           
           try {
             writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
-            vscode.commands.executeCommand("workbench.action.reloadWindow");
-            vscode.window.showInformationMessage(`The dw.json file was been fixed!`);
+            vscode.window.showInformationMessage(Constants.FIX_FILE_SUCCESS_MESSAGE);
+            vscode.commands.executeCommand("workbench.action.restartExtensionHost");
           } catch (error: any) {
-            vscode.window.showErrorMessage(`Error on fixing the dw.json file: `, error);            
+            vscode.window.showErrorMessage(Constants.FIX_FILE_ERROR_MESSAGE, error);            
           }      
 
           break;

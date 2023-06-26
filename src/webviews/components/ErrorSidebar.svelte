@@ -65,6 +65,6 @@
             type: 'onCreateFile',
             value: 'dw.json'
         });
-    }} id="btnCreate" class="monaco-button monaco-text-button btn" disabled={isBtnDisabled}>{isBtnDisabled ? "Create a dw.json disabled for missing workspace" : "Create a dw.json"}</button>
+    }} id="btnCreate" class="monaco-button monaco-text-button btn" disabled={isBtnDisabled}>Create a dw.json</button>
 
 </div>

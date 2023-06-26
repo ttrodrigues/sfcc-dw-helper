@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
-import { formatJson } from "./helpers/helpers";
+import { formatJson, defaultJson, updateProperty, jsonPath } from "./helpers/helpers";
 import { Constants } from "./helpers/constants"
 
 export class Sidebar implements vscode.WebviewViewProvider {
@@ -12,8 +12,31 @@ export class Sidebar implements vscode.WebviewViewProvider {
   
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
-    
 
+    const quickPick = (items:any, title:string, jsonField:string) => {
+      return new Promise(() => {
+          const quickPick = vscode.window.createQuickPick();
+          quickPick.items = items.map((item: any) => ({ label: item }));
+          
+          quickPick.title = title;
+                              
+          quickPick.onDidAccept(() => {
+              const selectionText = quickPick.activeItems[0].label;
+              const currentJson:any = defaultJson();
+              const { writeFileSync } = require("fs");
+              const path = jsonPath(); 
+  
+              currentJson[jsonField] = selectionText;        
+              writeFileSync(path, JSON.stringify(currentJson, null, 2), "utf8");
+              quickPick.hide();
+              webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);     
+              
+          })
+          quickPick.show();
+        }
+      )
+    }
+    
     webviewView.webview.options = {
       // Allow scripts in the webview
       enableScripts: true,
@@ -59,16 +82,13 @@ export class Sidebar implements vscode.WebviewViewProvider {
           } 
 
           const { writeFileSync } = require("fs");
-
-          //@ts-ignore
-          const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath
-          const path = `${rootFolder}/dw.json`; 
+          const path = jsonPath(); 
 
           try {
             writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
             webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
           } catch (error: any) {
-            vscode.window.showErrorMessage(`Error when updating dw.json file: `, error);            
+            vscode.window.showErrorMessage(Constants.UPDATE_FILE_ERROR_MESSAGE, error);            
           }         
 
           break;
@@ -115,7 +135,53 @@ export class Sidebar implements vscode.WebviewViewProvider {
           terminal.show();
 
           break;
-        }        
+        }    
+
+        case "onChangeProperty": {
+          if (!data.value) {
+            return;
+          }  
+          
+          updateProperty(data.value[0], data.value[1]);       
+
+          break;
+        }
+
+        case "onShowQuickPick": {
+          if (!data.value) {
+            return;
+          } 
+
+          let items:any;
+         
+          switch (data.value) {
+            case Constants.HOSTNAME: {
+              items = vscode.workspace.getConfiguration('sfcc-dw-helper').hostnameHistory;
+              
+              if (items !== null) {
+                quickPick(items, Constants.QUICKPICK_TITLE_HOSTNAME, Constants.HOSTNAME);
+              } else {
+                vscode.window.showInformationMessage(Constants.HOSTNAME_INFO_MESSAGE);
+              }
+              
+              break;
+            }
+
+            case Constants.CODEVERSION: {
+              items = vscode.workspace.getConfiguration('sfcc-dw-helper').codeversionHistory;
+              
+              if (items !== null) {
+                quickPick(items, Constants.QUICKPICK_TITLE_CODEVERSON, Constants.CODEVERSION);
+              } else {
+                vscode.window.showInformationMessage(Constants.CODEVERSION_INFO_MESSAGE);
+              }
+
+              break;
+            }            
+          }     
+
+          break;          
+        }   
       }
     });
   }
@@ -164,6 +230,14 @@ export class Sidebar implements vscode.WebviewViewProvider {
     const textPrdBuildBtn:string = vscode.workspace.getConfiguration('sfcc-dw-helper').textPrdBuildBtn;
     const showPrdBuildBtn:boolean = !!(enablePrdBuildBtn && commandPrdBuildBtn.length && textPrdBuildBtn);
 
+    // Flag of history property names
+    const hostname:string = Constants.HOSTNAME;
+    const codeversion:string = Constants.CODEVERSION;
+
+    // Hstory property names
+    const hostnameHistoryPropertyShort:string = Constants.HOSTNAME_HISTORY_PROPERTY_SHORT;
+    const codeversionHistoryPropertyShort:string = Constants.CODEVERSION_HISTORY_PROPERTY_SHORT;
+
     const htmlContent:string = `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -193,6 +267,10 @@ export class Sidebar implements vscode.WebviewViewProvider {
       const commandPrdBuildBtn = "${commandPrdBuildBtn}";
       const textDevBuildBtn = "${textDevBuildBtn}";
       const textPrdBuildBtn = "${textPrdBuildBtn}";
+      const hostname = "${hostname}";
+      const codeversion = "${codeversion}";
+      const hostnameHistoryPropertyShort = "${hostnameHistoryPropertyShort}";
+      const codeversionHistoryPropertyShort = "${codeversionHistoryPropertyShort}";
     </script>
     <body>
       <script nonce="${nonce}" src="${scriptUri}">

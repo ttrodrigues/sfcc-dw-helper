@@ -24,6 +24,24 @@ class Sidebar {
     }
     resolveWebviewView(webviewView) {
         this._view = webviewView;
+        const quickPick = (items, title, jsonField) => {
+            return new Promise(() => {
+                const quickPick = vscode.window.createQuickPick();
+                quickPick.items = items.map((item) => ({ label: item }));
+                quickPick.title = title;
+                quickPick.onDidAccept(() => {
+                    const selectionText = quickPick.activeItems[0].label;
+                    const currentJson = (0, helpers_1.defaultJson)();
+                    const { writeFileSync } = __webpack_require__(5);
+                    const path = (0, helpers_1.jsonPath)();
+                    currentJson[jsonField] = selectionText;
+                    writeFileSync(path, JSON.stringify(currentJson, null, 2), "utf8");
+                    quickPick.hide();
+                    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+                });
+                quickPick.show();
+            });
+        };
         webviewView.webview.options = {
             // Allow scripts in the webview
             enableScripts: true,
@@ -63,15 +81,13 @@ class Sidebar {
                         return;
                     }
                     const { writeFileSync } = __webpack_require__(5);
-                    //@ts-ignore
-                    const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-                    const path = `${rootFolder}/dw.json`;
+                    const path = (0, helpers_1.jsonPath)();
                     try {
                         writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
                         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
                     }
                     catch (error) {
-                        vscode.window.showErrorMessage(`Error when updating dw.json file: `, error);
+                        vscode.window.showErrorMessage(constants_1.Constants.UPDATE_FILE_ERROR_MESSAGE, error);
                     }
                     break;
                 }
@@ -103,6 +119,42 @@ class Sidebar {
                     const terminal = vscode.window.createTerminal(constants_1.Constants.TERMINAL_NAME);
                     terminal.sendText(data.value);
                     terminal.show();
+                    break;
+                }
+                case "onChangeProperty": {
+                    if (!data.value) {
+                        return;
+                    }
+                    (0, helpers_1.updateProperty)(data.value[0], data.value[1]);
+                    break;
+                }
+                case "onShowQuickPick": {
+                    if (!data.value) {
+                        return;
+                    }
+                    let items;
+                    switch (data.value) {
+                        case constants_1.Constants.HOSTNAME: {
+                            items = vscode.workspace.getConfiguration('sfcc-dw-helper').hostnameHistory;
+                            if (items !== null) {
+                                quickPick(items, constants_1.Constants.QUICKPICK_TITLE_HOSTNAME, constants_1.Constants.HOSTNAME);
+                            }
+                            else {
+                                vscode.window.showInformationMessage(constants_1.Constants.HOSTNAME_INFO_MESSAGE);
+                            }
+                            break;
+                        }
+                        case constants_1.Constants.CODEVERSION: {
+                            items = vscode.workspace.getConfiguration('sfcc-dw-helper').codeversionHistory;
+                            if (items !== null) {
+                                quickPick(items, constants_1.Constants.QUICKPICK_TITLE_CODEVERSON, constants_1.Constants.CODEVERSION);
+                            }
+                            else {
+                                vscode.window.showInformationMessage(constants_1.Constants.CODEVERSION_INFO_MESSAGE);
+                            }
+                            break;
+                        }
+                    }
                     break;
                 }
             }
@@ -137,6 +189,12 @@ class Sidebar {
         const commandPrdBuildBtn = vscode.workspace.getConfiguration('sfcc-dw-helper').commandPrdBuildBtn;
         const textPrdBuildBtn = vscode.workspace.getConfiguration('sfcc-dw-helper').textPrdBuildBtn;
         const showPrdBuildBtn = !!(enablePrdBuildBtn && commandPrdBuildBtn.length && textPrdBuildBtn);
+        // Flag of history property names
+        const hostname = constants_1.Constants.HOSTNAME;
+        const codeversion = constants_1.Constants.CODEVERSION;
+        // Hstory property names
+        const hostnameHistoryPropertyShort = constants_1.Constants.HOSTNAME_HISTORY_PROPERTY_SHORT;
+        const codeversionHistoryPropertyShort = constants_1.Constants.CODEVERSION_HISTORY_PROPERTY_SHORT;
         const htmlContent = `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -164,6 +222,10 @@ class Sidebar {
       const commandPrdBuildBtn = "${commandPrdBuildBtn}";
       const textDevBuildBtn = "${textDevBuildBtn}";
       const textPrdBuildBtn = "${textPrdBuildBtn}";
+      const hostname = "${hostname}";
+      const codeversion = "${codeversion}";
+      const hostnameHistoryPropertyShort = "${hostnameHistoryPropertyShort}";
+      const codeversionHistoryPropertyShort = "${codeversionHistoryPropertyShort}";
     </script>
     <body>
       <script nonce="${nonce}" src="${scriptUri}">
@@ -200,13 +262,11 @@ exports.getNonce = getNonce;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.defaultJson = exports.validateJson = exports.formatJson = void 0;
+exports.jsonPath = exports.updateProperty = exports.defaultJson = exports.validateJson = exports.formatJson = void 0;
 const vscode = __webpack_require__(1);
 const fs = __webpack_require__(5);
 function formatJson() {
-    //@ts-ignore
-    const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-    const path = `${rootFolder}/dw.json`;
+    const path = jsonPath();
     //@ts-ignore
     const initialJson = JSON.parse(fs.readFileSync(path));
     const stringifyJson = JSON.stringify(initialJson);
@@ -232,14 +292,39 @@ function validateJson(json) {
 }
 exports.validateJson = validateJson;
 function defaultJson() {
-    //@ts-ignore
-    const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-    const path = `${rootFolder}/dw.json`;
+    const path = jsonPath();
     //@ts-ignore
     const initialJson = JSON.parse(fs.readFileSync(path));
     return initialJson;
 }
 exports.defaultJson = defaultJson;
+async function updateProperty(inputText, property) {
+    const currentProperty = vscode.workspace.getConfiguration('sfcc-dw-helper').get(property);
+    let newProperty = [];
+    let isRepeated;
+    if (currentProperty === null) {
+        newProperty.push(inputText);
+    }
+    else {
+        newProperty.push(...currentProperty);
+        isRepeated = newProperty.some((e) => e === inputText);
+        if (!isRepeated) {
+            newProperty.push(inputText);
+            if (currentProperty.length > 9) {
+                newProperty.shift();
+            }
+        }
+    }
+    await vscode.workspace.getConfiguration().update(`sfcc-dw-helper.${property}`, newProperty, vscode.ConfigurationTarget.Global);
+}
+exports.updateProperty = updateProperty;
+function jsonPath() {
+    //@ts-ignore
+    const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+    const path = `${rootFolder}/dw.json`;
+    return path;
+}
+exports.jsonPath = jsonPath;
 
 
 /***/ }),
@@ -2092,6 +2177,21 @@ var Constants;
     Constants.COMMAND_DISABLE_UPLOAD = 'extension.prophet.command.disable.upload';
     Constants.COMMAND_ENABLE_UPLOAD = 'extension.prophet.command.enable.upload';
     Constants.TERMINAL_NAME = 'Build Prophet';
+    Constants.QUICKPICK_TITLE_HOSTNAME = 'Select the Hostname';
+    Constants.QUICKPICK_TITLE_CODEVERSON = 'Select the Code Version';
+    Constants.HOSTNAME_HISTORY_PROPERTY = 'sfcc-dw-helper.hostnameHistory';
+    Constants.CODEVERSION_HISTORY_PROPERTY = 'sfcc-dw-helper.codeversionHistory';
+    Constants.HOSTNAME = 'hostname';
+    Constants.CODEVERSION = 'code-version';
+    Constants.HOSTNAME_HISTORY_PROPERTY_SHORT = 'hostnameHistory';
+    Constants.CODEVERSION_HISTORY_PROPERTY_SHORT = 'codeversionHistory';
+    Constants.HOSTNAME_INFO_MESSAGE = 'No Hostname history present on settings';
+    Constants.CODEVERSION_INFO_MESSAGE = 'No Code Version history present on settings';
+    Constants.UPDATE_FILE_ERROR_MESSAGE = 'Error when updating dw.json file: ';
+    Constants.CREATE_FILE_ERROR_MESSAGE = 'Error when creating dw.json file: ';
+    Constants.CREATE_FILE_SUCCESS_MESSAGE = 'Created a dw.json file on this project folder';
+    Constants.FIX_FILE_ERROR_MESSAGE = 'Error on fixing the dw.json file: ';
+    Constants.FIX_FILE_SUCCESS_MESSAGE = 'The dw.json file was been fixed';
 })(Constants = exports.Constants || (exports.Constants = {}));
 
 
@@ -2104,6 +2204,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ErrorSidebar = void 0;
 const vscode = __webpack_require__(1);
 const getNonce_1 = __webpack_require__(3);
+const helpers_1 = __webpack_require__(4);
+const constants_1 = __webpack_require__(12);
 class ErrorSidebar {
     constructor(_extensionUri) {
         this._extensionUri = _extensionUri;
@@ -2137,9 +2239,7 @@ class ErrorSidebar {
                         return;
                     }
                     const { writeFileSync } = __webpack_require__(5);
-                    //@ts-ignore
-                    const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-                    const path = `${rootFolder}/dw.json`;
+                    const path = (0, helpers_1.jsonPath)();
                     const jsonContent = {
                         "hostname": "",
                         "username": "",
@@ -2148,11 +2248,11 @@ class ErrorSidebar {
                     };
                     try {
                         writeFileSync(path, JSON.stringify(jsonContent, null, 2), "utf8");
-                        vscode.commands.executeCommand("workbench.action.reloadWindow");
-                        vscode.window.showInformationMessage(`Created a ${data.value} on this project folder`);
+                        vscode.window.showInformationMessage(constants_1.Constants.CREATE_FILE_SUCCESS_MESSAGE);
+                        vscode.commands.executeCommand("workbench.action.restartExtensionHost");
                     }
                     catch (error) {
-                        vscode.window.showErrorMessage(`Error when creating ${data.value} file: `, error);
+                        vscode.window.showErrorMessage(constants_1.Constants.CREATE_FILE_ERROR_MESSAGE, error);
                     }
                     break;
                 }
@@ -2207,6 +2307,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SchemaErrorSidebar = void 0;
 const vscode = __webpack_require__(1);
 const getNonce_1 = __webpack_require__(3);
+const helpers_1 = __webpack_require__(4);
+const constants_1 = __webpack_require__(12);
 class SchemaErrorSidebar {
     constructor(_extensionUri) {
         this._extensionUri = _extensionUri;
@@ -2240,16 +2342,14 @@ class SchemaErrorSidebar {
                         return;
                     }
                     const { writeFileSync } = __webpack_require__(5);
-                    //@ts-ignore
-                    const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
-                    const path = `${rootFolder}/dw.json`;
+                    const path = (0, helpers_1.jsonPath)();
                     try {
                         writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
-                        vscode.commands.executeCommand("workbench.action.reloadWindow");
-                        vscode.window.showInformationMessage(`The dw.json file was been fixed!`);
+                        vscode.window.showInformationMessage(constants_1.Constants.FIX_FILE_SUCCESS_MESSAGE);
+                        vscode.commands.executeCommand("workbench.action.restartExtensionHost");
                     }
                     catch (error) {
-                        vscode.window.showErrorMessage(`Error on fixing the dw.json file: `, error);
+                        vscode.window.showErrorMessage(constants_1.Constants.FIX_FILE_ERROR_MESSAGE, error);
                     }
                     break;
                 }

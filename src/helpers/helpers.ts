@@ -2,9 +2,7 @@ import * as vscode from "vscode";
 import * as fs from 'fs';
 
 export function formatJson () {   
-    //@ts-ignore
-    const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath
-    const path = `${rootFolder}/dw.json`; 
+    const path = jsonPath(); 
     //@ts-ignore
     const initialJson = JSON.parse(fs.readFileSync(path));
 
@@ -34,11 +32,42 @@ export function validateJson (json:any) {
 }
 
 export function defaultJson () {   
-    //@ts-ignore
-    const rootFolder:string = vscode.workspace.workspaceFolders[0].uri.fsPath
-    const path = `${rootFolder}/dw.json`; 
+    const path = jsonPath(); 
     //@ts-ignore
     const initialJson:any = JSON.parse(fs.readFileSync(path));
 
     return initialJson;
 }
+
+export async function updateProperty (inputText:string, property:string) {
+    const currentProperty:any = vscode.workspace.getConfiguration('sfcc-dw-helper').get(property);
+    let newProperty:any = [];
+    let isRepeated:boolean;
+    
+    if (currentProperty === null) {
+        newProperty.push(inputText);
+    } else {
+        newProperty.push(...currentProperty);
+        isRepeated = newProperty.some((e:string) => e === inputText);
+
+        if (!isRepeated) {
+            newProperty.push(inputText);
+            
+            if (currentProperty.length > 9) {
+                newProperty.shift();
+            }
+        }
+
+    }
+
+    await vscode.workspace.getConfiguration().update(`sfcc-dw-helper.${property}`, newProperty, vscode.ConfigurationTarget.Global);
+}
+
+export function jsonPath () {   
+    //@ts-ignore
+    const rootFolder:string = vscode.workspace.workspaceFolders[0].uri.fsPath
+    const path:string = `${rootFolder}/dw.json`; 
+   
+    return path;
+}
+

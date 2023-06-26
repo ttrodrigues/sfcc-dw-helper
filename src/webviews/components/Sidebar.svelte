@@ -5,6 +5,8 @@
     import { onMount } from 'svelte';
     import ShowIcon from './ShowIcon.svelte';
     import HideIcon from './HideIcon.svelte';
+    import History from './History.svelte';
+    import CollapsibleSection from './CollapsibleSection.svelte';
 
     let componentSelected:svelteHTML = ShowIcon;
 
@@ -18,6 +20,11 @@
     let textCommandPrdBuildBtn:string;
     let textLayoutPrdBuildBtn:string;
 
+    let codeversionConstant:string;
+    let hostnameConstant:string;
+
+    let codeversionPropertyShort:string;
+    let hostnamePropertyShort:string;
     
     // To change the visibility of password field
     let isPasswordVisible:boolean = false;   
@@ -40,6 +47,10 @@
         textCommandPrdBuildBtn = commandPrdBuildBtn;
         textLayoutDevBuildBtn = textDevBuildBtn;
         textLayoutPrdBuildBtn = textPrdBuildBtn;
+        codeversionConstant = codeversion;
+        hostnameConstant = hostname;
+        codeversionPropertyShort = codeversionHistoryPropertyShort;
+        hostnamePropertyShort = hostnameHistoryPropertyShort;
     }
     );
     
@@ -89,6 +100,20 @@
             value: option
         });
     }
+
+    const changeProperty = (input:string, property:string) => {        
+        tsvscode.postMessage({
+            type: 'onChangeProperty',
+            value: [input, property]
+        });
+    }
+
+    const clickBtnHistory = (property:string) => {
+        tsvscode.postMessage({
+            type: 'onShowQuickPick',
+            value: property
+        });
+    }
     
     function buttonClick() {
         isPasswordVisible = !isPasswordVisible;
@@ -135,36 +160,31 @@
     }
     
     div#main{
-       margin-top: 10px; 
-       min-width: 250px;
-       padding-right: 20px;
+       min-width: 360px;
+       margin-top: 5px;
     }
     #hostname {
-       margin-top: 5px; 
-       margin-bottom: 20px; 
+       margin-bottom: 10px; 
        width: 100%;
-       max-width: 350px;
+       max-width: 325px;
     }
     #codeVersion {
-       margin-top: 5px; 
-       margin-bottom: 20px; 
+       margin-bottom: 10px; 
        width: 100%;
        max-width: 200px;
     }
     #userName {
-       margin-top: 5px; 
-       margin-bottom: 20px; 
+       margin-bottom: 10px; 
        width: 100%;
        max-width: 200px; 
     }
     #password {
-       margin-top: 5px; 
-       margin-bottom: 20px; 
+       margin-bottom: 10px; 
        width: 100%;
        max-width: 200px;
     }
     
-    #btnSvg {
+    #btnSvgPassword {
        width: 28px;
        height: 28px;
        left: 225px;
@@ -174,17 +194,47 @@
        margin-top: 6px;
     }
 
-    #btnSvg:hover {
+    #btnSvgPassword:hover {
+        background-color: transparent;
+    }
+
+    #btnSvgHostname {
+       width: 28px;
+       height: 28px;
+       left: 350px;
+       position: absolute;
+       color: transparent;
+       background-color: transparent;
+       margin-top: 6px;
+    }
+
+    #btnSvgHostname:hover {
+        background-color: transparent;
+    }
+
+    #btnSvgCodeversion {
+       width: 28px;
+       height: 28px;
+       left: 225px;
+       position: absolute;
+       color: transparent;
+       background-color: transparent;
+       margin-top: 6px;
+    }
+
+    #btnSvgCodeversion:hover {
         background-color: transparent;
     }
 
     #prophetBtn {
-        margin-top: 20px; 
         margin-bottom: 20px; 
     }
     
     #commandsBtn {
-        margin-top: 20px; 
+        margin-bottom: 20px; 
+    }
+
+    #environmentBtns {
         margin-bottom: 20px; 
     }
 
@@ -202,38 +252,71 @@
         max-width: 350px;
     }
 
+    .textInput {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 4px 0 0;
+        margin: 0;
+        font-size: 11px;
+        font-weight: 400;
+    }
+
 </style>       
 
 <div id="main">
 
-        <div>Hostname</div>
-        <input on:change={()=>{
-            changeJsonFile();
-        }} type="text" id="hostname">
-    
-        <div>Code Version</div>
-        <input on:change={()=>{
-            changeJsonFile();
-        }} type="text" id="codeVersion">
-    
-        <div>User Name</div>
-        <input on:change={()=>{
-            changeJsonFile();
-        }} type="text" id="userName">
-    
-        <div>
-            <div>Password</div>
+    <CollapsibleSection headerText={'Environment'} expanded={true}>
+        <div id="environmentBtns">
+            <div>
+                <div class="textInput">Hostname</div>
+                <input on:change={(e)=>{
+                    changeProperty(e.target.value, hostnamePropertyShort);
+                    changeJsonFile();
+                }} type="text" id="hostname">
+        
+                <svelte:component this={History} />
+                <button id="btnSvgHostname" on:click={()=>{
+                    clickBtnHistory(hostnameConstant);
+                }}></button>  
+        
+            </div>
+        
+            <div>
+                <div class="textInput">Code Version</div>
+                <input on:change={(e)=>{
+                    changeProperty(e.target.value, codeversionPropertyShort);
+                    changeJsonFile();
+                }} type="text" id="codeVersion">
+            
+                <svelte:component this={History} />
+                <button id="btnSvgCodeversion" on:click={()=>{
+                    clickBtnHistory(codeversionConstant);
+                }}></button>  
+        
+            </div>
+        
+            <div class="textInput">User Name</div>
             <input on:change={()=>{
                 changeJsonFile();
-            }} type={isPasswordVisible ? "text" : "password"} id="password">
+            }} type="text" id="userName">
         
-            <svelte:component this={componentSelected} />
-            <button id="btnSvg" on:click={()=>{
-                buttonClick()
-            }}></button>            
+            <div>
+                <div class="textInput">Password</div>
+                <input on:change={()=>{
+                    changeJsonFile();
+                }} type={isPasswordVisible ? "text" : "password"} id="password">
+            
+                <svelte:component this={componentSelected} />
+                <button id="btnSvgPassword" on:click={()=>{
+                    buttonClick()
+                }}></button>            
+            </div>   
         </div>
-
-        {#if isProphetInstalled}
+    </CollapsibleSection>
+        
+    {#if isProphetInstalled}
+        <CollapsibleSection headerText={'Compiler'} expanded={true}>
             <div id="commandsBtn">
                 {#if isToShowDevBuildBtn}
                     <div>
@@ -250,26 +333,34 @@
                         }} class="btn-build monaco-button monaco-text-button">{textLayoutPrdBuildBtn}</button>
                     </div>
                 {/if}
-            </div>
+            </div>            
+        </CollapsibleSection>
+
+        <CollapsibleSection headerText={'Commands'} expanded={true}>
             <div id="prophetBtn">
                 <div>
                     <button on:click={()=>{
                         clickBtnCleanUpload();
                     }} class="btn-prophet monaco-button monaco-text-button">Clean Project / Upload All</button>                    
                 </div>
-
+    
                 <div>
                     <button on:click={()=>{
                         clickBtnEnableUpload();
                     }} class="btn-prophet monaco-button monaco-text-button">Enable Upload</button>
                 </div>
-
+    
                 <div>
                     <button on:click={()=>{
                         clickBtnDisableUpload();
                     }} class="btn-prophet monaco-button monaco-text-button">Disable Upload</button>
                 </div>
-            </div>
-        {/if}
-
+            </div>        
+        </CollapsibleSection>    
+    {/if}
+        
 </div>
+
+
+
+
