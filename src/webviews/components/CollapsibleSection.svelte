@@ -22,7 +22,7 @@
 <style>
   .collapsible {
     line-height: 22px; 
-    color: var(--vscode-sideBarSectionHeader-foreground); 
+    color: var(--vscode-icon-foreground); 
     background-color: var(--vscode-sideBarSectionHeader-background); 
     border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
   }
@@ -33,7 +33,7 @@
 	
   button {
     background-color: var(--vscode-sideBarSectionHeader-background);
-    color: var(--vscode-sideBarSectionHeader-foreground);
+    color: var(--vscode-icon-foreground);
     display: flex;
 		justify-content: space-between;
     width: 100%;

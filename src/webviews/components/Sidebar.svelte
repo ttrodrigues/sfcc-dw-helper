@@ -162,6 +162,7 @@
     div#main{
        min-width: 385px;
        padding-right: 20px;
+       margin-top: 5px;
     }
     #hostname {
        margin-top: 5px; 

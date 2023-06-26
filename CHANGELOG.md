@@ -1,4 +1,9 @@
 # Change Log
+
+## [0.0.13]
+
+- Minor fixes on sidebar collapse feature
+
 ## [0.0.12]
 
 - Implementation of history for **Hostname** and **Code Version** fields
