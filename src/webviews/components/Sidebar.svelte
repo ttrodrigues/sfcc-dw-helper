@@ -6,6 +6,7 @@
     import ShowIcon from './ShowIcon.svelte';
     import HideIcon from './HideIcon.svelte';
     import History from './History.svelte';
+    import CollapsibleSection from './CollapsibleSection.svelte';
 
     let componentSelected:svelteHTML = ShowIcon;
 
@@ -159,7 +160,6 @@
     }
     
     div#main{
-       margin-top: 10px; 
        min-width: 385px;
        padding-right: 20px;
     }
@@ -231,12 +231,14 @@
     }
 
     #prophetBtn {
-        margin-top: 20px; 
         margin-bottom: 20px; 
     }
     
     #commandsBtn {
-        margin-top: 20px; 
+        margin-bottom: 20px; 
+    }
+
+    #environmentBtns {
         margin-bottom: 20px; 
     }
 
@@ -258,52 +260,57 @@
 
 <div id="main">
 
-        <div>
-            <div>Hostname</div>
-            <input on:change={(e)=>{
-                changeProperty(e.target.value, hostnamePropertyShort);
-                changeJsonFile();
-            }} type="text" id="hostname">
-
-            <svelte:component this={History} />
-            <button id="btnSvgHostname" on:click={()=>{
-                clickBtnHistory(hostnameConstant);
-            }}></button>  
-
-        </div>
-
-        <div>
-            <div>Code Version</div>
-            <input on:change={(e)=>{
-                changeProperty(e.target.value, codeversionPropertyShort);
-                changeJsonFile();
-            }} type="text" id="codeVersion">
+    <CollapsibleSection headerText={'Environment'} expanded={true}>
+        <div id="environmentBtns">
+            <div>
+                <div>Hostname</div>
+                <input on:change={(e)=>{
+                    changeProperty(e.target.value, hostnamePropertyShort);
+                    changeJsonFile();
+                }} type="text" id="hostname">
         
-            <svelte:component this={History} />
-            <button id="btnSvgCodeversion" on:click={()=>{
-                clickBtnHistory(codeversionConstant);
-            }}></button>  
-
-        </div>
-
-        <div>User Name</div>
-        <input on:change={()=>{
-            changeJsonFile();
-        }} type="text" id="userName">
-    
-        <div>
-            <div>Password</div>
+                <svelte:component this={History} />
+                <button id="btnSvgHostname" on:click={()=>{
+                    clickBtnHistory(hostnameConstant);
+                }}></button>  
+        
+            </div>
+        
+            <div>
+                <div>Code Version</div>
+                <input on:change={(e)=>{
+                    changeProperty(e.target.value, codeversionPropertyShort);
+                    changeJsonFile();
+                }} type="text" id="codeVersion">
+            
+                <svelte:component this={History} />
+                <button id="btnSvgCodeversion" on:click={()=>{
+                    clickBtnHistory(codeversionConstant);
+                }}></button>  
+        
+            </div>
+        
+            <div>User Name</div>
             <input on:change={()=>{
                 changeJsonFile();
-            }} type={isPasswordVisible ? "text" : "password"} id="password">
+            }} type="text" id="userName">
         
-            <svelte:component this={componentSelected} />
-            <button id="btnSvgPassword" on:click={()=>{
-                buttonClick()
-            }}></button>            
+            <div>
+                <div>Password</div>
+                <input on:change={()=>{
+                    changeJsonFile();
+                }} type={isPasswordVisible ? "text" : "password"} id="password">
+            
+                <svelte:component this={componentSelected} />
+                <button id="btnSvgPassword" on:click={()=>{
+                    buttonClick()
+                }}></button>            
+            </div>   
         </div>
-
-        {#if isProphetInstalled}
+    </CollapsibleSection>
+        
+    {#if isProphetInstalled}
+        <CollapsibleSection headerText={'Compiler'} expanded={true}>
             <div id="commandsBtn">
                 {#if isToShowDevBuildBtn}
                     <div>
@@ -320,25 +327,34 @@
                         }} class="btn-build monaco-button monaco-text-button">{textLayoutPrdBuildBtn}</button>
                     </div>
                 {/if}
-            </div>
+            </div>            
+        </CollapsibleSection>
+
+        <CollapsibleSection headerText={'Commands'} expanded={true}>
             <div id="prophetBtn">
                 <div>
                     <button on:click={()=>{
                         clickBtnCleanUpload();
                     }} class="btn-prophet monaco-button monaco-text-button">Clean Project / Upload All</button>                    
                 </div>
-
+    
                 <div>
                     <button on:click={()=>{
                         clickBtnEnableUpload();
                     }} class="btn-prophet monaco-button monaco-text-button">Enable Upload</button>
                 </div>
-
+    
                 <div>
                     <button on:click={()=>{
                         clickBtnDisableUpload();
                     }} class="btn-prophet monaco-button monaco-text-button">Disable Upload</button>
                 </div>
-            </div>
+            </div>        
+        </CollapsibleSection>    
         {/if}
+        
 </div>
+
+
+
+

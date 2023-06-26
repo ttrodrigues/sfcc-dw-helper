@@ -378,11 +378,6 @@ var app = (function () {
     	let p2;
     	let t5;
     	let button;
-
-    	let t6_value = (/*isBtnDisabled*/ ctx[0]
-    	? "Create a dw.json disabled for missing workspace"
-    	: "Create a dw.json") + "";
-
     	let t6;
     	let mounted;
     	let dispose;
@@ -400,7 +395,7 @@ var app = (function () {
     			p2.textContent = "Otherwise,the button will be disabled until a workspace has been open.";
     			t5 = space();
     			button = element("button");
-    			t6 = text(t6_value);
+    			t6 = text("Create a dw.json");
     			add_location(p0, file, 55, 4, 1116);
     			add_location(p1, file, 56, 4, 1192);
     			add_location(p2, file, 57, 4, 1301);
