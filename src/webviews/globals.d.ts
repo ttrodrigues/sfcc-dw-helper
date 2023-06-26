@@ -1,9 +1,6 @@
 import * as vscode from 'vscode';
+import type WebViewApi from '@types/vscode-webview';
 
-declare global {
-    const tsvscode: {
-        postMessage: ({type: string, value:any}) => void;
-        getState: () => object;
-        setState: ({ text:string }) => object
-    }
-}
+global {
+    declare const tsvscode: WebViewApi<unknown>;
+  }

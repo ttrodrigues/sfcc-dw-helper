@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
+import { jsonPath } from "./helpers/helpers";
+import { Constants } from "./helpers/constants"
 
 export class ErrorSidebar implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
@@ -43,9 +45,7 @@ export class ErrorSidebar implements vscode.WebviewViewProvider {
                     
           const { writeFileSync } = require("fs");
 
-          //@ts-ignore
-          const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath
-          const path = `${rootFolder}/dw.json`;
+          const path = jsonPath();
           
           const jsonContent = {
             "hostname": "",
@@ -56,10 +56,10 @@ export class ErrorSidebar implements vscode.WebviewViewProvider {
 
           try {
             writeFileSync(path, JSON.stringify(jsonContent, null, 2), "utf8");
-            vscode.commands.executeCommand("workbench.action.reloadWindow");
-            vscode.window.showInformationMessage(`Created a ${data.value} on this project folder`);
+            vscode.window.showInformationMessage(Constants.CREATE_FILE_SUCCESS_MESSAGE);
+            vscode.commands.executeCommand("workbench.action.restartExtensionHost");
           } catch (error: any) {
-            vscode.window.showErrorMessage(`Error when creating ${data.value} file: `, error);            
+            vscode.window.showErrorMessage(Constants.CREATE_FILE_ERROR_MESSAGE, error);            
           }         
           break;
         }

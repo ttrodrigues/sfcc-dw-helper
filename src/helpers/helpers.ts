@@ -1,12 +1,8 @@
 import * as vscode from "vscode";
 import * as fs from 'fs';
-import { Constants } from "./constants"
-
 
 export function formatJson () {   
-    //@ts-ignore
-    const rootFolder = vscode.workspace.workspaceFolders[0].uri.fsPath
-    const path = `${rootFolder}/dw.json`; 
+    const path = jsonPath(); 
     //@ts-ignore
     const initialJson = JSON.parse(fs.readFileSync(path));
 
@@ -36,38 +32,15 @@ export function validateJson (json:any) {
 }
 
 export function defaultJson () {   
-    //@ts-ignore
-    const rootFolder:string = vscode.workspace.workspaceFolders[0].uri.fsPath
-    const path = `${rootFolder}/dw.json`; 
+    const path = jsonPath(); 
     //@ts-ignore
     const initialJson:any = JSON.parse(fs.readFileSync(path));
 
     return initialJson;
 }
 
-export async function quickPick (items:any, title:string) {
-    return new Promise((resolve) => {
-        const quickPick = vscode.window.createQuickPick();
-        quickPick.items = items.map((item: any) => ({ label: item }));
-
-        quickPick.title = title;
-
-        // quickPick.onDidChangeValue(() => {
-        //     // INJECT user values into proposed values
-        //     if (!items.includes(quickPick.value)) quickPick.items = [quickPick.value, ...items].map(label => ({ label }))
-        // })
-
-        quickPick.onDidAccept(() => {
-            const selection = quickPick.activeItems[0]
-            resolve(selection.label)
-            quickPick.hide()
-        })
-        quickPick.show();
-    })
-}
-
-export async function updateProperty (inputText:string) {
-    const currentProperty:any = vscode.workspace.getConfiguration('sfcc-dw-helper').hostnameHistory;
+export async function updateProperty (inputText:string, property:string) {
+    const currentProperty:any = vscode.workspace.getConfiguration('sfcc-dw-helper').get(property);
     let newProperty:any = [];
     let isRepeated:boolean;
     
@@ -87,7 +60,14 @@ export async function updateProperty (inputText:string) {
 
     }
 
-    await vscode.workspace.getConfiguration().update('sfcc-dw-helper.hostnameHistory', newProperty, vscode.ConfigurationTarget.Global);
+    await vscode.workspace.getConfiguration().update(`sfcc-dw-helper.${property}`, newProperty, vscode.ConfigurationTarget.Global);
 }
 
+export function jsonPath () {   
+    //@ts-ignore
+    const rootFolder:string = vscode.workspace.workspaceFolders[0].uri.fsPath
+    const path:string = `${rootFolder}/dw.json`; 
+   
+    return path;
+}
 

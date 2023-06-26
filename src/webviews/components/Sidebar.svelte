@@ -5,6 +5,7 @@
     import { onMount } from 'svelte';
     import ShowIcon from './ShowIcon.svelte';
     import HideIcon from './HideIcon.svelte';
+    import History from './History.svelte';
 
     let componentSelected:svelteHTML = ShowIcon;
 
@@ -21,8 +22,8 @@
     let codeversionConstant:string;
     let hostnameConstant:string;
 
-
-
+    let codeversionPropertyShort:string;
+    let hostnamePropertyShort:string;
     
     // To change the visibility of password field
     let isPasswordVisible:boolean = false;   
@@ -47,6 +48,8 @@
         textLayoutPrdBuildBtn = textPrdBuildBtn;
         codeversionConstant = codeversion;
         hostnameConstant = hostname;
+        codeversionPropertyShort = codeversionHistoryPropertyShort;
+        hostnamePropertyShort = hostnameHistoryPropertyShort;
     }
     );
     
@@ -97,10 +100,10 @@
         });
     }
 
-    const changeProperty = (input:string) => {        
+    const changeProperty = (input:string, property:string) => {        
         tsvscode.postMessage({
             type: 'onChangeProperty',
-            value: input
+            value: [input, property]
         });
     }
 
@@ -157,7 +160,7 @@
     
     div#main{
        margin-top: 10px; 
-       min-width: 250px;
+       min-width: 385px;
        padding-right: 20px;
     }
     #hostname {
@@ -185,7 +188,7 @@
        max-width: 200px;
     }
     
-    #btnSvg {
+    #btnSvgPassword {
        width: 28px;
        height: 28px;
        left: 225px;
@@ -195,7 +198,35 @@
        margin-top: 6px;
     }
 
-    #btnSvg:hover {
+    #btnSvgPassword:hover {
+        background-color: transparent;
+    }
+
+    #btnSvgHostname {
+       width: 28px;
+       height: 28px;
+       left: 375px;
+       position: absolute;
+       color: transparent;
+       background-color: transparent;
+       margin-top: 6px;
+    }
+
+    #btnSvgHostname:hover {
+        background-color: transparent;
+    }
+
+    #btnSvgCodeversion {
+       width: 28px;
+       height: 28px;
+       left: 225px;
+       position: absolute;
+       color: transparent;
+       background-color: transparent;
+       margin-top: 6px;
+    }
+
+    #btnSvgCodeversion:hover {
         background-color: transparent;
     }
 
@@ -227,17 +258,34 @@
 
 <div id="main">
 
-        <div>Hostname</div>
-        <input on:change={(e)=>{
-            changeJsonFile();
-            changeProperty(e.target.value);
-        }} type="text" id="hostname">
-    
-        <div>Code Version</div>
-        <input on:change={()=>{
-            changeJsonFile();
-        }} type="text" id="codeVersion">
-    
+        <div>
+            <div>Hostname</div>
+            <input on:change={(e)=>{
+                changeProperty(e.target.value, hostnamePropertyShort);
+                changeJsonFile();
+            }} type="text" id="hostname">
+
+            <svelte:component this={History} />
+            <button id="btnSvgHostname" on:click={()=>{
+                clickBtnHistory(hostnameConstant);
+            }}></button>  
+
+        </div>
+
+        <div>
+            <div>Code Version</div>
+            <input on:change={(e)=>{
+                changeProperty(e.target.value, codeversionPropertyShort);
+                changeJsonFile();
+            }} type="text" id="codeVersion">
+        
+            <svelte:component this={History} />
+            <button id="btnSvgCodeversion" on:click={()=>{
+                clickBtnHistory(codeversionConstant);
+            }}></button>  
+
+        </div>
+
         <div>User Name</div>
         <input on:change={()=>{
             changeJsonFile();
@@ -250,7 +298,7 @@
             }} type={isPasswordVisible ? "text" : "password"} id="password">
         
             <svelte:component this={componentSelected} />
-            <button id="btnSvg" on:click={()=>{
+            <button id="btnSvgPassword" on:click={()=>{
                 buttonClick()
             }}></button>            
         </div>
@@ -293,9 +341,4 @@
                 </div>
             </div>
         {/if}
-
-        <button on:click={()=>{
-            clickBtnHistory(hostnameConstant);
-        }} class="btn-prophet monaco-button monaco-text-button">TESTE</button>
-    
 </div>

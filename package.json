@@ -42,14 +42,14 @@
       "title": "SFCC DW Helper",
       "properties": {
         "sfcc-dw-helper.enableDevBuildBtn": {
-                "type": "boolean",
-                "default": false,
-                "markdownDescription": "Enable/Disable the button on sidebar with custom command for build code in **Development** compiler"
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable/Disable the button on sidebar with custom command for build code in **Development** compiler"
         },
         "sfcc-dw-helper.enablePrdBuildBtn": {
-                "type": "boolean",
-                "default": false,
-                "markdownDescription": "Enable/Disable the button on sidebar with custom command for build code in **Production** compiler"
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable/Disable the button on sidebar with custom command for build code in **Production** compiler"
         },
         "sfcc-dw-helper.commandDevBuildBtn": {
           "type": "string",
@@ -76,12 +76,12 @@
         "sfcc-dw-helper.hostnameHistory": {
           "type": "array",
           "default": null,
-          "markdownDescription": "History of last 10 introduced **hotsname**"
+          "markdownDescription": "History of last 10 introduced **Hotsname**"
         },
         "sfcc-dw-helper.codeversionHistory": {
           "type": "array",
           "default": null,
-          "markdownDescription": "History of last 10 introduced **code version**"
+          "markdownDescription": "History of last 10 introduced **Code Version**"
         }
       }
     }
@@ -133,6 +133,7 @@
     "webpack-cli": "^4.2.0"
   },
   "dependencies": {
+    "@types/vscode-webview": "^1.57.1",
     "btoa": "^1.2.1",
     "date-fns": "^2.16.1",
     "jsonschema": "^1.4.1",
