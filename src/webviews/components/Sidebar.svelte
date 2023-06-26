@@ -351,7 +351,7 @@
                 </div>
             </div>        
         </CollapsibleSection>    
-        {/if}
+    {/if}
         
 </div>
 

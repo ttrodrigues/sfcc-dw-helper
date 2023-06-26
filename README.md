@@ -56,11 +56,15 @@ The button only will be rendering if the toggle is enabled and both text fields 
 
 ![](/media/settings_options.png)
 
+&nbsp;
+
+The history of **Hostname** and **Code Version** inputted data, will be saved on **settings.json** on an arrays (**Hostname History** and **Codeversion History** respectively)
+
+![](/media/history_settings.png)
 
 &nbsp;
 
 &nbsp;
 
 ## Next developments
-* Possibility to save the **hostname** and **codeversion** introduced by user
-* Integrate more **Prophet** commands, if seems necessary
+* Possibility of integrate more **Prophet** commands dynamically
