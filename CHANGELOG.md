@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.0.14]
+
+- Minor fixes on sidebar layout
+
 ## [0.0.13]
 
 - Minor fixes on sidebar collapse feature

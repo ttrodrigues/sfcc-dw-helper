@@ -160,31 +160,26 @@
     }
     
     div#main{
-       min-width: 385px;
-       padding-right: 20px;
+       min-width: 360px;
        margin-top: 5px;
     }
     #hostname {
-       margin-top: 5px; 
-       margin-bottom: 20px; 
+       margin-bottom: 10px; 
        width: 100%;
-       max-width: 350px;
+       max-width: 325px;
     }
     #codeVersion {
-       margin-top: 5px; 
-       margin-bottom: 20px; 
+       margin-bottom: 10px; 
        width: 100%;
        max-width: 200px;
     }
     #userName {
-       margin-top: 5px; 
-       margin-bottom: 20px; 
+       margin-bottom: 10px; 
        width: 100%;
        max-width: 200px; 
     }
     #password {
-       margin-top: 5px; 
-       margin-bottom: 20px; 
+       margin-bottom: 10px; 
        width: 100%;
        max-width: 200px;
     }
@@ -206,7 +201,7 @@
     #btnSvgHostname {
        width: 28px;
        height: 28px;
-       left: 375px;
+       left: 350px;
        position: absolute;
        color: transparent;
        background-color: transparent;
@@ -257,6 +252,16 @@
         max-width: 350px;
     }
 
+    .textInput {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 4px 0 0;
+        margin: 0;
+        font-size: 11px;
+        font-weight: 400;
+    }
+
 </style>       
 
 <div id="main">
@@ -264,7 +269,7 @@
     <CollapsibleSection headerText={'Environment'} expanded={true}>
         <div id="environmentBtns">
             <div>
-                <div>Hostname</div>
+                <div class="textInput">Hostname</div>
                 <input on:change={(e)=>{
                     changeProperty(e.target.value, hostnamePropertyShort);
                     changeJsonFile();
@@ -278,7 +283,7 @@
             </div>
         
             <div>
-                <div>Code Version</div>
+                <div class="textInput">Code Version</div>
                 <input on:change={(e)=>{
                     changeProperty(e.target.value, codeversionPropertyShort);
                     changeJsonFile();
@@ -291,13 +296,13 @@
         
             </div>
         
-            <div>User Name</div>
+            <div class="textInput">User Name</div>
             <input on:change={()=>{
                 changeJsonFile();
             }} type="text" id="userName">
         
             <div>
-                <div>Password</div>
+                <div class="textInput">Password</div>
                 <input on:change={()=>{
                     changeJsonFile();
                 }} type={isPasswordVisible ? "text" : "password"} id="password">
