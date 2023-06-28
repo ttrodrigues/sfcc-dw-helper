@@ -22,18 +22,19 @@
 <style>
   .collapsible {
     line-height: 22px; 
-    color: var(--vscode-icon-foreground); 
-    background-color: var(--vscode-sideBarSectionHeader-background); 
-    border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
+    color: var(--vscode-icon-foreground);
   }
 	
 	h3 {
-		margin: 0;
+		margin-left: -20px;
+    margin-right: -20px;
+    margin-top: 0;
+    margin-bottom: 0;
 	}
 	
   button {
     background-color: var(--vscode-sideBarSectionHeader-background);
-    color: var(--vscode-icon-foreground);
+    color: var(--vscode-sideBarSectionHeader-foreground, var(--vscode-foreground));
     display: flex;
 		justify-content: space-between;
     width: 100%;
@@ -48,6 +49,9 @@
     font-weight: bold;
     padding: 0;
     cursor: pointer;
+    align-items: center;
+    padding-left: 20px;
+    margin-bottom: 0;
   }
 
   button[aria-expanded="true"] .openSection {
@@ -59,13 +63,14 @@
   }
 
   svg {
-    height: 16px;
-    width: 16px;
+    height: 22px;
+    width: 17px;
   }
 
   .svgIcon {
     left: 3px;
     position: fixed;
+    padding-top: 3px;
   }
 </style>
 

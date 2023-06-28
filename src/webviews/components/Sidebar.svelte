@@ -126,6 +126,7 @@
     :global(body) {
         font-family: Segoe WPC,Segoe UI,sans-serif;
         font-size: 13px;
+        padding-right: 20px;
     }
 
     input {
@@ -227,15 +228,15 @@
     }
 
     #prophetBtn {
-        margin-bottom: 20px; 
+        margin-bottom: 10px; 
     }
     
     #commandsBtn {
-        margin-bottom: 20px; 
+        margin-bottom: 10px; 
     }
 
     #environmentBtns {
-        margin-bottom: 20px; 
+        margin-bottom: 10px; 
     }
 
     .btn-prophet {
