@@ -1,4 +1,14 @@
 # Change Log
+## [0.0.17]
+
+- Minor fixes
+## [0.0.16]
+
+- Refactoring code
+
+## [0.0.15]
+
+- Minor fixes on sidebar layout
 
 ## [0.0.14]
 
