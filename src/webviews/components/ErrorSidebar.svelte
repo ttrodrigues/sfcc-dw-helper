@@ -55,7 +55,7 @@
 <div id="error">
 
     <p>This folder do not has a dw.json file or is not a SFCC project!</p>
-    <p>If you already have a workspace open, please click on bellow button to create anew dw.json file.</p>
+    <p>If you already have a workspace open, please click on bellow button to create a new dw.json file.</p>
     <p>Otherwise,the button will be disabled until a workspace has been open.</p>
 
 

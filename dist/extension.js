@@ -125,7 +125,8 @@ class Sidebar {
                     if (!data.value) {
                         return;
                     }
-                    (0, helpers_1.updateProperty)(data.value[0], data.value[1]);
+                    const [input, property] = data.value;
+                    (0, helpers_1.updateProperty)(input, property);
                     break;
                 }
                 case "onShowQuickPick": {

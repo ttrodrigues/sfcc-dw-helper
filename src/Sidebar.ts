@@ -142,7 +142,9 @@ export class Sidebar implements vscode.WebviewViewProvider {
             return;
           }  
           
-          updateProperty(data.value[0], data.value[1]);       
+          const [input, property]:any = data.value;
+
+          updateProperty(input, property);       
 
           break;
         }

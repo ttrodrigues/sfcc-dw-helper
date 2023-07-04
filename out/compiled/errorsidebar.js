@@ -389,7 +389,7 @@ var app = (function () {
     			p0.textContent = "This folder do not has a dw.json file or is not a SFCC project!";
     			t1 = space();
     			p1 = element("p");
-    			p1.textContent = "If you already have a workspace open, please click on bellow button to create anew dw.json file.";
+    			p1.textContent = "If you already have a workspace open, please click on bellow button to create a new dw.json file.";
     			t3 = space();
     			p2 = element("p");
     			p2.textContent = "Otherwise,the button will be disabled until a workspace has been open.";
@@ -398,11 +398,11 @@ var app = (function () {
     			t6 = text("Create a dw.json");
     			add_location(p0, file, 55, 4, 1116);
     			add_location(p1, file, 56, 4, 1192);
-    			add_location(p2, file, 57, 4, 1301);
+    			add_location(p2, file, 57, 4, 1302);
     			attr_dev(button, "id", "btnCreate");
     			attr_dev(button, "class", "monaco-button monaco-text-button btn svelte-1fgb5mx");
     			button.disabled = /*isBtnDisabled*/ ctx[0];
-    			add_location(button, file, 61, 4, 1436);
+    			add_location(button, file, 61, 4, 1437);
     			attr_dev(div, "id", "error");
     			attr_dev(div, "class", "svelte-1fgb5mx");
     			add_location(div, file, 53, 0, 1092);
