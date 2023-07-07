@@ -68,19 +68,13 @@ export class SchemaErrorSidebar implements vscode.WebviewViewProvider {
   }
 
   private _getHtmlForWebview(webview: vscode.Webview) {
-    const styleResetUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "out/compiled", "reset.css")
-    );
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "out/compiled", "schemaerrorsidebar.js")
     );
     const styleMainUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "out/compiled", "schemaerrorsidebar.css")
     );
-    const styleVSCodeUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "out/compiled", "vscode.css")
-    );
-
+    
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce();
     
@@ -96,8 +90,6 @@ export class SchemaErrorSidebar implements vscode.WebviewViewProvider {
     webview.cspSource
   }; script-src 'nonce-${nonce}';">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link href="${styleResetUri}" rel="stylesheet">
-      <link href="${styleVSCodeUri}" rel="stylesheet">
       <link href="${styleMainUri}" rel="stylesheet">
     </head>
     <script nonce="${nonce}">
