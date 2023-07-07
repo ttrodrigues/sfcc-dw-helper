@@ -54,6 +54,10 @@
     margin-bottom: 0;
   }
 
+  button:focus {
+      outline: none;
+  }
+
   button[aria-expanded="true"] .openSection {
       display: none;
   }

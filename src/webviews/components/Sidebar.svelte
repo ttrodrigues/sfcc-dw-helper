@@ -127,6 +127,7 @@
         font-family: Segoe WPC,Segoe UI,sans-serif;
         font-size: 13px;
         padding-right: 20px;
+        overflow-x: hidden;
     }
 
     input {
@@ -139,7 +140,7 @@
 
     input:focus{
         outline-offset: -1px;
-        outline-color: var(--vscode-focusBorder);
+        outline-color: var(--vscode-input-foreground);
     }
 
     button {
@@ -155,44 +156,42 @@
         background-color: var(--vscode-button-hoverBackground);
     }
 
-    button:focus{
-        outline-offset: -1px;
-        outline-color: var(--vscode-focusBorder);
-    }
+    button:focus {
+      outline: none;
+  }
     
     div#main{
-       min-width: 360px;
+       min-width: 315px;
        margin-top: 5px;
     }
     #hostname {
        margin-bottom: 10px; 
        width: 100%;
-       max-width: 325px;
+       width: 285px;
     }
     #codeVersion {
        margin-bottom: 10px; 
        width: 100%;
-       max-width: 200px;
+       width: 285px;
     }
     #userName {
        margin-bottom: 10px; 
        width: 100%;
-       max-width: 200px; 
+       width: 285px; 
     }
     #password {
        margin-bottom: 10px; 
        width: 100%;
-       max-width: 200px;
+       width: 285px;
     }
     
     #btnSvgPassword {
        width: 28px;
        height: 28px;
-       left: 225px;
+       left: 310px;
        position: absolute;
        color: transparent;
        background-color: transparent;
-       margin-top: 6px;
     }
 
     #btnSvgPassword:hover {
@@ -202,11 +201,10 @@
     #btnSvgHostname {
        width: 28px;
        height: 28px;
-       left: 350px;
+       left: 310px;
        position: absolute;
        color: transparent;
        background-color: transparent;
-       margin-top: 6px;
     }
 
     #btnSvgHostname:hover {
@@ -216,11 +214,28 @@
     #btnSvgCodeversion {
        width: 28px;
        height: 28px;
-       left: 225px;
+       left: 310px;
        position: absolute;
        color: transparent;
        background-color: transparent;
-       margin-top: 6px;
+    }
+
+    #svgLogoHistoryHostname {
+        left: 313px;
+        position: absolute;
+        top: 47px;
+    }
+
+    #svgLogoHistoryCodeversion {
+        left: 313px;
+        position: absolute;
+        top: 113px;
+    }
+
+    #svgLogoPassword {
+        left: 313px;
+        position: absolute;
+        top: 245px;
     }
 
     #btnSvgCodeversion:hover {
@@ -241,16 +256,14 @@
 
     .btn-prophet {
         width: 100%;
-        min-width: 250px;
+        width: 315px;
         margin-top: 10px;
-        max-width: 350px;
     }
 
     .btn-build {
         width: 100%;
-        min-width: 250px;
+        width: 315px;
         margin-top: 10px;
-        max-width: 350px;
     }
 
     .textInput {
@@ -276,7 +289,10 @@
                     changeJsonFile();
                 }} type="text" id="hostname">
         
-                <svelte:component this={History} />
+                <div id="svgLogoHistoryHostname">
+                    <svelte:component this={History} />
+                </div>
+
                 <button id="btnSvgHostname" on:click={()=>{
                     clickBtnHistory(hostnameConstant);
                 }}></button>  
@@ -289,8 +305,11 @@
                     changeProperty(e.target.value, codeversionPropertyShort);
                     changeJsonFile();
                 }} type="text" id="codeVersion">
-            
-                <svelte:component this={History} />
+                        
+                <div id="svgLogoHistoryCodeversion">
+                    <svelte:component this={History} />
+                </div>
+
                 <button id="btnSvgCodeversion" on:click={()=>{
                     clickBtnHistory(codeversionConstant);
                 }}></button>  
@@ -308,7 +327,10 @@
                     changeJsonFile();
                 }} type={isPasswordVisible ? "text" : "password"} id="password">
             
-                <svelte:component this={componentSelected} />
+                <div id="svgLogoPassword">
+                    <svelte:component this={componentSelected} />
+                </div>
+
                 <button id="btnSvgPassword" on:click={()=>{
                     buttonClick()
                 }}></button>            
