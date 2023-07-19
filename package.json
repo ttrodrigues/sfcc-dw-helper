@@ -3,7 +3,7 @@
   "displayName": "SFCC DW Helper",
   "publisher": "ttrodrigues",
   "description": "Helper for dw.json file usage to connect to an SFCC environment",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "license": "Open source",
   "icon": "/media/icon.png",
   "engines": {
@@ -81,7 +81,17 @@
         "sfcc-dw-helper.codeversionHistory": {
           "type": "array",
           "default": null,
-          "markdownDescription": "History of last 10 introduced **Code Version**"
+          "markdownDescription": "History of last 20 introduced **Code Version**"
+        },
+        "sfcc-dw-helper.ocapiClientId": {
+          "type": "string",
+          "default": null,
+          "markdownDescription": "Value of the **OCAPI** Client Id"
+        },
+        "sfcc-dw-helper.ocapiClientPassword": {
+          "type": "string",
+          "default": null,
+          "markdownDescription": "Value of the **OCAPI** Client Password"
         }
       }
     }
@@ -134,6 +144,7 @@
   },
   "dependencies": {
     "@types/vscode-webview": "^1.57.1",
+    "axios": "^1.4.0",
     "btoa": "^1.2.1",
     "date-fns": "^2.16.1",
     "jsonschema": "^1.4.1",

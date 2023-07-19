@@ -1,4 +1,7 @@
 # Change Log
+## [0.0.19]
+
+- Add the functionality to get the Code Versions of the current hostname
 ## [0.0.18]
 
 - Layout fixes
