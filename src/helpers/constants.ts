@@ -6,6 +6,7 @@ export namespace Constants {
     export const TERMINAL_NAME = 'Build Prophet';
     export const QUICKPICK_TITLE_HOSTNAME = 'Select the Hostname';
     export const QUICKPICK_TITLE_CODEVERSON = 'Select the Code Version';
+    export const QUICKPICK_TITLE_CODEVERSON_REMOTE = 'Select the Code Version from';
     export const HOSTNAME_HISTORY_PROPERTY = 'sfcc-dw-helper.hostnameHistory';
     export const CODEVERSION_HISTORY_PROPERTY = 'sfcc-dw-helper.codeversionHistory';
     export const HOSTNAME = 'hostname';
@@ -19,4 +20,13 @@ export namespace Constants {
     export const CREATE_FILE_SUCCESS_MESSAGE = 'Created a dw.json file on this project folder';
     export const FIX_FILE_ERROR_MESSAGE = 'Error on fixing the dw.json file: ';
     export const FIX_FILE_SUCCESS_MESSAGE = 'The dw.json file was been fixed';
+    export const URL_GET_TOKEN = '/dw/oauth2/access_token';
+    export const URL_PREFIX = 'https://';
+    export const URL_HEADER_AUTHORIZATION = 'Basic ';
+    export const URL_GRANT_TYPE = 'urn:demandware:params:oauth:grant-type:client-id:dwsid:dwsecuretoken';
+    export const URL_CONTENT_TYPE = 'application/x-www-form-urlencoded';
+    export const URL_GET_CODEVERSIONS = '/s/-/dw/data/v19_1/code_versions';
+    export const CLIENT_PASSWORD_ERROR = 'Please confirm your OCAPI Client Password on extension Settings';
+    export const REMOTE_CODEVERSIONS_ERROR = 'Error to get the environment Code Versions. It will use the extension settings option.';
+    export const CODEVERSIONS_ACTIVE = '(Active)';
 }

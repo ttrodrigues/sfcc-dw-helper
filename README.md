@@ -64,6 +64,33 @@ The history of **Hostname** and **Code Version** inputted data, will be saved on
 
 &nbsp;
 
+Possibility to connect to **SalesForce Commerce Cloud**, via **OCAPI**, to get all **Code Versions** of the environment configured on **dw.json**. All necessary fields, **Client ID** and **Client Password** should be fulfilled to an successful connection to the environment.
+For more information, the [**SalesForce Commerce Cloud** documentation can be accessed here](https://documentation.b2c.commercecloud.salesforce.com/DOC1/topic/com.demandware.dochelp/OCAPI/current/usage/OAuth.html?cp=0_17_2_24).
+
+![](/media/ocapi_settings.png)
+
+&nbsp;
+
+In your environment, should be configured the **GET** method to **Code Versions**. On **Business Manager**, search by **OCAPI** settings,* later select the **Data API** and include the following object on your **Client ID** configuration:
+```json
+ {
+    "resource_id": "/code_versions",
+    "methods": [
+        "get"
+    ],
+    "read_attributes": "(**)",
+    "write_attributes": "(**)"
+}
+```
+With this feature you can see the current active **Code Version** on the environment. When an **Code Version** is choose, this onewill be saved on your **Codeversion History**, like the original feature. 
+In case of any error to get the **Code Versions** via **OCAPI**, the original feature of access to **Codeversion History** will be automatically set.
+
+For more information, please see the [**SalesForce Commerce Cloud** documentation can be accessed here](https://documentation.b2c.commercecloud.salesforce.com/DOC1/topic/com.demandware.dochelp/OCAPI/current/data/Resources/CodeVersions.html?cp=0_17_4_11) 
+
+![](/media/get_codeversions_ocapi.png)
+
+&nbsp;
+
 &nbsp;
 
 ## Next developments

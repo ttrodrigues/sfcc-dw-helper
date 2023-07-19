@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
-import { formatJson, defaultJson, updateProperty, jsonPath } from "./helpers/helpers";
+import { formatJson, defaultJson, updateProperty, jsonPath, formatConfigurationCodeVersionArray, ocapiGetCodeVersions } from "./helpers/helpers";
 import { Constants } from "./helpers/constants"
 
 export class Sidebar implements vscode.WebviewViewProvider {
@@ -13,15 +13,16 @@ export class Sidebar implements vscode.WebviewViewProvider {
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
 
-    const quickPick = (items:any, title:string, jsonField:string) => {
+    const quickPick = (items:any, title:string, jsonField:string, propertyChange:any) => {
       return new Promise(() => {
           const quickPick = vscode.window.createQuickPick();
-          quickPick.items = items.map((item: any) => ({ label: item }));
+          quickPick.items = items.map((item: any) => ({ label: item.displayName, id: item.id }));
           
           quickPick.title = title;
                               
           quickPick.onDidAccept(() => {
-              const selectionText = quickPick.activeItems[0].label;
+              //@ts-ignore
+              const selectionText = quickPick.activeItems[0].id;
               const currentJson:any = defaultJson();
               const { writeFileSync } = require("fs");
               const path = jsonPath(); 
@@ -29,7 +30,12 @@ export class Sidebar implements vscode.WebviewViewProvider {
               currentJson[jsonField] = selectionText;        
               writeFileSync(path, JSON.stringify(currentJson, null, 2), "utf8");
               quickPick.hide();
-              webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);     
+              webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);  
+              
+               // On scenario of getting Code Versions on remote environment, will be update the array of CodeversionsHistory 
+               if (propertyChange) {
+                 updateProperty(selectionText, propertyChange); 
+               }
               
           })
           quickPick.show();
@@ -159,9 +165,10 @@ export class Sidebar implements vscode.WebviewViewProvider {
           switch (data.value) {
             case Constants.HOSTNAME: {
               items = vscode.workspace.getConfiguration('sfcc-dw-helper').hostnameHistory;
+              const formattedItems:any = formatConfigurationCodeVersionArray(items);
               
-              if (items !== null) {
-                quickPick(items, Constants.QUICKPICK_TITLE_HOSTNAME, Constants.HOSTNAME);
+              if (formattedItems !== null) {
+                quickPick(formattedItems, Constants.QUICKPICK_TITLE_HOSTNAME, Constants.HOSTNAME, null);
               } else {
                 vscode.window.showInformationMessage(Constants.HOSTNAME_INFO_MESSAGE);
               }
@@ -171,12 +178,36 @@ export class Sidebar implements vscode.WebviewViewProvider {
 
             case Constants.CODEVERSION: {
               items = vscode.workspace.getConfiguration('sfcc-dw-helper').codeversionHistory;
-              
-              if (items !== null) {
-                quickPick(items, Constants.QUICKPICK_TITLE_CODEVERSON, Constants.CODEVERSION);
+              const formattedItems:any = formatConfigurationCodeVersionArray(items);
+
+              const environmentItems = await ocapiGetCodeVersions();
+
+              if (!environmentItems.error) {
+
+                const json:any = defaultJson();
+                const title:string = `${Constants.QUICKPICK_TITLE_CODEVERSON_REMOTE} ${json.hostname}`; 
+
+                quickPick(environmentItems, title, Constants.CODEVERSION,Constants.CODEVERSION_HISTORY_PROPERTY_SHORT);  
+
               } else {
-                vscode.window.showInformationMessage(Constants.CODEVERSION_INFO_MESSAGE);
-              }
+
+                if (formattedItems !== null) {
+
+                  const clientId:any = vscode.workspace.getConfiguration('sfcc-dw-helper').get('ocapiClientId');
+                  const clientPassword:any = vscode.workspace.getConfiguration('sfcc-dw-helper').get('ocapiClientPassword');
+
+                  if (clientId.length && clientPassword.length) {
+                    vscode.window.showInformationMessage(Constants.REMOTE_CODEVERSIONS_ERROR);
+                  }
+
+                  quickPick(formattedItems, Constants.QUICKPICK_TITLE_CODEVERSON, Constants.CODEVERSION, null);
+
+                } else {
+
+                  vscode.window.showInformationMessage(Constants.CODEVERSION_INFO_MESSAGE);
+                  
+                }
+              }              
 
               break;
             }            
