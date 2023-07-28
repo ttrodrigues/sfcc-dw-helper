@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
-import { formatJson, defaultJson, updateProperty, jsonPath, formatConfigurationCodeVersionArray, ocapiGetCodeVersions } from "./helpers/helpers";
+import { formatJson, defaultJson, updateProperty, jsonPath, formatConfigurationCodeVersionArray, ocapiGetCodeVersions, ocapiActiveCodeVersion, quickPickSelectItemDelete, inputboxCreateItem } from "./helpers/helpers";
 import { Constants } from "./helpers/constants"
 
 export class Sidebar implements vscode.WebviewViewProvider {
@@ -13,33 +13,43 @@ export class Sidebar implements vscode.WebviewViewProvider {
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
 
-    const quickPick = (items:any, title:string, jsonField:string, propertyChange:any) => {
+    const quickPickSelectItem = (items:any, title:string, jsonField:string, propertyChange:any, remoteAccess:boolean) => {
       return new Promise(() => {
-          const quickPick = vscode.window.createQuickPick();
-          quickPick.items = items.map((item: any) => ({ label: item.displayName, id: item.id }));
+        const quickPick = vscode.window.createQuickPick();
+        quickPick.items = items.map((item: any) => ({ label: item.displayName, id: item.id }));
+        
+        quickPick.title = title;
+                            
+        quickPick.onDidAccept(async () => {
+          //@ts-ignore
+          const selectionText = quickPick.activeItems[0].id;
+          const currentJson:any = defaultJson();
+          const { writeFileSync } = require("fs");
+          const path = jsonPath(); 
+
+          currentJson[jsonField] = selectionText;        
+          writeFileSync(path, JSON.stringify(currentJson, null, 2), "utf8");
+          quickPick.hide();
+          webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);  
           
-          quickPick.title = title;
-                              
-          quickPick.onDidAccept(() => {
-              //@ts-ignore
-              const selectionText = quickPick.activeItems[0].id;
-              const currentJson:any = defaultJson();
-              const { writeFileSync } = require("fs");
-              const path = jsonPath(); 
-  
-              currentJson[jsonField] = selectionText;        
-              writeFileSync(path, JSON.stringify(currentJson, null, 2), "utf8");
-              quickPick.hide();
-              webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);  
-              
-               // On scenario of getting Code Versions on remote environment, will be update the array of CodeversionsHistory 
-               if (propertyChange) {
-                 updateProperty(selectionText, propertyChange); 
-               }
-              
-          })
-          quickPick.show();
-        }
+          // Only runs in scenario of getting Code Versions on remote environment, will activate the Code Version on environment
+          if (remoteAccess) {
+
+              // On scenario of getting Code Versions on remote environment, will be update the array of CodeversionsHistory 
+              if (propertyChange) {
+                  updateProperty(selectionText, propertyChange); 
+              }
+
+              const ocapiCall:any = await ocapiActiveCodeVersion(selectionText);
+
+              if (!ocapiCall.error) {
+                  vscode.window.showInformationMessage(Constants.CODEVERSION_SUCCESS_FIRST + selectionText + Constants.ACTIVE_CODEVERSION_SUCCESS_SECOND + currentJson.hostname);
+              }
+          }
+            
+        })
+        quickPick.show();
+      }
       )
     }
     
@@ -74,6 +84,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
           vscode.window.showInformationMessage(data.value);
           break;
         }
+
         case "onError": {
           if (!data.value) {
             return;
@@ -94,7 +105,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
             writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
             webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
           } catch (error: any) {
-            vscode.window.showErrorMessage(Constants.UPDATE_FILE_ERROR_MESSAGE, error);            
+            vscode.window.showInformationMessage(Constants.UPDATE_FILE_ERROR_MESSAGE, error);            
           }         
 
           break;
@@ -168,7 +179,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
               const formattedItems:any = formatConfigurationCodeVersionArray(items);
               
               if (formattedItems !== null) {
-                quickPick(formattedItems, Constants.QUICKPICK_TITLE_HOSTNAME, Constants.HOSTNAME, null);
+                quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_HOSTNAME, Constants.HOSTNAME, null, false); 
               } else {
                 vscode.window.showInformationMessage(Constants.HOSTNAME_INFO_MESSAGE);
               }
@@ -187,7 +198,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
                 const json:any = defaultJson();
                 const title:string = `${Constants.QUICKPICK_TITLE_CODEVERSON_REMOTE} ${json.hostname}`; 
 
-                quickPick(environmentItems, title, Constants.CODEVERSION,Constants.CODEVERSION_HISTORY_PROPERTY_SHORT);  
+                quickPickSelectItem(environmentItems, title, Constants.CODEVERSION,Constants.CODEVERSION_HISTORY_PROPERTY_SHORT, true);  
 
               } else {
 
@@ -200,7 +211,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
                     vscode.window.showInformationMessage(Constants.REMOTE_CODEVERSIONS_ERROR);
                   }
 
-                  quickPick(formattedItems, Constants.QUICKPICK_TITLE_CODEVERSON, Constants.CODEVERSION, null);
+                  quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_CODEVERSON, Constants.CODEVERSION, null, false); 
 
                 } else {
 
@@ -215,6 +226,37 @@ export class Sidebar implements vscode.WebviewViewProvider {
 
           break;          
         }   
+
+        case "onNewCodeversion": {
+          if (!data.value) {
+            return;
+          }  
+          
+          const environmentItems = await ocapiGetCodeVersions();
+
+          if (!environmentItems.error) {
+            await inputboxCreateItem();
+          } else {
+            vscode.window.showInformationMessage(Constants.INPUTBOX_ERROR_REMOTE);
+          }
+          break;
+        }
+
+        case "onDeleteCodeversion": {
+          if (!data.value) {
+            return;
+          }  
+         
+          const environmentItems = await ocapiGetCodeVersions();
+
+          if (!environmentItems.error) {
+            quickPickSelectItemDelete(environmentItems);
+          } else {
+            vscode.window.showInformationMessage(Constants.REMOTE_CODEVERSIONS_DELETE_ERROR);
+          }
+          
+          break;
+        }
       }
     });
   }

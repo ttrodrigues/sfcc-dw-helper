@@ -94,6 +94,20 @@
         });
     }
 
+    const clickBtnNewCodeversion = () => {
+        tsvscode.postMessage({
+            type: 'onNewCodeversion',
+            value: true
+        });
+    }
+
+    const clickBtnDeleteCodeversion = () => {
+        tsvscode.postMessage({
+            type: 'onDeleteCodeversion',
+            value: true
+        });
+    }
+
     const clickBtnBuild = (option) => {
         tsvscode.postMessage({
             type: 'onBuild',
@@ -245,6 +259,10 @@
     #prophetBtn {
         margin-bottom: 10px; 
     }
+
+     #settingsBtn {
+        margin-bottom: 10px; 
+    }
     
     #commandsBtn {
         margin-bottom: 10px; 
@@ -255,6 +273,12 @@
     }
 
     .btn-prophet {
+        width: 100%;
+        width: 315px;
+        margin-top: 10px;
+    }
+
+    .btn-settings {
         width: 100%;
         width: 315px;
         margin-top: 10px;
@@ -339,6 +363,22 @@
     </CollapsibleSection>
         
     {#if isProphetInstalled}
+         <CollapsibleSection headerText={'Environment Settings'} expanded={true}>
+            <div id="settingsBtn">
+                <div>
+                    <button on:click={()=>{
+                        clickBtnNewCodeversion();
+                    }} class="btn-settings monaco-button monaco-text-button">New Code Version</button>                    
+                </div>
+    
+                <div>
+                    <button on:click={()=>{
+                        clickBtnDeleteCodeversion();
+                    }} class="btn-settings monaco-button monaco-text-button">Delete Code Version</button>
+                </div>
+            </div>        
+        </CollapsibleSection>    
+
         <CollapsibleSection headerText={'Compiler'} expanded={true}>
             <div id="commandsBtn">
                 {#if isToShowDevBuildBtn}
