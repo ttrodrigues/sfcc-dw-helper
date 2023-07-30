@@ -260,3 +260,207 @@ export function formatRemoteCodeVersionArray (items:any) {
 
     return formattedArray;    
 }
+
+/**
+ * OCAPI call to SFCC environment to create or delete an Code Version
+ *
+ * @param   codeversion Code version to be created/deleted
+ * @param   method Method to be used on OCAPI call
+ * @returns Object with result of the OCAPI call
+ */
+export async function ocapiCreateDeleteCodeVersion (codeversion: string, method:string) {   
+    const clientId:any = vscode.workspace.getConfiguration('sfcc-dw-helper').get('ocapiClientId');
+    const dwFile:any = defaultJson();
+    const token:any = await getToken();
+
+    let result:any = token;
+
+    //@ts-ignore
+    if (token.response.status === 200) {
+        //@ts-ignore
+        const authorizationHeader:string = `${token.response.data.token_type} ${token.response.data.access_token}`
+    
+        const endpointUrl:string = Constants.URL_PREFIX + dwFile.hostname + Constants.URL_PUT_DELETE_CODEVERSIONS + codeversion;
+        const headers:any = { 'Authorization': authorizationHeader, 'x-dw-client-id': clientId, 'Content-Type': Constants.URL_CONTENT_TYPE_UTF8 };
+    
+        const config = {
+            method: method,
+            url: endpointUrl,
+            headers: headers
+        }
+        await axios(config)
+            .then(function (response:any) {
+                result = {
+                    error: false,
+                    response: response
+                };
+            })
+            .catch(function (error:any) {
+                result = {
+                    error: true,
+                    response: error
+                };
+            });
+    }
+        
+    return result;
+}
+
+/**
+ * OCAPI call to SFCC environment to active an Code Version
+ *
+ * @param   codeversion Code version to be actived
+ * @returns Object with result of OCAPI call
+ */
+export async function ocapiActiveCodeVersion (codeversion: string) {   
+    const clientId:any = vscode.workspace.getConfiguration('sfcc-dw-helper').get('ocapiClientId');
+    const dwFile:any = defaultJson();
+    const token:any = await getToken();
+
+    let result:any = token;
+
+    //@ts-ignore
+    if (token.response.status === 200) {
+        //@ts-ignore
+        const authorizationHeader:string = `${token.response.data.token_type} ${token.response.data.access_token}`
+    
+        const endpointUrl:string = Constants.URL_PREFIX + dwFile.hostname + Constants.URL_PUT_DELETE_CODEVERSIONS + codeversion;
+        const headers:any = { 'Authorization': authorizationHeader, 'x-dw-client-id': clientId, 'Content-Type': Constants.URL_CONTENT_TYPE_UTF8 };
+    
+        const config = {
+            method: "patch",
+            url: endpointUrl,
+            headers: headers,
+            data: {
+                "active": true
+            }
+        }
+        await axios(config)
+            .then(function (response:any) {
+                result = {
+                    error: false,
+                    response: response
+                };
+            })
+            .catch(function (error:any) {
+                result = {
+                    error: true,
+                    response: error
+                };
+            });
+    }
+        
+    return result;
+}
+
+/**
+ * Open quickpick to delete a Code Version
+ *
+ * @param   items List of Code Version to show on quickpick
+ */
+export async function quickPickSelectItemDelete (items:any) {
+    return new Promise(() => {
+        const quickPick = vscode.window.createQuickPick();
+        quickPick.items = items.map((item: any) => ({ label: item.displayName, id: item.id }));
+        
+        quickPick.title = Constants.QUICKPICK_TITLE_TO_DELETE;
+                            
+        quickPick.onDidAccept(async () => {
+            //@ts-ignore
+            const selectionItem = quickPick.activeItems[0].id;
+            const currentJson:any = defaultJson();
+            
+            quickPick.hide();  
+            
+            const ocapiCall:any = await ocapiCreateDeleteCodeVersion(selectionItem, Constants.API_DELETE_METHOD);
+            
+            if (!ocapiCall.error) {
+                vscode.window.showInformationMessage(Constants.CODEVERSION_SUCCESS_FIRST + selectionItem + Constants.DELETE_ITEM_SUCCESS_SECOND + currentJson.hostname);
+            } else {
+                vscode.window.showErrorMessage(Constants.DELETE_ITEM_ERROR + selectionItem);
+            }         
+            
+        })
+        quickPick.show();
+    })
+}
+
+
+/**
+ * Open inputbox to create a new Code Version
+ *
+ */
+export async function inputboxCreateItem () {    
+    const inputText:any = await vscode.window.showInputBox({
+        placeHolder: Constants.INPUTBOX_PROMPT,
+        prompt: Constants.INPUTBOX_TITLE
+    });
+
+    if (inputText && inputText.length <= 3) {
+        vscode.window.showErrorMessage(Constants.INPUTBOX_ERROR_LENGTH);
+        return;
+    }
+    
+    if (inputText !== undefined) {
+        const ocapiCall:any = await ocapiCreateDeleteCodeVersion(inputText, Constants.API_PUT_METHOD);
+        const currentJson:any = defaultJson();
+
+        if (!ocapiCall.error) {
+            vscode.window.showInformationMessage(Constants.CODEVERSION_SUCCESS_FIRST + inputText + Constants.INPUTBOX_SUCCESS_SECOND + currentJson.hostname);
+        } else {
+            vscode.window.showErrorMessage(Constants.INPUTBOX_ERROR + inputText);
+        }    
+    }
+    
+}
+
+/**
+ * Open quickpick to select a Code Version or Hostname
+ *
+ * @param   items List of Code Version or Hostname to show on quickpick
+ * @param   title Title of the quickpick
+ * @param   jsonField Name of property of the dw.json file
+ * @param   propertyChange Property of settings to be updated
+ * @param   remoteAccess If is execution to remote environment
+ */
+export async function quickPickSelectItem (items:any, title:string, jsonField:string, propertyChange:any, remoteAccess:boolean) {
+    return new Promise<void>((resolve) => {
+      const quickPick = vscode.window.createQuickPick();
+      quickPick.items = items.map((item: any) => ({ label: item.displayName, id: item.id }));
+      
+      quickPick.title = title;
+                          
+      quickPick.onDidAccept(async () => {
+        //@ts-ignore
+        const selectionText = quickPick.activeItems[0].id;
+        const currentJson:any = defaultJson();
+        const { writeFileSync } = require("fs");
+        const path = jsonPath(); 
+
+        currentJson[jsonField] = selectionText;        
+        writeFileSync(path, JSON.stringify(currentJson, null, 2), "utf8");
+        quickPick.hide();
+        
+        
+        // Only runs in scenario of getting Code Versions on remote environment, will activate the Code Version on environment
+        if (remoteAccess) {
+
+            // On scenario of getting Code Versions on remote environment, will be update the array of CodeversionsHistory 
+            if (propertyChange) {
+                updateProperty(selectionText, propertyChange); 
+            }
+
+            const ocapiCall:any = await ocapiActiveCodeVersion(selectionText);
+
+            if (!ocapiCall.error) {
+                vscode.window.showInformationMessage(Constants.CODEVERSION_SUCCESS_FIRST + selectionText + Constants.ACTIVE_CODEVERSION_SUCCESS_SECOND + currentJson.hostname);
+            }            
+        }   
+        
+        resolve();
+      })
+      
+      quickPick.show();
+    }
+    )
+  }
