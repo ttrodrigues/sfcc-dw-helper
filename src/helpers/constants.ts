@@ -38,11 +38,10 @@ export namespace Constants {
     export const ACTIVE_CODEVERSION_SUCCESS_SECOND = ' is activated on ';
     export const DELETE_ITEM_SUCCESS_SECOND = ' was been removed from ';
     export const DELETE_ITEM_ERROR = 'Error to remove the Code Version ';
-    export const REMOTE_CODEVERSIONS_DELETE_ERROR = 'Error to get the environment Code Versions';
     export const INPUTBOX_TITLE = 'Insert the name from the new Code Version';
     export const INPUTBOX_PROMPT = 'Code Version';
     export const INPUTBOX_ERROR_LENGTH = 'The Code Version name should have more that 3 characters';
     export const INPUTBOX_SUCCESS_SECOND = ' has been created on ';
     export const INPUTBOX_ERROR = 'Error to create the Code Version ';
-    export const INPUTBOX_ERROR_REMOTE = 'Error when connecting to environment';
+    export const CONNECTION_ERROR_REMOTE = 'Error when connecting to environment';
 }

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
-import { formatJson, defaultJson, updateProperty, jsonPath, formatConfigurationCodeVersionArray, ocapiGetCodeVersions, ocapiActiveCodeVersion, quickPickSelectItemDelete, inputboxCreateItem } from "./helpers/helpers";
+import { formatJson, defaultJson, updateProperty, jsonPath, formatConfigurationCodeVersionArray, ocapiGetCodeVersions, quickPickSelectItemDelete, inputboxCreateItem, quickPickSelectItem } from "./helpers/helpers";
 import { Constants } from "./helpers/constants"
 
 export class Sidebar implements vscode.WebviewViewProvider {
@@ -12,47 +12,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
   
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
-
-    const quickPickSelectItem = (items:any, title:string, jsonField:string, propertyChange:any, remoteAccess:boolean) => {
-      return new Promise(() => {
-        const quickPick = vscode.window.createQuickPick();
-        quickPick.items = items.map((item: any) => ({ label: item.displayName, id: item.id }));
-        
-        quickPick.title = title;
-                            
-        quickPick.onDidAccept(async () => {
-          //@ts-ignore
-          const selectionText = quickPick.activeItems[0].id;
-          const currentJson:any = defaultJson();
-          const { writeFileSync } = require("fs");
-          const path = jsonPath(); 
-
-          currentJson[jsonField] = selectionText;        
-          writeFileSync(path, JSON.stringify(currentJson, null, 2), "utf8");
-          quickPick.hide();
-          webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);  
-          
-          // Only runs in scenario of getting Code Versions on remote environment, will activate the Code Version on environment
-          if (remoteAccess) {
-
-              // On scenario of getting Code Versions on remote environment, will be update the array of CodeversionsHistory 
-              if (propertyChange) {
-                  updateProperty(selectionText, propertyChange); 
-              }
-
-              const ocapiCall:any = await ocapiActiveCodeVersion(selectionText);
-
-              if (!ocapiCall.error) {
-                  vscode.window.showInformationMessage(Constants.CODEVERSION_SUCCESS_FIRST + selectionText + Constants.ACTIVE_CODEVERSION_SUCCESS_SECOND + currentJson.hostname);
-              }
-          }
-            
-        })
-        quickPick.show();
-      }
-      )
-    }
-    
+      
     webviewView.webview.options = {
       // Allow scripts in the webview
       enableScripts: true,
@@ -105,7 +65,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
             writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
             webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
           } catch (error: any) {
-            vscode.window.showInformationMessage(Constants.UPDATE_FILE_ERROR_MESSAGE, error);            
+            vscode.window.showErrorMessage(Constants.UPDATE_FILE_ERROR_MESSAGE, error);            
           }         
 
           break;
@@ -179,7 +139,10 @@ export class Sidebar implements vscode.WebviewViewProvider {
               const formattedItems:any = formatConfigurationCodeVersionArray(items);
               
               if (formattedItems !== null) {
-                quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_HOSTNAME, Constants.HOSTNAME, null, false); 
+                await quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_HOSTNAME, Constants.HOSTNAME, null, false)
+                .then(() => {
+                  webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);               
+                });   
               } else {
                 vscode.window.showInformationMessage(Constants.HOSTNAME_INFO_MESSAGE);
               }
@@ -198,7 +161,10 @@ export class Sidebar implements vscode.WebviewViewProvider {
                 const json:any = defaultJson();
                 const title:string = `${Constants.QUICKPICK_TITLE_CODEVERSON_REMOTE} ${json.hostname}`; 
 
-                quickPickSelectItem(environmentItems, title, Constants.CODEVERSION,Constants.CODEVERSION_HISTORY_PROPERTY_SHORT, true);  
+                await quickPickSelectItem(environmentItems, title, Constants.CODEVERSION,Constants.CODEVERSION_HISTORY_PROPERTY_SHORT, true)
+                .then(() => {
+                  webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);               
+                }); 
 
               } else {
 
@@ -208,10 +174,13 @@ export class Sidebar implements vscode.WebviewViewProvider {
                   const clientPassword:any = vscode.workspace.getConfiguration('sfcc-dw-helper').get('ocapiClientPassword');
 
                   if (clientId.length && clientPassword.length) {
-                    vscode.window.showInformationMessage(Constants.REMOTE_CODEVERSIONS_ERROR);
+                    vscode.window.showErrorMessage(Constants.REMOTE_CODEVERSIONS_ERROR);
                   }
 
-                  quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_CODEVERSON, Constants.CODEVERSION, null, false); 
+                  await quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_CODEVERSON, Constants.CODEVERSION, null, false)
+                  .then(() => {
+                    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);               
+                  }); 
 
                 } else {
 
@@ -237,7 +206,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
           if (!environmentItems.error) {
             await inputboxCreateItem();
           } else {
-            vscode.window.showInformationMessage(Constants.INPUTBOX_ERROR_REMOTE);
+            vscode.window.showErrorMessage(Constants.CONNECTION_ERROR_REMOTE );
           }
           break;
         }
@@ -252,7 +221,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
           if (!environmentItems.error) {
             quickPickSelectItemDelete(environmentItems);
           } else {
-            vscode.window.showInformationMessage(Constants.REMOTE_CODEVERSIONS_DELETE_ERROR);
+            vscode.window.showErrorMessage(Constants.CONNECTION_ERROR_REMOTE);
           }
           
           break;
