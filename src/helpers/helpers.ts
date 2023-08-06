@@ -440,8 +440,8 @@ export async function quickPickSelectItem (items:any, title:string, jsonField:st
         currentJson[jsonField] = selectionText;        
         writeFileSync(path, JSON.stringify(currentJson, null, 2), "utf8");
         quickPick.hide();
-        
-        
+        vscode.commands.executeCommand(Constants.COMMAND_DISABLE_UPLOAD);
+                
         // Only runs in scenario of getting Code Versions on remote environment, will activate the Code Version on environment
         if (remoteAccess) {
 
@@ -461,6 +461,5 @@ export async function quickPickSelectItem (items:any, title:string, jsonField:st
       })
       
       quickPick.show();
-    }
-    )
-  }
+    })
+}

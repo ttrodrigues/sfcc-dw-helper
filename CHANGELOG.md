@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.0.21]
+- Add improvement to disable code upload when changing the dw.json file or when select another hostname oe code version
+
 ## [0.0.20]
 - Add the functionality to activate the Code Version, when is connected to an hostname
 - Add the functionality to create and delete Code Versions of the current hostname

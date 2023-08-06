@@ -63,6 +63,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
 
           try {
             writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
+            vscode.commands.executeCommand(Constants.COMMAND_DISABLE_UPLOAD);
             webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
           } catch (error: any) {
             vscode.window.showErrorMessage(Constants.UPDATE_FILE_ERROR_MESSAGE, error);            
