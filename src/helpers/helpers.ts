@@ -463,3 +463,25 @@ export async function quickPickSelectItem (items:any, title:string, jsonField:st
       quickPick.show();
     })
 }
+
+/**
+ * Get the initial WebView to be rendered
+ *
+ */
+export async function initialWebView () {   
+    let file:any = await vscode.workspace.findFiles(Constants.FILENAME, null, 1);
+
+    if (!file.length) {
+        return Constants.WEBVIEW_NO_FILE;    
+    }
+
+    // To validate the json schema    
+    const initialJson:any = defaultJson();
+    const jsonValidationResult:any = validateJson(initialJson);
+
+    if (!jsonValidationResult.valid) {
+        return Constants.WEBVIEW_SCHEMA_ERROR;
+    }
+
+    return Constants.WEBVIEW_DEFAULT;
+}
