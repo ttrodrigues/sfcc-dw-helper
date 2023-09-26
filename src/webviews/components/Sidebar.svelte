@@ -6,7 +6,11 @@
     import ShowIcon from './ShowIcon.svelte';
     import HideIcon from './HideIcon.svelte';
     import History from './History.svelte';
-    import CollapsibleSection from './CollapsibleSection.svelte';
+    import BracketMenu from './BracketMenu.svelte';
+    import SettingsMenu from './SettingsMenu.svelte';
+   
+    let initialView:string = 'default';
+    let isWorkspaceOpen:boolean;
 
     let componentSelected:svelteHTML = ShowIcon;
 
@@ -28,17 +32,65 @@
     
     // To change the visibility of password field
     let isPasswordVisible:boolean = false;   
+
+    let page: "bracket" | "settings" = tsvscode.getState()?.page || "bracket";
+
+    $: {
+        tsvscode.setState({ page });
+    }
     
     onMount(() => {
-        const hostnameInput:HTMLElement = document.getElementById('hostname');
-        const usernameInput:HTMLElement = document.getElementById('userName');
-        const passwordInput:HTMLElement = document.getElementById('password');
-        const codeversionInput:HTMLElement = document.getElementById('codeVersion');
-        
-        usernameInput?.value = initUsername;
-        passwordInput?.value = initPassword;
-        hostnameInput?.value = initHostname;
-        codeversionInput?.value = initCodeversion;
+        window.addEventListener('message', (event) => {
+            const message = event.data; 
+            switch (message.command) {
+                case 'initialView': {
+                    initialView = message.data;
+
+                    if (initialView === 'noFile') {
+                        tsvscode.postMessage({
+                            type: 'onCheckWorkspace',
+                            value: true
+                        });
+                    }
+                                        
+                    if (initialView === 'default') {
+                        updateMarginTopMain(true);
+                    } else {
+                        updateMarginTopMain(false);
+                    }     
+                    
+                    if (initialView === 'default' && page === "settings") {
+                        updateClass('.settings', '.bracket');
+                    }   
+
+                    break;
+                }
+
+                case 'jsonValues': {
+                    if (page === "bracket") {
+                        const jsonValues = message.data;
+    
+                        document.getElementById('hostname').value = jsonValues.hostname;
+                        document.getElementById('userName').value = jsonValues.username;
+                        document.getElementById('password').value = jsonValues.password;
+                        document.getElementById('codeVersion').value = jsonValues.codeversion;
+                    }
+                    
+                    break;
+                }
+                                
+                case 'isWorkspaceOpen': {
+                    isWorkspaceOpen = message.data;
+
+                    break;
+                }             
+                
+            }
+        });  
+
+        if (initialView === 'default' && page === "settings") {
+            updateClass('.settings', '.bracket');
+        }        
         
         isProphetInstalled = isProphetInstall;
         isToShowDevBuildBtn = showDevBuildBtn;
@@ -128,10 +180,34 @@
             value: property
         });
     }
+
+    const getInputData = () => {
+        tsvscode.postMessage({
+            type: 'onGetInputData',
+            value: true
+        });
+    }
     
-    function buttonClick() {
+    const buttonClick = () => {
         isPasswordVisible = !isPasswordVisible;
         componentSelected = isPasswordVisible ? HideIcon : ShowIcon;
+    }
+
+    const updateClass = (classNameAdd, classNameRemove) => {
+        const elementToAdd = document.querySelector(classNameAdd);
+        elementToAdd.classList.add('selected');
+        const elementToRemove = document.querySelector(classNameRemove);
+        elementToRemove.classList.remove('selected');
+    }
+
+    const updateMarginTopMain = (isDefault) => {
+        const mainElement = document.getElementById('main');
+        
+        if (isDefault) {
+            mainElement?.style.marginTop = '45px';
+        } else {
+            mainElement?.style.marginTop = '5px';
+        }
     }
     
 </script>
@@ -176,27 +252,32 @@
     
     div#main{
        min-width: 315px;
-       margin-top: 5px;
+       margin-top: 45px;
+
     }
     #hostname {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px;
+       margin-top: 10px;
     }
     #codeVersion {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px;
+       margin-top: 10px;
     }
     #userName {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px; 
+       margin-top: 10px;
     }
     #password {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px;
+       margin-top: 10px;
     }
     
     #btnSvgPassword {
@@ -206,6 +287,8 @@
        position: absolute;
        color: transparent;
        background-color: transparent;
+       border: none;
+       margin-top: 10px;
     }
 
     #btnSvgPassword:hover {
@@ -219,6 +302,8 @@
        position: absolute;
        color: transparent;
        background-color: transparent;
+       border: none;
+       margin-top: 10px;
     }
 
     #btnSvgHostname:hover {
@@ -232,24 +317,26 @@
        position: absolute;
        color: transparent;
        background-color: transparent;
+       border: none;
+       margin-top: 10px;
     }
 
     #svgLogoHistoryHostname {
         left: 313px;
         position: absolute;
-        top: 47px;
+        top: 68px;
     }
 
     #svgLogoHistoryCodeversion {
         left: 313px;
         position: absolute;
-        top: 113px;
+        top: 137px;
     }
 
     #svgLogoPassword {
         left: 313px;
         position: absolute;
-        top: 245px;
+        top: 276px;
     }
 
     #btnSvgCodeversion:hover {
@@ -290,136 +377,224 @@
         margin-top: 10px;
     }
 
-    .textInput {
+    .textInput, .textButton {
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
         padding: 4px 0 0;
         margin: 0;
-        font-size: 11px;
+        font-size: 13px;
         font-weight: 400;
+        font-variant-caps: small-caps;
     }
 
-</style>       
+    #btnCreate, #btnFix {
+       margin-top: 20px; 
+       width: 100%;
+    }
+
+    .buttons-wrapper {
+        height: 45px;
+        display: flex;
+        width: 315px;
+        position: fixed;
+        top: 0;
+        z-index: 999;
+        background-color: var(--vscode-sideBar-background);
+    }
+
+    .menu-button {
+        width: 50%;
+        padding: 0;
+        color: rgb(92, 92, 92);
+        background-color: transparent;
+        height: 32px;
+        border: none;
+    }
+
+    .menu-button:hover {
+        background-color: transparent;
+    }
+
+    .selected {
+        color: var(--vscode-input-foreground);
+    }
+
+</style>    
+
+{#if initialView === 'default'}
+    <div class="buttons-wrapper">
+        <button class="menu-button selected bracket" on:click={() => { 
+            page = 'bracket';
+            getInputData();
+            updateClass('.bracket', '.settings');
+            }}>
+            <BracketMenu/>
+        </button> 
+        <button class="menu-button settings" on:click={() => { 
+            page = 'settings';
+            updateClass('.settings', '.bracket');
+            }}>
+            <SettingsMenu/>
+        </button> 
+    </div>
+{/if}
 
 <div id="main">
 
-    <CollapsibleSection headerText={'Environment'} expanded={true}>
-        <div id="environmentBtns">
-            <div>
-                <div class="textInput">Hostname</div>
-                <input on:change={(e)=>{
-                    changeProperty(e.target.value, hostnamePropertyShort);
-                    changeJsonFile();
-                }} type="text" id="hostname">
-        
-                <div id="svgLogoHistoryHostname">
-                    <svelte:component this={History} />
-                </div>
+    {#if initialView === 'default'}
 
-                <button id="btnSvgHostname" on:click={()=>{
-                    clickBtnHistory(hostnameConstant);
-                }}></button>  
-        
-            </div>
-        
-            <div>
-                <div class="textInput">Code Version</div>
-                <input on:change={(e)=>{
-                    changeProperty(e.target.value, codeversionPropertyShort);
-                    changeJsonFile();
-                }} type="text" id="codeVersion">
-                        
-                <div id="svgLogoHistoryCodeversion">
-                    <svelte:component this={History} />
-                </div>
+        {#if page === 'bracket'}
+            <div id="environmentBtns">
+                <div>
+                    <div class="textInput">Hostname</div>
+                    <input on:change={(e)=>{
+                        changeProperty(e.target.value, hostnamePropertyShort);
+                        changeJsonFile();
+                    }} type="text" id="hostname">
+            
+                    <div id="svgLogoHistoryHostname">
+                        <svelte:component this={History} />
+                    </div>
 
-                <button id="btnSvgCodeversion" on:click={()=>{
-                    clickBtnHistory(codeversionConstant);
-                }}></button>  
-        
-            </div>
-        
-            <div class="textInput">User Name</div>
-            <input on:change={()=>{
-                changeJsonFile();
-            }} type="text" id="userName">
-        
-            <div>
-                <div class="textInput">Password</div>
+                    <button id="btnSvgHostname" on:click={()=>{
+                        clickBtnHistory(hostnameConstant);
+                    }}></button>  
+            
+                </div>
+            
+                <div>
+                    <div class="textInput">Code Version</div>
+                    <input on:change={(e)=>{
+                        changeProperty(e.target.value, codeversionPropertyShort);
+                        changeJsonFile();
+                    }} type="text" id="codeVersion">
+                            
+                    <div id="svgLogoHistoryCodeversion">
+                        <svelte:component this={History} />
+                    </div>
+
+                    <button id="btnSvgCodeversion" on:click={()=>{
+                        clickBtnHistory(codeversionConstant);
+                    }}></button>  
+            
+                </div>
+            
+                <div class="textInput">User Name</div>
                 <input on:change={()=>{
                     changeJsonFile();
-                }} type={isPasswordVisible ? "text" : "password"} id="password">
+                }} type="text" id="userName">
             
-                <div id="svgLogoPassword">
-                    <svelte:component this={componentSelected} />
-                </div>
+                <div>
+                    <div class="textInput">Password</div>
+                    <input on:change={()=>{
+                        changeJsonFile();
+                    }} type={isPasswordVisible ? "text" : "password"} id="password">
+                
+                    <div id="svgLogoPassword">
+                        <svelte:component this={componentSelected} />
+                    </div>
 
-                <button id="btnSvgPassword" on:click={()=>{
-                    buttonClick()
-                }}></button>            
-            </div>   
-        </div>
-    </CollapsibleSection>
+                    <button id="btnSvgPassword" on:click={()=>{
+                        buttonClick()
+                    }}></button>            
+                </div>   
+            </div>
+        {/if}
+
+        {#if page === 'settings'}    
+            {#if isProphetInstalled}                
+                <div id="settingsBtn">
+                    <div class="textButton">Environment Settings</div>
+                    <div>
+                        <button on:click={()=>{
+                            clickBtnNewCodeversion();
+                        }} class="btn-settings monaco-button monaco-text-button">New Code Version</button>                    
+                    </div>
         
-    {#if isProphetInstalled}
-         <CollapsibleSection headerText={'Environment Settings'} expanded={true}>
-            <div id="settingsBtn">
-                <div>
-                    <button on:click={()=>{
-                        clickBtnNewCodeversion();
-                    }} class="btn-settings monaco-button monaco-text-button">New Code Version</button>                    
-                </div>
-    
-                <div>
-                    <button on:click={()=>{
-                        clickBtnDeleteCodeversion();
-                    }} class="btn-settings monaco-button monaco-text-button">Delete Code Version</button>
-                </div>
-            </div>        
-        </CollapsibleSection>    
-
-        <CollapsibleSection headerText={'Compiler'} expanded={true}>
-            <div id="commandsBtn">
-                {#if isToShowDevBuildBtn}
                     <div>
                         <button on:click={()=>{
-                            clickBtnBuild(textCommandDevBuildBtn);
-                        }} class="btn-build monaco-button monaco-text-button">{textLayoutDevBuildBtn}</button>
+                            clickBtnDeleteCodeversion();
+                        }} class="btn-settings monaco-button monaco-text-button">Delete Code Version</button>
                     </div>
-                {/if}
+                </div>        
+            
+                {#if isToShowDevBuildBtn || isToShowPrdBuildBtn}
+                    <div class="textButton">Compiler</div>
+                    <div id="commandsBtn">
+                        {#if isToShowDevBuildBtn}
+                            <div>
+                                <button on:click={()=>{
+                                    clickBtnBuild(textCommandDevBuildBtn);
+                                }} class="btn-build monaco-button monaco-text-button">{textLayoutDevBuildBtn}</button>
+                            </div>
+                        {/if}
 
-                {#if isToShowPrdBuildBtn}
+                        {#if isToShowPrdBuildBtn}
+                            <div>
+                                <button on:click={()=>{
+                                    clickBtnBuild(textCommandPrdBuildBtn);
+                                }} class="btn-build monaco-button monaco-text-button">{textLayoutPrdBuildBtn}</button>
+                            </div>
+                        {/if}
+                    </div> 
+                {/if}           
+            
+                <div id="prophetBtn">
+                    <div class="textButton">Commands</div>
                     <div>
                         <button on:click={()=>{
-                            clickBtnBuild(textCommandPrdBuildBtn);
-                        }} class="btn-build monaco-button monaco-text-button">{textLayoutPrdBuildBtn}</button>
+                            clickBtnCleanUpload();
+                        }} class="btn-prophet monaco-button monaco-text-button">Clean Project / Upload All</button>                    
                     </div>
-                {/if}
-            </div>            
-        </CollapsibleSection>
+        
+                    <div>
+                        <button on:click={()=>{
+                            clickBtnEnableUpload();
+                        }} class="btn-prophet monaco-button monaco-text-button">Enable Upload</button>
+                    </div>
+        
+                    <div>
+                        <button on:click={()=>{
+                            clickBtnDisableUpload();
+                        }} class="btn-prophet monaco-button monaco-text-button">Disable Upload</button>
+                    </div>
+                </div>  
 
-        <CollapsibleSection headerText={'Commands'} expanded={true}>
-            <div id="prophetBtn">
-                <div>
-                    <button on:click={()=>{
-                        clickBtnCleanUpload();
-                    }} class="btn-prophet monaco-button monaco-text-button">Clean Project / Upload All</button>                    
-                </div>
-    
-                <div>
-                    <button on:click={()=>{
-                        clickBtnEnableUpload();
-                    }} class="btn-prophet monaco-button monaco-text-button">Enable Upload</button>
-                </div>
-    
-                <div>
-                    <button on:click={()=>{
-                        clickBtnDisableUpload();
-                    }} class="btn-prophet monaco-button monaco-text-button">Disable Upload</button>
-                </div>
-            </div>        
-        </CollapsibleSection>    
+            {/if}
+        {/if}
+    {/if}
+
+    {#if initialView === 'noFile'}
+
+        <p>This folder do not has a dw.json file or is not a SFCC project!</p>
+        <p>If you already have a workspace open, please click on bellow button to create a new dw.json file.</p>
+        <p>Otherwise,the button will be disabled until a workspace has been open.</p>
+
+
+        <!-- svelte-ignore missing-declaration -->
+        <button on:click={()=>{
+            tsvscode.postMessage({
+                type: 'onCreateFile',
+                value: true
+            });
+        }} id="btnCreate" class="monaco-button monaco-text-button btn" disabled={!isWorkspaceOpen}>Create a dw.json</button>
+
+    {/if}
+
+    {#if initialView === 'schemaError'}
+
+        <p>Detected a dw.json file with a schema error!</p>
+        <p>The properties names are incorrect or not in string format.</p>
+
+        <!-- svelte-ignore missing-declaration -->
+        <button on:click={()=>{
+            tsvscode.postMessage({
+                type: 'onCreateFile',
+                value: false
+            });
+        }} id="btnFix" class="monaco-button monaco-text-button btn">Fix the dw.json</button>
+
     {/if}
         
 </div>

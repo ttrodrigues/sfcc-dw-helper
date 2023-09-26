@@ -1,14 +1,18 @@
 # Change Log
 
+## [0.0.22]
+- Major code refactor
+- New design of extension, similar to my other **VS Code Extension** [**SFCC Docs**](https://marketplace.visualstudio.com/items?itemName=ttrodrigues.sfcc-docs) 
+
 ## [0.0.21]
-- Add improvement to disable code upload when changing the dw.json file or when select another hostname oe code version
+- Add improvement to disable code upload when changing the `dw.json` file or when select another **hostname** or **code version**
 
 ## [0.0.20]
-- Add the functionality to activate the Code Version, when is connected to an hostname
-- Add the functionality to create and delete Code Versions of the current hostname
+- Add the functionality to activate the **Code Version**, when is connected to an **hostname**
+- Add the functionality to create and delete **Code Versions** of the current **hostname**
 
 ## [0.0.19]
-- Add the functionality to get the Code Versions of the current hostname
+- Add the functionality to get the **Code Versions** of the current **hostname**
 
 ## [0.0.18]
 - Layout fixes
@@ -32,12 +36,11 @@
 - Implementation of history for **Hostname** and **Code Version** fields
 - Selection of user inputted history by **QuickPick**
 - Implementation of collapse sections on sidebar 
-- Possibility to execute Prophet commands 
 
 ## [0.0.11]
 - Initial production release
 - Possibility to execute compiler commands 
-- Possibility to execute Prophet commands 
+- Possibility to execute **Prophet** commands 
 
 ## [0.0.1] - [0.0.10] 
 - Beta releases

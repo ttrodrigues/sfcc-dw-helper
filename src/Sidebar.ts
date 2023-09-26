@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
-import { formatJson, defaultJson, updateProperty, jsonPath, formatConfigurationCodeVersionArray, ocapiGetCodeVersions, quickPickSelectItemDelete, inputboxCreateItem, quickPickSelectItem } from "./helpers/helpers";
+import { formatJson, defaultJson, updateProperty, jsonPath, formatConfigurationCodeVersionArray, ocapiGetCodeVersions, quickPickSelectItemDelete, inputboxCreateItem, quickPickSelectItem, initialWebView } from "./helpers/helpers";
 import { Constants } from "./helpers/constants"
 
 export class Sidebar implements vscode.WebviewViewProvider {
@@ -10,7 +10,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
   
   constructor(private readonly _extensionUri: vscode.Uri) {}
   
-  public resolveWebviewView(webviewView: vscode.WebviewView) {
+  public async resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
       
     webviewView.webview.options = {
@@ -18,11 +18,20 @@ export class Sidebar implements vscode.WebviewViewProvider {
       enableScripts: true,
       localResourceRoots: [this._extensionUri],
     };
-
+    
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+    
+    let initialView:any = await initialWebView();
+        
+    webviewView.webview.postMessage({command:"initialView", data:initialView});
+
+    if (initialView === Constants.WEBVIEW_DEFAULT) {
+      let currentJson:any = await formatJson();
+      webviewView.webview.postMessage({command:"jsonValues", data:currentJson});
+    }
 
     // Listener to changes in configuration options
-    vscode.workspace.onDidChangeConfiguration(event => {
+    vscode.workspace.onDidChangeConfiguration(async event => {
       const affectedEnableDevBuildBtn:boolean = event.affectsConfiguration("sfcc-dw-helper.enableDevBuildBtn");
       const affectedEnablePrdBuildBtn:boolean = event.affectsConfiguration("sfcc-dw-helper.enablePrdBuildBtn");
       const affectedCommandDevBuildBtn:boolean = event.affectsConfiguration("sfcc-dw-helper.commandDevBuildBtn");
@@ -32,6 +41,8 @@ export class Sidebar implements vscode.WebviewViewProvider {
         
       if (affectedEnableDevBuildBtn || affectedEnablePrdBuildBtn || affectedCommandDevBuildBtn || affectedCommandPrdBuildBtn || affectedTextDevBuildBtn || affectedTextPrdBuildBtn) {
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);   
+        let currentJson:any = await formatJson();
+        webviewView.webview.postMessage({command:"jsonValues", data:currentJson});
       }
     })
 
@@ -64,7 +75,8 @@ export class Sidebar implements vscode.WebviewViewProvider {
           try {
             writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
             vscode.commands.executeCommand(Constants.COMMAND_DISABLE_UPLOAD);
-            webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+            let currentJson:any = await formatJson();
+            webviewView.webview.postMessage({command:"jsonValues", data:currentJson});
           } catch (error: any) {
             vscode.window.showErrorMessage(Constants.UPDATE_FILE_ERROR_MESSAGE, error);            
           }         
@@ -106,9 +118,9 @@ export class Sidebar implements vscode.WebviewViewProvider {
           if (!data.value) {
             return;
           } 
+          vscode.commands.executeCommand("workbench.action.terminal.killAll");
 
           const terminal = vscode.window.createTerminal(Constants.TERMINAL_NAME);
-
           terminal.sendText(data.value);
           terminal.show();
 
@@ -141,8 +153,9 @@ export class Sidebar implements vscode.WebviewViewProvider {
               
               if (formattedItems !== null) {
                 await quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_HOSTNAME, Constants.HOSTNAME, null, false)
-                .then(() => {
-                  webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);               
+                .then(async () => {
+                  let currentJson:any = await formatJson();   
+                  webviewView.webview.postMessage({command:"jsonValues", data:currentJson});           
                 });   
               } else {
                 vscode.window.showInformationMessage(Constants.HOSTNAME_INFO_MESSAGE);
@@ -163,8 +176,9 @@ export class Sidebar implements vscode.WebviewViewProvider {
                 const title:string = `${Constants.QUICKPICK_TITLE_CODEVERSON_REMOTE} ${json.hostname}`; 
 
                 await quickPickSelectItem(environmentItems, title, Constants.CODEVERSION,Constants.CODEVERSION_HISTORY_PROPERTY_SHORT, true)
-                .then(() => {
-                  webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);               
+                .then(async () => { 
+                  let currentJson:any = await formatJson(); 
+                  webviewView.webview.postMessage({command:"jsonValues", data:currentJson});           
                 }); 
 
               } else {
@@ -175,12 +189,13 @@ export class Sidebar implements vscode.WebviewViewProvider {
                   const clientPassword:any = vscode.workspace.getConfiguration('sfcc-dw-helper').get('ocapiClientPassword');
 
                   if (clientId.length && clientPassword.length) {
-                    vscode.window.showErrorMessage(Constants.REMOTE_CODEVERSIONS_ERROR);
+                    vscode.window.showInformationMessage(Constants.REMOTE_CODEVERSIONS_ERROR);
                   }
 
                   await quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_CODEVERSON, Constants.CODEVERSION, null, false)
-                  .then(() => {
-                    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);               
+                  .then(async () => { 
+                    let currentJson:any = await formatJson();   
+                    webviewView.webview.postMessage({command:"jsonValues", data:currentJson});         
                   }); 
 
                 } else {
@@ -227,8 +242,63 @@ export class Sidebar implements vscode.WebviewViewProvider {
           
           break;
         }
+
+        case "onCreateFile": {
+          const toCreateFile = data.value;                    
+          const { writeFileSync } = require("fs");
+          const path = jsonPath();
+          
+          const jsonContent = {
+            "hostname": "",
+            "username": "",
+            "password": "",
+            "code-version": ""
+          };
+
+          try {
+            writeFileSync(path, JSON.stringify(jsonContent, null, 2), "utf8");
+            if (toCreateFile) {
+              vscode.window.showInformationMessage(Constants.CREATE_FILE_SUCCESS_MESSAGE);
+            } else {
+              vscode.window.showInformationMessage(Constants.FIX_FILE_SUCCESS_MESSAGE);
+            }
+            webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);    
+            webviewView.webview.postMessage({command:"initialView", data:Constants.WEBVIEW_DEFAULT});
+            let currentJson:any = await formatJson();
+            webviewView.webview.postMessage({command:"jsonValues", data:currentJson});
+          } catch (error: any) {
+            if (toCreateFile) {
+              vscode.window.showErrorMessage(Constants.CREATE_FILE_ERROR_MESSAGE, error);   
+            } else {
+              vscode.window.showErrorMessage(Constants.FIX_FILE_ERROR_MESSAGE, error);   
+            }         
+          }         
+          break;
+        }
+
+        case "onCheckWorkspace": {
+          if (!data.value) {
+            return;
+          }  
+          
+          const isWorkspaceOpen:boolean = !!vscode.workspace.workspaceFolders;
+          webviewView.webview.postMessage({command:"isWorkspaceOpen", data:isWorkspaceOpen});     
+
+          break;
+        }
+
+        case "onGetInputData": {
+          if (!data.value) {
+            return;
+          }  
+          
+          let currentJson:any = await formatJson();
+          webviewView.webview.postMessage({command:"jsonValues", data:currentJson});  
+
+          break;
+        }        
       }
-    });
+    });    
   }
 
   public revive(panel: vscode.WebviewView) {
@@ -245,13 +315,6 @@ export class Sidebar implements vscode.WebviewViewProvider {
     
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce();
-
-    // Get the value of each json field of the file 
-    const readJson:any = formatJson();
-    const initUsername:string = readJson.username;
-    const initPassword:string = readJson.password;
-    const initHostname:string = readJson.hostname;
-    const initCodeversion:string = readJson.codeversion;
 
     // Check if Prophet extension is installed
     const allExtensions: readonly any[] = vscode.extensions.all;
@@ -293,10 +356,6 @@ export class Sidebar implements vscode.WebviewViewProvider {
     </head>
     <script nonce="${nonce}">
       const tsvscode = acquireVsCodeApi();
-      const initUsername ="${initUsername}";
-      const initPassword ="${initPassword}";
-      const initHostname ="${initHostname}";
-      const initCodeversion ="${initCodeversion}";
       const isProphetInstall = ${isProphetInstall};
       const showDevBuildBtn = ${showDevBuildBtn};
       const commandDevBuildBtn = "${commandDevBuildBtn}";
@@ -307,7 +366,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
       const hostname = "${hostname}";
       const codeversion = "${codeversion}";
       const hostnameHistoryPropertyShort = "${hostnameHistoryPropertyShort}";
-      const codeversionHistoryPropertyShort = "${codeversionHistoryPropertyShort}";
+      const codeversionHistoryPropertyShort = "${codeversionHistoryPropertyShort}"; 
     </script>
     <body>
       <script nonce="${nonce}" src="${scriptUri}">

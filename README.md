@@ -3,8 +3,6 @@ Small extension to help the **SFCC (SalesForce Commerce Cloud)** developers, to 
 
 &nbsp;
 
-&nbsp;
-
 ## Why this Extension?
 Simplify the life to **SFCC developers**, with an extension that provides direct edition of **dw.json** and the possibility of run **Prophet** commands on the same sidebar.
 
@@ -25,13 +23,11 @@ Interact with environment present on **dw.json**, to get, create, and delete **C
 
 &nbsp;
 
-&nbsp;
-
 ## Features
-### Edit the dw.json file
-Edition of **dw.json** directly on the sidebar
+### Edit the dw.json file with modern design
+Edition of **dw.json** directly on the sidebar with a refresh and simplicity design
 
-![](/media/edit_json.png)
+![](/media/new_desgin.gif)
 
 &nbsp;
 ### Hiding the user's password
@@ -118,4 +114,71 @@ For more information, please see the [**SalesForce Commerce Cloud** documentatio
 
 &nbsp;
 
+## Extension Settings
+
+All necessary configurations of the extension will be automatically updated on the user's `settings.json`, when the star button is clicked:
+
+* `sfcc-dw-helper.enableDevBuildBtn`: Enable/Disable the button on sidebar with custom command for build code in **Development** compiler
+* `sfcc-dw-helper.enablePrdBuildBtn`: Enable/Disable the button on sidebar with custom command for build code in **Production** compiler
+* `sfcc-dw-helper.commandDevBuildBtn`: Command for build code in **Development** compiler
+* `sfcc-dw-helper.commandPrdBuildBtn`: Command for build code in **Production** compiler
+* `sfcc-dw-helper.textDevBuildBtn`: Text for the build code button in **Development** compilerr
+* `sfcc-dw-helper.textPrdBuildBtn`: Text for the build code button in **Production** compiler
+* `sfcc-dw-helper.hostnameHistory`: Array with the history of last 10 introduced **Hotsname**
+* `sfcc-dw-helper.codeversionHistory`: Array with the history of last 20 introduced **Code Version**
+* `sfcc-dw-helper.ocapiClientId`: Value of the **OCAPI** Client Id
+* `sfcc-dw-helper.ocapiClientPassword`: Value of the **OCAPI** Client Password
+
 &nbsp;
+
+## Known Issues
+
+None, until now.
+
+&nbsp;
+
+## Release Notes
+## [0.0.22]
+- Major code refactor
+- New design of extension, similar to my other **VS Code Extension** [**SFCC Docs**](https://marketplace.visualstudio.com/items?itemName=ttrodrigues.sfcc-docs) 
+
+## [0.0.21]
+- Add improvement to disable code upload when changing the `dw.json` file or when select another **hostname** or **code version**
+
+## [0.0.20]
+- Add the functionality to activate the **Code Version**, when is connected to an **hostname**
+- Add the functionality to create and delete **Code Versions** of the current **hostname**
+
+## [0.0.19]
+- Add the functionality to get the **Code Versions** of the current **hostname**
+
+## [0.0.18]
+- Layout fixes
+
+## [0.0.17]
+- Minor fixes
+
+## [0.0.16]
+- Refactoring code
+
+## [0.0.15]
+- Minor fixes on sidebar layout
+
+## [0.0.14]
+- Minor fixes on sidebar layout
+
+## [0.0.13]
+- Minor fixes on sidebar collapse feature
+
+## [0.0.12]
+- Implementation of history for **Hostname** and **Code Version** fields
+- Selection of user inputted history by **QuickPick**
+- Implementation of collapse sections on sidebar 
+
+## [0.0.11]
+- Initial production release
+- Possibility to execute compiler commands 
+- Possibility to execute **Prophet** commands 
+
+## [0.0.1] - [0.0.10] 
+- Beta releases

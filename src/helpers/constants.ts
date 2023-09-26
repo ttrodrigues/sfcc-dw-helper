@@ -1,4 +1,8 @@
 export namespace Constants {
+    export const FILENAME = 'dw.json';
+    export const WEBVIEW_NO_FILE = 'noFile';
+    export const WEBVIEW_SCHEMA_ERROR = 'schemaError';
+    export const WEBVIEW_DEFAULT = 'default';
     export const PROPHET_ID_NAME = 'SqrTT.prophet';
     export const COMMAND_CLEAN_UPLOAD = 'extension.prophet.command.clean.upload';
     export const COMMAND_DISABLE_UPLOAD = 'extension.prophet.command.disable.upload';
