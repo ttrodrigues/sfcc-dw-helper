@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.0.24]
+- Minor layout fixes
+
 ## [0.0.23]
 - Minor layout fixes
 

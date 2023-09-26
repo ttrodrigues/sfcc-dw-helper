@@ -285,7 +285,7 @@
        height: 28px;
        left: 310px;
        position: absolute;
-       color: transparent;
+       color: var(--vscode-input-foreground);
        background-color: transparent;
        border: none;
        margin-top: 10px;
@@ -300,7 +300,7 @@
        height: 28px;
        left: 310px;
        position: absolute;
-       color: transparent;
+       color: var(--vscode-input-foreground);
        background-color: transparent;
        border: none;
        margin-top: 10px;
@@ -315,28 +315,10 @@
        height: 28px;
        left: 310px;
        position: absolute;
-       color: transparent;
+       color: var(--vscode-input-foreground);
        background-color: transparent;
        border: none;
        margin-top: 10px;
-    }
-
-    #svgLogoHistoryHostname {
-        left: 313px;
-        position: absolute;
-        top: 68px;
-    }
-
-    #svgLogoHistoryCodeversion {
-        left: 313px;
-        position: absolute;
-        top: 136px;
-    }
-
-    #svgLogoPassword {
-        left: 313px;
-        position: absolute;
-        top: 273px;
     }
 
     #btnSvgCodeversion:hover {
@@ -453,13 +435,9 @@
                         changeJsonFile();
                     }} type="text" id="hostname">
             
-                    <div id="svgLogoHistoryHostname">
-                        <svelte:component this={History} />
-                    </div>
-
                     <button id="btnSvgHostname" on:click={()=>{
                         clickBtnHistory(hostnameConstant);
-                    }}></button>  
+                    }}><svelte:component this={History} /></button>  
             
                 </div>
             
@@ -470,13 +448,9 @@
                         changeJsonFile();
                     }} type="text" id="codeVersion">
                             
-                    <div id="svgLogoHistoryCodeversion">
-                        <svelte:component this={History} />
-                    </div>
-
                     <button id="btnSvgCodeversion" on:click={()=>{
                         clickBtnHistory(codeversionConstant);
-                    }}></button>  
+                    }}><svelte:component this={History} /></button>  
             
                 </div>
             
@@ -491,13 +465,9 @@
                         changeJsonFile();
                     }} type={isPasswordVisible ? "text" : "password"} id="password">
                 
-                    <div id="svgLogoPassword">
-                        <svelte:component this={componentSelected} />
-                    </div>
-
                     <button id="btnSvgPassword" on:click={()=>{
                         buttonClick()
-                    }}></button>            
+                    }}><svelte:component this={componentSelected} /></button>            
                 </div>   
             </div>
         {/if}
