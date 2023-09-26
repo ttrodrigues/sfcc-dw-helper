@@ -330,13 +330,13 @@
     #svgLogoHistoryCodeversion {
         left: 313px;
         position: absolute;
-        top: 137px;
+        top: 136px;
     }
 
     #svgLogoPassword {
         left: 313px;
         position: absolute;
-        top: 276px;
+        top: 273px;
     }
 
     #btnSvgCodeversion:hover {
@@ -383,7 +383,7 @@
         white-space: nowrap;
         padding: 4px 0 0;
         margin: 0;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 400;
         font-variant-caps: small-caps;
     }

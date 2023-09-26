@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.0.23]
+- Minor layout fixes
+
 ## [0.0.22]
 - Major code refactor
 - New design of extension, similar to my other **VS Code Extension** [**SFCC Docs**](https://marketplace.visualstudio.com/items?itemName=ttrodrigues.sfcc-docs) 
