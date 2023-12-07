@@ -6,6 +6,7 @@ export namespace Constants {
     export const PROPHET_ID_NAME = 'SqrTT.prophet';
     export const COMMAND_CLEAN_UPLOAD = 'extension.prophet.command.clean.upload';
     export const COMMAND_DISABLE_UPLOAD = 'extension.prophet.command.disable.upload';
+    export const COMMAND_REFRESH_CARTRIDGES = 'extension.prophet.command.refresh.cartridges';
     export const COMMAND_ENABLE_UPLOAD = 'extension.prophet.command.enable.upload';
     export const TERMINAL_NAME = 'Build Prophet';
     export const QUICKPICK_TITLE_HOSTNAME = 'Select the Hostname';
@@ -48,4 +49,11 @@ export namespace Constants {
     export const INPUTBOX_SUCCESS_SECOND = ' has been created on ';
     export const INPUTBOX_ERROR = 'Error to create the Code Version ';
     export const CONNECTION_ERROR_REMOTE = 'Error when connecting to environment';
+    export const STATUS_BAR_CONNECT_MSG = 'Connected to';
+    export const STATUS_BAR_DISCONNECT_MSG = 'Disconnected from';
+    export const STATUS_BAR_CONNECT_ICON = 'cloud';
+    export const STATUS_BAR_DISCONNECT_ICON = 'debug-disconnect';
+    export const STATUS_BAR_HOSTNAME_ERROR = 'No Hostname defined';
+    export const STATUS_BAR_CODEVERSION_ERROR = 'No Code Version defined';
+    export const COMMAND_FOCUS_WEBVIEW = 'sfcc-dw-helper-sidebar.open';
 }

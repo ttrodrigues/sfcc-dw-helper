@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
-import { formatJson, defaultJson, updateProperty, jsonPath, formatConfigurationCodeVersionArray, ocapiGetCodeVersions, quickPickSelectItemDelete, inputboxCreateItem, quickPickSelectItem, initialWebView } from "./helpers/helpers";
+import { formatJson, defaultJson, updateProperty, jsonPath, formatConfigurationCodeVersionArray, ocapiGetCodeVersions, quickPickSelectItemDelete, inputboxCreateItem, quickPickSelectItem, initialWebView, showStatusBarItem } from "./helpers/helpers";
 import { Constants } from "./helpers/constants"
 
 export class Sidebar implements vscode.WebviewViewProvider {
@@ -11,7 +11,15 @@ export class Sidebar implements vscode.WebviewViewProvider {
   constructor(private readonly _extensionUri: vscode.Uri) {}
   
   public async resolveWebviewView(webviewView: vscode.WebviewView) {
+    let statusBar:any = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -10);
+    const dwFile:any = await formatJson();
+    
     this._view = webviewView;
+    
+    if (dwFile) {
+      showStatusBarItem(statusBar, false);
+      statusBar.show();
+    }
       
     webviewView.webview.options = {
       // Allow scripts in the webview
@@ -44,7 +52,10 @@ export class Sidebar implements vscode.WebviewViewProvider {
         let currentJson:any = await formatJson();
         webviewView.webview.postMessage({command:"jsonValues", data:currentJson});
       }
-    })
+    });
+
+    // For active the Prophet extension on startup 
+    vscode.commands.executeCommand(Constants.COMMAND_REFRESH_CARTRIDGES);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
@@ -75,6 +86,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
           try {
             writeFileSync(path, JSON.stringify(data.value, null, 2), "utf8");
             vscode.commands.executeCommand(Constants.COMMAND_DISABLE_UPLOAD);
+            showStatusBarItem(statusBar, false);
             let currentJson:any = await formatJson();
             webviewView.webview.postMessage({command:"jsonValues", data:currentJson});
           } catch (error: any) {
@@ -89,7 +101,13 @@ export class Sidebar implements vscode.WebviewViewProvider {
             return;
           } 
 
-          vscode.commands.executeCommand(Constants.COMMAND_CLEAN_UPLOAD);
+          const allExtensions: readonly any[] = vscode.extensions.all;
+          const prophetExtension = allExtensions.filter(e => e.id === Constants.PROPHET_ID_NAME)[0];
+
+          if (prophetExtension.isActive) {
+            vscode.commands.executeCommand(Constants.COMMAND_CLEAN_UPLOAD);
+            showStatusBarItem(statusBar, true);
+          }
 
           break;
         }
@@ -100,6 +118,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
           } 
           
           vscode.commands.executeCommand(Constants.COMMAND_DISABLE_UPLOAD);
+          showStatusBarItem(statusBar, false);
 
           break;
         }
@@ -110,6 +129,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
           } 
           
           vscode.commands.executeCommand(Constants.COMMAND_ENABLE_UPLOAD);
+          showStatusBarItem(statusBar, true);
 
           break;
         }
@@ -152,7 +172,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
               const formattedItems:any = formatConfigurationCodeVersionArray(items);
               
               if (formattedItems !== null) {
-                await quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_HOSTNAME, Constants.HOSTNAME, null, false)
+                await quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_HOSTNAME, Constants.HOSTNAME, null, false, statusBar)
                 .then(async () => {
                   let currentJson:any = await formatJson();   
                   webviewView.webview.postMessage({command:"jsonValues", data:currentJson});           
@@ -175,7 +195,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
                 const json:any = defaultJson();
                 const title:string = `${Constants.QUICKPICK_TITLE_CODEVERSON_REMOTE} ${json.hostname}`; 
 
-                await quickPickSelectItem(environmentItems, title, Constants.CODEVERSION,Constants.CODEVERSION_HISTORY_PROPERTY_SHORT, true)
+                await quickPickSelectItem(environmentItems, title, Constants.CODEVERSION,Constants.CODEVERSION_HISTORY_PROPERTY_SHORT, true, statusBar)
                 .then(async () => { 
                   let currentJson:any = await formatJson(); 
                   webviewView.webview.postMessage({command:"jsonValues", data:currentJson});           
@@ -192,7 +212,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
                     vscode.window.showInformationMessage(Constants.REMOTE_CODEVERSIONS_ERROR);
                   }
 
-                  await quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_CODEVERSON, Constants.CODEVERSION, null, false)
+                  await quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_CODEVERSON, Constants.CODEVERSION, null, false, statusBar)
                   .then(async () => { 
                     let currentJson:any = await formatJson();   
                     webviewView.webview.postMessage({command:"jsonValues", data:currentJson});         
@@ -266,6 +286,8 @@ export class Sidebar implements vscode.WebviewViewProvider {
             webviewView.webview.postMessage({command:"initialView", data:Constants.WEBVIEW_DEFAULT});
             let currentJson:any = await formatJson();
             webviewView.webview.postMessage({command:"jsonValues", data:currentJson});
+            showStatusBarItem(statusBar, false);
+            statusBar.show();
           } catch (error: any) {
             if (toCreateFile) {
               vscode.window.showErrorMessage(Constants.CREATE_FILE_ERROR_MESSAGE, error);   

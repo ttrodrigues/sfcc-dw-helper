@@ -8,14 +8,18 @@ import { Sidebar } from "./Sidebar";
 export async function activate(context: vscode.ExtensionContext) {
 
   const sidebar = new Sidebar(context.extensionUri);
-      context.subscriptions.push(
-        vscode.window.registerWebviewViewProvider(
-        "sfcc-dw-helper-sidebar",
-        sidebar,
-        { webviewOptions: { retainContextWhenHidden: true } }
-        )
-      );
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider(
+      "sfcc-dw-helper-sidebar",
+      sidebar,
+      { webviewOptions: { retainContextWhenHidden: true } }
+    ),
+    vscode.commands.registerCommand('sfcc-dw-helper-sidebar.open', () => {
+      vscode.commands.executeCommand('sfcc-dw-helper-sidebar.focus');
+    })
+  );
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
+//sfcc-dw-helper-sidebar.start

@@ -12,8 +12,16 @@ const url = require('url');
  */
 export function formatJson () {   
     const path = jsonPath(); 
+
+    if (!fs.existsSync(path)) {
+        return null;
+    }
+
+    const readFile = fs.readFileSync(path);
+
     //@ts-ignore
-    const initialJson = JSON.parse(fs.readFileSync(path));
+    const initialJson = JSON.parse(readFile);
+
 
     const stringifyJson = JSON.stringify(initialJson);
     const formattedJson = stringifyJson.replace('code-version', 'codeversion');
@@ -422,8 +430,9 @@ export async function inputboxCreateItem () {
  * @param   jsonField Name of property of the dw.json file
  * @param   propertyChange Property of settings to be updated
  * @param   remoteAccess If is execution to remote environment
+ * @param   statusBar Status bar item
  */
-export async function quickPickSelectItem (items:any, title:string, jsonField:string, propertyChange:any, remoteAccess:boolean) {
+export async function quickPickSelectItem (items:any, title:string, jsonField:string, propertyChange:any, remoteAccess:boolean, statusBar:any) {
     return new Promise<void>((resolve) => {
       const quickPick = vscode.window.createQuickPick();
       quickPick.items = items.map((item: any) => ({ label: item.displayName, id: item.id }));
@@ -441,6 +450,7 @@ export async function quickPickSelectItem (items:any, title:string, jsonField:st
         writeFileSync(path, JSON.stringify(currentJson, null, 2), "utf8");
         quickPick.hide();
         vscode.commands.executeCommand(Constants.COMMAND_DISABLE_UPLOAD);
+        showStatusBarItem(statusBar, false);
                 
         // Only runs in scenario of getting Code Versions on remote environment, will activate the Code Version on environment
         if (remoteAccess) {
@@ -484,4 +494,20 @@ export async function initialWebView () {
     }
 
     return Constants.WEBVIEW_DEFAULT;
+}
+
+/**
+ * Create and show a StatusBarItem
+ * 
+ * @param   sbItem Status bar item
+ * @param   isConnected The extension is connected to environment
+ */
+export async function showStatusBarItem(sbItem:any, isConnected:boolean) {
+    const currentJson:any = await formatJson();
+    const iconName:string = isConnected ? Constants.STATUS_BAR_CONNECT_ICON : Constants.STATUS_BAR_DISCONNECT_ICON;
+    const tooltip:string = isConnected ? Constants.STATUS_BAR_CONNECT_MSG : Constants.STATUS_BAR_DISCONNECT_MSG;
+    
+    sbItem.text = `$(${iconName}) ${currentJson.codeversion.length ? currentJson.codeversion : Constants.STATUS_BAR_CODEVERSION_ERROR}`;
+    sbItem.tooltip = currentJson.hostname.length ? `${tooltip} ${currentJson.hostname}` : Constants.STATUS_BAR_HOSTNAME_ERROR;
+    sbItem.command = Constants.COMMAND_FOCUS_WEBVIEW;
 }
