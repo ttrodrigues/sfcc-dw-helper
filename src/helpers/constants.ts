@@ -55,5 +55,5 @@ export namespace Constants {
     export const STATUS_BAR_DISCONNECT_ICON = 'debug-disconnect';
     export const STATUS_BAR_HOSTNAME_ERROR = 'No Hostname defined';
     export const STATUS_BAR_CODEVERSION_ERROR = 'No Code Version defined';
-    export const COMMAND_FOCUS_WEBVIEW = 'sfcc-dw-helper-sidebar.open';
+    export const COMMAND_FOCUS_WEBVIEW = 'sfcc-dw-helper-sidebar.focus';
 }

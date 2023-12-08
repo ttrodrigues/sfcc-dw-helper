@@ -30,6 +30,14 @@ Edition of **dw.json** directly on the sidebar with a refresh and simplicity des
 ![](/media/new_desgin.gif)
 
 &nbsp;
+### New Status bar information for the connection status
+Now we can check directly on **Status bar** the status of our connection to environment. When clicked, the **SFCC DW Helper** sidebar we be focused.
+
+![](/media/statusbar.png)
+
+![](/media/statusbar_clicked.gif)
+
+&nbsp;
 ### Hiding the user's password
 
 Possibility of hide and show the **password** field
@@ -138,6 +146,10 @@ None, until now.
 &nbsp;
 
 ## Release Notes
+## [0.0.25]
+- Added a status bar info about the connection to environment status
+- Minor improvements on some features
+
 ## [0.0.24]
 - Minor layout fixes
 

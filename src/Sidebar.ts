@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
-import { formatJson, defaultJson, updateProperty, jsonPath, formatConfigurationCodeVersionArray, ocapiGetCodeVersions, quickPickSelectItemDelete, inputboxCreateItem, quickPickSelectItem, initialWebView, showStatusBarItem } from "./helpers/helpers";
+import { formatJson, defaultJson, updateProperty, jsonPath, formatConfigurationCodeVersionArray, ocapiGetCodeVersions, quickPickSelectItemDelete, inputboxCreateItem, quickPickSelectItem, initialWebView, showStatusBarItem, getProphetInfo } from "./helpers/helpers";
 import { Constants } from "./helpers/constants"
 
 export class Sidebar implements vscode.WebviewViewProvider {
@@ -101,8 +101,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
             return;
           } 
 
-          const allExtensions: readonly any[] = vscode.extensions.all;
-          const prophetExtension = allExtensions.filter(e => e.id === Constants.PROPHET_ID_NAME)[0];
+          const prophetExtension = getProphetInfo();
 
           if (prophetExtension.isActive) {
             vscode.commands.executeCommand(Constants.COMMAND_CLEAN_UPLOAD);
@@ -128,8 +127,12 @@ export class Sidebar implements vscode.WebviewViewProvider {
             return;
           } 
           
-          vscode.commands.executeCommand(Constants.COMMAND_ENABLE_UPLOAD);
-          showStatusBarItem(statusBar, true);
+          const prophetExtension = getProphetInfo();
+
+          if (prophetExtension.isActive) {
+            vscode.commands.executeCommand(Constants.COMMAND_ENABLE_UPLOAD);
+            showStatusBarItem(statusBar, true);
+          }
 
           break;
         }

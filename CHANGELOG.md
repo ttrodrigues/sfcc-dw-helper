@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.0.25]
+- Added a status bar info about the connection to environment status
+- Minor improvements on some features
+
 ## [0.0.24]
 - Minor layout fixes
 

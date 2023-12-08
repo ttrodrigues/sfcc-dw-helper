@@ -3,7 +3,7 @@
   "displayName": "SFCC DW Helper",
   "publisher": "ttrodrigues",
   "description": "Helper for dw.json file usage to connect to an SFCC environment",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "license": "Open source",
   "icon": "/media/icon.png",
   "engines": {
@@ -17,13 +17,6 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "sfcc-dw-helper-sidebar.open",
-        "title": "Open SFCC DW Helper sidebar",
-        "category": "SFCC DW Helper"
-      }
-    ],
     "viewsContainers": {
       "activitybar": [
         {

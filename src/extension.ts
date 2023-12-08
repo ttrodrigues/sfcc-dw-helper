@@ -13,13 +13,9 @@ export async function activate(context: vscode.ExtensionContext) {
       "sfcc-dw-helper-sidebar",
       sidebar,
       { webviewOptions: { retainContextWhenHidden: true } }
-    ),
-    vscode.commands.registerCommand('sfcc-dw-helper-sidebar.open', () => {
-      vscode.commands.executeCommand('sfcc-dw-helper-sidebar.focus');
-    })
+    )
   );
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
-//sfcc-dw-helper-sidebar.start

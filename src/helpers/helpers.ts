@@ -511,3 +511,12 @@ export async function showStatusBarItem(sbItem:any, isConnected:boolean) {
     sbItem.tooltip = currentJson.hostname.length ? `${tooltip} ${currentJson.hostname}` : Constants.STATUS_BAR_HOSTNAME_ERROR;
     sbItem.command = Constants.COMMAND_FOCUS_WEBVIEW;
 }
+
+/**
+ * Get Prophet extension information
+ *
+ */
+export function getProphetInfo () {   
+    const allExtensions: readonly any[] = vscode.extensions.all;
+    return allExtensions.filter(e => e.id === Constants.PROPHET_ID_NAME)[0];
+}
