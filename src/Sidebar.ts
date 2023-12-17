@@ -59,22 +59,6 @@ export class Sidebar implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
-        case "onInfo": {
-          if (!data.value) {
-            return;
-          }
-          vscode.window.showInformationMessage(data.value);
-          break;
-        }
-
-        case "onError": {
-          if (!data.value) {
-            return;
-          }
-          vscode.window.showErrorMessage(data.value);
-          break;
-        }
-
         case "onChangeFile": {
           if (!data.value) {
             return;
@@ -142,6 +126,8 @@ export class Sidebar implements vscode.WebviewViewProvider {
             return;
           } 
           vscode.commands.executeCommand("workbench.action.terminal.killAll");
+          vscode.commands.executeCommand(Constants.COMMAND_DISABLE_UPLOAD);
+          showStatusBarItem(statusBar, false);
 
           const terminal = vscode.window.createTerminal(Constants.TERMINAL_NAME);
           terminal.sendText(data.value);

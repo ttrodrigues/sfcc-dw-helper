@@ -49,7 +49,7 @@ export namespace Constants {
     export const INPUTBOX_SUCCESS_SECOND = ' has been created on ';
     export const INPUTBOX_ERROR = 'Error to create the Code Version ';
     export const CONNECTION_ERROR_REMOTE = 'Error when connecting to environment';
-    export const STATUS_BAR_CONNECT_MSG = 'Connected to';
+    export const STATUS_BAR_CONNECT_MSG = 'Uploading code to';
     export const STATUS_BAR_DISCONNECT_MSG = 'Disconnected from';
     export const STATUS_BAR_CONNECT_ICON = 'cloud';
     export const STATUS_BAR_DISCONNECT_ICON = 'debug-disconnect';
