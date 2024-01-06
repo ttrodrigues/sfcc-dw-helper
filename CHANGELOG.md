@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.0.27]
+- Added shortcuts to Business Manager and Storefront on main screen
+- Added shortcut to extension settings on settings screen
+- Minor refactor to delete useless code 
+
 ## [0.0.26]
 - Minor fix to disable code uploading when any compile buttons is clicked
 - Minor improvements on icons of history and show/hide password

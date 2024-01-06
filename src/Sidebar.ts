@@ -106,6 +106,30 @@ export class Sidebar implements vscode.WebviewViewProvider {
           break;
         }
 
+        case "onBtnLink": {
+          if (!data.value) {
+            return;
+          } 
+          
+          const [host, isBusinessManager]:any = data.value;
+          const link:string = isBusinessManager ? Constants.URL_PREFIX + host + Constants.URL_BM : Constants.URL_PREFIX + host;
+          const parseLink = vscode.Uri.parse(link);
+
+          vscode.commands.executeCommand('vscode.open', parseLink);
+
+          break;
+        }
+
+        case "onOpenSettings": {
+          if (!data.value) {
+            return;
+          } 
+
+          vscode.commands.executeCommand('workbench.action.openSettings', Constants.EXTENSION_NAME);
+
+          break;
+        }
+        
         case "onEnableUpload": {
           if (!data.value) {
             return;

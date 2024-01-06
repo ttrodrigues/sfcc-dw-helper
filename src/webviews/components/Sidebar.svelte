@@ -187,6 +187,20 @@
             value: true
         });
     }
+
+    const clickBtnLink = (isBusinessManager) => {
+        tsvscode.postMessage({
+            type: 'onBtnLink',
+            value: [document.getElementById('hostname')?.value, isBusinessManager]
+        });
+    }
+
+    const clickBtnOpenSettings = () => {
+        tsvscode.postMessage({
+            type: 'onOpenSettings',
+            value: true
+        });
+    }    
     
     const buttonClick = () => {
         isPasswordVisible = !isPasswordVisible;
@@ -325,35 +339,15 @@
         background-color: transparent;
     }
 
-    #prophetBtn {
+    .btns-block {
         margin-bottom: 10px; 
     }
 
-     #settingsBtn {
-        margin-bottom: 10px; 
-    }
-    
-    #commandsBtn {
+    .environmentSettings {
         margin-bottom: 10px; 
     }
 
-    #environmentBtns {
-        margin-bottom: 10px; 
-    }
-
-    .btn-prophet {
-        width: 100%;
-        width: 315px;
-        margin-top: 10px;
-    }
-
-    .btn-settings {
-        width: 100%;
-        width: 315px;
-        margin-top: 10px;
-    }
-
-    .btn-build {
+    .btn {
         width: 100%;
         width: 315px;
         margin-top: 10px;
@@ -427,7 +421,7 @@
     {#if initialView === 'default'}
 
         {#if page === 'bracket'}
-            <div id="environmentBtns">
+            <div class="environmentSettings">
                 <div>
                     <div class="textInput">Hostname</div>
                     <input on:change={(e)=>{
@@ -470,33 +464,48 @@
                     }}><svelte:component this={componentSelected} /></button>            
                 </div>   
             </div>
+
+            <div class="environmentSettings">
+                <div class="textButton">Environment Links</div>
+                <div>
+                    <button on:click={()=>{
+                        clickBtnLink(true);
+                    }} class="btn monaco-button monaco-text-button">Open Business Manager</button>                    
+                </div>
+
+                <div>
+                    <button on:click={()=>{
+                        clickBtnLink(false);
+                    }} class="btn monaco-button monaco-text-button">Open StoreFront</button>                    
+                </div>
+            </div>
         {/if}
 
         {#if page === 'settings'}    
             {#if isProphetInstalled}                
-                <div id="settingsBtn">
+                <div class="btns-block">
                     <div class="textButton">Environment Settings</div>
                     <div>
                         <button on:click={()=>{
                             clickBtnNewCodeversion();
-                        }} class="btn-settings monaco-button monaco-text-button">New Code Version</button>                    
+                        }} class="btn monaco-button monaco-text-button">New Code Version</button>                    
                     </div>
         
                     <div>
                         <button on:click={()=>{
                             clickBtnDeleteCodeversion();
-                        }} class="btn-settings monaco-button monaco-text-button">Delete Code Version</button>
+                        }} class="btn monaco-button monaco-text-button">Delete Code Version</button>
                     </div>
                 </div>        
             
                 {#if isToShowDevBuildBtn || isToShowPrdBuildBtn}
                     <div class="textButton">Compiler</div>
-                    <div id="commandsBtn">
+                    <div class="btns-block">
                         {#if isToShowDevBuildBtn}
                             <div>
                                 <button on:click={()=>{
                                     clickBtnBuild(textCommandDevBuildBtn);
-                                }} class="btn-build monaco-button monaco-text-button">{textLayoutDevBuildBtn}</button>
+                                }} class="btn monaco-button monaco-text-button">{textLayoutDevBuildBtn}</button>
                             </div>
                         {/if}
 
@@ -504,30 +513,39 @@
                             <div>
                                 <button on:click={()=>{
                                     clickBtnBuild(textCommandPrdBuildBtn);
-                                }} class="btn-build monaco-button monaco-text-button">{textLayoutPrdBuildBtn}</button>
+                                }} class="btn monaco-button monaco-text-button">{textLayoutPrdBuildBtn}</button>
                             </div>
                         {/if}
                     </div> 
                 {/if}           
             
-                <div id="prophetBtn">
+                <div class="btns-block">
                     <div class="textButton">Commands</div>
                     <div>
                         <button on:click={()=>{
                             clickBtnCleanUpload();
-                        }} class="btn-prophet monaco-button monaco-text-button">Clean Project / Upload All</button>                    
+                        }} class="btn monaco-button monaco-text-button">Clean Project / Upload All</button>                    
                     </div>
         
                     <div>
                         <button on:click={()=>{
                             clickBtnEnableUpload();
-                        }} class="btn-prophet monaco-button monaco-text-button">Enable Upload</button>
+                        }} class="btn monaco-button monaco-text-button">Enable Upload</button>
                     </div>
         
                     <div>
                         <button on:click={()=>{
                             clickBtnDisableUpload();
-                        }} class="btn-prophet monaco-button monaco-text-button">Disable Upload</button>
+                        }} class="btn monaco-button monaco-text-button">Disable Upload</button>
+                    </div>
+                </div>  
+
+                <div class="btns-block">
+                    <div class="textButton">Configuration</div>
+                    <div>
+                        <button on:click={()=>{
+                            clickBtnOpenSettings();
+                        }} class="btn monaco-button monaco-text-button">Extention settings</button>                    
                     </div>
                 </div>  
 

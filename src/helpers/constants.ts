@@ -28,6 +28,7 @@ export namespace Constants {
     export const FIX_FILE_SUCCESS_MESSAGE = 'The dw.json file was been fixed';
     export const URL_GET_TOKEN = '/dw/oauth2/access_token';
     export const URL_PREFIX = 'https://';
+    export const URL_BM = '/on/demandware.store/Sites-Site';
     export const URL_HEADER_AUTHORIZATION = 'Basic ';
     export const URL_GRANT_TYPE = 'urn:demandware:params:oauth:grant-type:client-id:dwsid:dwsecuretoken';
     export const URL_CONTENT_TYPE = 'application/x-www-form-urlencoded';
@@ -56,4 +57,6 @@ export namespace Constants {
     export const STATUS_BAR_HOSTNAME_ERROR = 'No Hostname defined';
     export const STATUS_BAR_CODEVERSION_ERROR = 'No Code Version defined';
     export const COMMAND_FOCUS_WEBVIEW = 'sfcc-dw-helper-sidebar.focus';
+    export const EXTENSION_NAME = 'sfcc-dw-helper';
+
 }
