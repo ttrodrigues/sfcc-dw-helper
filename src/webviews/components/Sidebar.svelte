@@ -237,9 +237,9 @@
     input {
         color: var(--vscode-input-foreground);
         background-color: inherit;
-        border: none;
+        border: 1px solid var(--vscode-input-border, transparent);
         background-color: var(--vscode-input-background);
-        height: 28px;
+        height: 24px;
     }
 
     input:focus{
@@ -253,7 +253,7 @@
         border: 1px solid var(--vscode-button-border,transparent);
         cursor: pointer;
         box-sizing: border-box;  
-        height: 28px;
+        height: 24px;
     }
 
     button:hover {

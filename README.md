@@ -146,6 +146,9 @@ None, until now.
 &nbsp;
 
 ## Release Notes
+## [0.0.28]
+- Minor layout fixes
+
 ## [0.0.27]
 - Added shortcuts to Business Manager and Storefront on main screen
 - Added shortcut to extension settings on settings screen
