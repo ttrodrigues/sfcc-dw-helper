@@ -10,29 +10,21 @@
     import SettingsMenu from './SettingsMenu.svelte';
    
     let initialView:string = 'default';
-    let isWorkspaceOpen:boolean;
-
+    let isLoading:boolean = false;
+    let environment:string = '';
     let componentSelected:svelteHTML = ShowIcon;
-
     let isProphetInstalled:boolean;
-
     let isToShowDevBuildBtn:boolean;
     let textCommandDevBuildBtn:string;
     let textLayoutDevBuildBtn:string;
-
     let isToShowPrdBuildBtn:boolean;
     let textCommandPrdBuildBtn:string;
     let textLayoutPrdBuildBtn:string;
-
     let codeversionConstant:string;
     let hostnameConstant:string;
-
     let codeversionPropertyShort:string;
     let hostnamePropertyShort:string;
-    
-    // To change the visibility of password field
     let isPasswordVisible:boolean = false;   
-
     let page: "bracket" | "settings" = tsvscode.getState()?.page || "bracket";
 
     $: {
@@ -46,7 +38,7 @@
                 case 'initialView': {
                     initialView = message.data;
 
-                    if (initialView === 'noFile') {
+                    if (initialView === 'checkWorkspace') {
                         tsvscode.postMessage({
                             type: 'onCheckWorkspace',
                             value: true
@@ -77,14 +69,13 @@
                     }
                     
                     break;
-                }
-                                
-                case 'isWorkspaceOpen': {
-                    isWorkspaceOpen = message.data;
-
-                    break;
-                }             
+                }      
                 
+                case 'loading': {
+                    [isLoading, environment] = message.data;
+                    
+                    break;
+                }  
             }
         });  
 
@@ -396,6 +387,30 @@
         color: var(--vscode-input-foreground);
     }
 
+    .loading {
+        position: absolute;
+        width: 315px;
+        text-align: center;
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+        font-weight: 400;
+        font-variant-caps: small-caps;
+        font-size: 14px;
+        margin-top: 20px;
+    }
+
+    .message-text {
+        font-weight: 400;
+        font-variant-caps: small-caps;
+        font-size: 14px;
+    }
+
+    .d-none {
+        display: none;
+    }
+
 </style>    
 
 {#if initialView === 'default'}
@@ -420,8 +435,12 @@
 
     {#if initialView === 'default'}
 
+        {#if isLoading}
+            <div class='loading'> Loading information from {environment}...</div>
+        {/if}
+
         {#if page === 'bracket'}
-            <div class="environmentSettings">
+            <div class="environmentSettings {isLoading ? 'd-none' : ''}">
                 <div>
                     <div class="textInput">Hostname</div>
                     <input on:change={(e)=>{
@@ -465,7 +484,7 @@
                 </div>   
             </div>
 
-            <div class="environmentSettings">
+            <div class="environmentSettings {isLoading ? 'd-none' : ''}">
                 <div class="textButton">Environment Links</div>
                 <div>
                     <button on:click={()=>{
@@ -555,10 +574,8 @@
 
     {#if initialView === 'noFile'}
 
-        <p>This folder do not has a dw.json file or is not a SFCC project!</p>
-        <p>If you already have a workspace open, please click on bellow button to create a new dw.json file.</p>
-        <p>Otherwise,the button will be disabled until a workspace has been open.</p>
-
+        <p class="message-text">This folder do not has a dw.json file or is not a SFCC project!</p>
+        <p class="message-text">If you already have a workspace open, please click on bellow button to create a new dw.json file.</p>
 
         <!-- svelte-ignore missing-declaration -->
         <button on:click={()=>{
@@ -566,14 +583,21 @@
                 type: 'onCreateFile',
                 value: true
             });
-        }} id="btnCreate" class="monaco-button monaco-text-button btn" disabled={!isWorkspaceOpen}>Create a dw.json</button>
+        }} id="btnCreate" class="monaco-button monaco-text-button btn">Create a dw.json</button>
+
+    {/if}
+
+    {#if initialView === 'noWorkspace'}
+
+        <p class="message-text">Ups... This extensions needs a Workspace to run...</p>
+        <p class="message-text">Please open a Workspace.</p>
 
     {/if}
 
     {#if initialView === 'schemaError'}
 
-        <p>Detected a dw.json file with a schema error!</p>
-        <p>The properties names are incorrect or not in string format.</p>
+        <p class="message-text">Detected a dw.json file with a schema error!</p>
+        <p class="message-text">The properties names are incorrect or not in string format.</p>
 
         <!-- svelte-ignore missing-declaration -->
         <button on:click={()=>{

@@ -104,10 +104,22 @@ export async function updateProperty (inputText:string, property:string) {
  */
 export function jsonPath () {   
     //@ts-ignore
-    const rootFolder:string = vscode.workspace.workspaceFolders[0].uri.fsPath
+    const rootFolder:string = getWorkspacePath();
     const path:string = `${rootFolder}/dw.json`; 
    
     return path;
+}
+
+/**
+ * Get the workspace path
+ *
+ * @returns Full path of the dw.json file
+ */
+export function getWorkspacePath () {   
+    //@ts-ignore
+    const rootFolder:any = vscode.workspace?.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
+   
+    return rootFolder;
 }
 
 /**
@@ -259,9 +271,12 @@ export function formatRemoteCodeVersionArray (items:any) {
     let formattedArray:any  = []   
     items.forEach((codeversion:any) => {
         let obj:any = {};
+        const date = new Date(codeversion.last_modification_time)
     
         obj['id'] = codeversion.id;
-        obj['displayName'] = codeversion.active ? `${codeversion.id} ${Constants.CODEVERSIONS_ACTIVE}` : codeversion.id;
+        obj['displayName'] = codeversion.id;
+        obj['active'] = codeversion.active ? `$(${Constants.STATUS_BAR_CONNECT_ICON}) ${Constants.CODEVERSIONS_ACTIVE}` : '';
+        obj['modification'] = `${Constants.QUICKPICK_LAST_MODIFICATION} ${date.toDateString()} ${date.toLocaleTimeString()}`;    
     
         formattedArray.push(obj);    
     });
@@ -431,14 +446,15 @@ export async function inputboxCreateItem () {
  * @param   propertyChange Property of settings to be updated
  * @param   remoteAccess If is execution to remote environment
  * @param   statusBar Status bar item
+ * @param   webviewView Webview view of extension
  */
-export async function quickPickSelectItem (items:any, title:string, jsonField:string, propertyChange:any, remoteAccess:boolean, statusBar:any) {
+export async function quickPickSelectItem (items:any, title:string, jsonField:string, propertyChange:any, remoteAccess:boolean, statusBar:any, webviewView:any) {
     return new Promise<void>((resolve) => {
       const quickPick = vscode.window.createQuickPick();
-      quickPick.items = items.map((item: any) => ({ label: item.displayName, id: item.id }));
+      quickPick.items = items.map((item: any) => ({ label: item.displayName, id: item.id, description: item.active, detail: item.modification }));
       
-      quickPick.title = title;
-                          
+      quickPick.placeholder = title;
+      
       quickPick.onDidAccept(async () => {
         //@ts-ignore
         const selectionText = quickPick.activeItems[0].id;
@@ -470,6 +486,7 @@ export async function quickPickSelectItem (items:any, title:string, jsonField:st
         resolve();
       })
       
+      webviewView.webview.postMessage({command:"loading", data:[false, '']}); 
       quickPick.show();
     })
 }
@@ -482,7 +499,7 @@ export async function initialWebView () {
     let file:any = await vscode.workspace.findFiles(Constants.FILENAME, null, 1);
 
     if (!file.length) {
-        return Constants.WEBVIEW_NO_FILE;    
+        return Constants.WEBVIEW_CHECK_WORKSPACE;    
     }
 
     // To validate the json schema    

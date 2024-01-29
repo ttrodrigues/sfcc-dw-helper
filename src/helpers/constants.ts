@@ -1,6 +1,8 @@
 export namespace Constants {
     export const FILENAME = 'dw.json';
     export const WEBVIEW_NO_FILE = 'noFile';
+    export const WEBVIEW_NO_WORKSPACE = 'noWorkspace';
+    export const WEBVIEW_CHECK_WORKSPACE = 'checkWorkspace';
     export const WEBVIEW_SCHEMA_ERROR = 'schemaError';
     export const WEBVIEW_DEFAULT = 'default';
     export const PROPHET_ID_NAME = 'SqrTT.prophet';
@@ -13,6 +15,7 @@ export namespace Constants {
     export const QUICKPICK_TITLE_TO_DELETE = 'Select the Code Version to delete';
     export const QUICKPICK_TITLE_CODEVERSON = 'Select the Code Version';
     export const QUICKPICK_TITLE_CODEVERSON_REMOTE = 'Select the Code Version from';
+    export const QUICKPICK_LAST_MODIFICATION = 'Last modification:';
     export const HOSTNAME_HISTORY_PROPERTY = 'sfcc-dw-helper.hostnameHistory';
     export const CODEVERSION_HISTORY_PROPERTY = 'sfcc-dw-helper.codeversionHistory';
     export const HOSTNAME = 'hostname';
@@ -37,7 +40,7 @@ export namespace Constants {
     export const URL_PUT_DELETE_CODEVERSIONS = '/s/-/dw/data/v19_1/code_versions/';
     export const CLIENT_PASSWORD_ERROR = 'Please confirm your OCAPI Client Password on extension Settings';
     export const REMOTE_CODEVERSIONS_ERROR = 'Error to get the environment Code Versions. It will use the extension settings option.';
-    export const CODEVERSIONS_ACTIVE = '(Active)';
+    export const CODEVERSIONS_ACTIVE = 'Active on environment';
     export const API_PUT_METHOD = 'PUT';
     export const API_DELETE_METHOD = 'DELETE';
     export const CODEVERSION_SUCCESS_FIRST = 'Code version ';

@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.0.29]
+- Fix bug when try to open webview of extension on a window without workspace open
+- Improvements on quickpick of Code Version selection when is getting information from environment
+- Added loading information when clicks to get Code Versions of an environment
+
 ## [0.0.28]
 - Minor layout fixes
 

@@ -11,16 +11,10 @@ export class Sidebar implements vscode.WebviewViewProvider {
   constructor(private readonly _extensionUri: vscode.Uri) {}
   
   public async resolveWebviewView(webviewView: vscode.WebviewView) {
-    let statusBar:any = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -10);
-    const dwFile:any = await formatJson();
-    
     this._view = webviewView;
     
-    if (dwFile) {
-      showStatusBarItem(statusBar, false);
-      statusBar.show();
-    }
-      
+    let statusBar:any = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -10);
+        
     webviewView.webview.options = {
       // Allow scripts in the webview
       enableScripts: true,
@@ -30,12 +24,14 @@ export class Sidebar implements vscode.WebviewViewProvider {
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
     
     let initialView:any = await initialWebView();
-        
+    
     webviewView.webview.postMessage({command:"initialView", data:initialView});
-
+    
     if (initialView === Constants.WEBVIEW_DEFAULT) {
       let currentJson:any = await formatJson();
       webviewView.webview.postMessage({command:"jsonValues", data:currentJson});
+      showStatusBarItem(statusBar, false);
+      statusBar.show();
     }
 
     // Listener to changes in configuration options
@@ -185,7 +181,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
               const formattedItems:any = formatConfigurationCodeVersionArray(items);
               
               if (formattedItems !== null) {
-                await quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_HOSTNAME, Constants.HOSTNAME, null, false, statusBar)
+                await quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_HOSTNAME, Constants.HOSTNAME, null, false, statusBar, webviewView)
                 .then(async () => {
                   let currentJson:any = await formatJson();   
                   webviewView.webview.postMessage({command:"jsonValues", data:currentJson});           
@@ -199,8 +195,8 @@ export class Sidebar implements vscode.WebviewViewProvider {
 
             case Constants.CODEVERSION: {
               items = vscode.workspace.getConfiguration('sfcc-dw-helper').codeversionHistory;
+              webviewView.webview.postMessage({command:"loading", data:[true, defaultJson().hostname]}); 
               const formattedItems:any = formatConfigurationCodeVersionArray(items);
-
               const environmentItems = await ocapiGetCodeVersions();
 
               if (!environmentItems.error) {
@@ -208,7 +204,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
                 const json:any = defaultJson();
                 const title:string = `${Constants.QUICKPICK_TITLE_CODEVERSON_REMOTE} ${json.hostname}`; 
 
-                await quickPickSelectItem(environmentItems, title, Constants.CODEVERSION,Constants.CODEVERSION_HISTORY_PROPERTY_SHORT, true, statusBar)
+                await quickPickSelectItem(environmentItems, title, Constants.CODEVERSION,Constants.CODEVERSION_HISTORY_PROPERTY_SHORT, true, statusBar, webviewView)
                 .then(async () => { 
                   let currentJson:any = await formatJson(); 
                   webviewView.webview.postMessage({command:"jsonValues", data:currentJson});           
@@ -225,7 +221,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
                     vscode.window.showInformationMessage(Constants.REMOTE_CODEVERSIONS_ERROR);
                   }
 
-                  await quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_CODEVERSON, Constants.CODEVERSION, null, false, statusBar)
+                  await quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_CODEVERSON, Constants.CODEVERSION, null, false, statusBar, webviewView)
                   .then(async () => { 
                     let currentJson:any = await formatJson();   
                     webviewView.webview.postMessage({command:"jsonValues", data:currentJson});         
@@ -317,7 +313,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
           }  
           
           const isWorkspaceOpen:boolean = !!vscode.workspace.workspaceFolders;
-          webviewView.webview.postMessage({command:"isWorkspaceOpen", data:isWorkspaceOpen});     
+          webviewView.webview.postMessage({command:"initialView", data:isWorkspaceOpen ? Constants.WEBVIEW_NO_FILE : Constants.WEBVIEW_NO_WORKSPACE});   
 
           break;
         }
