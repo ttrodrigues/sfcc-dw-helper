@@ -246,12 +246,15 @@ export class Sidebar implements vscode.WebviewViewProvider {
             return;
           }  
           
+          webviewView.webview.postMessage({command:"loading", data:[true, defaultJson().hostname]}); 
+          
           const environmentItems = await ocapiGetCodeVersions();
 
           if (!environmentItems.error) {
-            await inputboxCreateItem();
+            await inputboxCreateItem(webviewView);
           } else {
             vscode.window.showErrorMessage(Constants.CONNECTION_ERROR_REMOTE );
+            webviewView.webview.postMessage({command:"loading", data:[false, '']}); 
           }
           break;
         }
@@ -261,12 +264,15 @@ export class Sidebar implements vscode.WebviewViewProvider {
             return;
           }  
          
+          webviewView.webview.postMessage({command:"loading", data:[true, defaultJson().hostname]}); 
+
           const environmentItems = await ocapiGetCodeVersions();
 
           if (!environmentItems.error) {
-            quickPickSelectItemDelete(environmentItems);
+            quickPickSelectItemDelete(environmentItems, webviewView);
           } else {
             vscode.window.showErrorMessage(Constants.CONNECTION_ERROR_REMOTE);
+            webviewView.webview.postMessage({command:"loading", data:[false, '']}); 
           }
           
           break;

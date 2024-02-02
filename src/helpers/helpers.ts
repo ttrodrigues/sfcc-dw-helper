@@ -380,8 +380,9 @@ export async function ocapiActiveCodeVersion (codeversion: string) {
  * Open quickpick to delete a Code Version
  *
  * @param   items List of Code Version to show on quickpick
+ * @param   webviewView Webview view of extension
  */
-export async function quickPickSelectItemDelete (items:any) {
+export async function quickPickSelectItemDelete (items:any, webviewView:any) {
     return new Promise(() => {
         const quickPick = vscode.window.createQuickPick();
         quickPick.items = items.map((item: any) => ({ label: item.displayName, id: item.id }));
@@ -404,6 +405,7 @@ export async function quickPickSelectItemDelete (items:any) {
             }         
             
         })
+        webviewView.webview.postMessage({command:"loading", data:[false, '']}); 
         quickPick.show();
     })
 }
@@ -411,9 +413,12 @@ export async function quickPickSelectItemDelete (items:any) {
 
 /**
  * Open inputbox to create a new Code Version
+ * @param   webviewView Webview view of extension
  *
  */
-export async function inputboxCreateItem () {    
+export async function inputboxCreateItem (webviewView:any) {    
+    webviewView.webview.postMessage({command:"loading", data:[false, '']}); 
+    
     const inputText:any = await vscode.window.showInputBox({
         placeHolder: Constants.INPUTBOX_PROMPT,
         prompt: Constants.INPUTBOX_TITLE

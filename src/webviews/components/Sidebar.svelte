@@ -8,6 +8,7 @@
     import History from './History.svelte';
     import BracketMenu from './BracketMenu.svelte';
     import SettingsMenu from './SettingsMenu.svelte';
+    import Loading from './Loading.svelte';
    
     let initialView:string = 'default';
     let isLoading:boolean = false;
@@ -311,6 +312,14 @@
        margin-top: 10px;
     }
 
+    .svgLoading {
+       width: 50px;
+       height: 50px;  
+       left: 132.5px; /* Min-width divided per two and minus half of element width */
+       position: relative;
+       top: 70px;
+    }
+
     #btnSvgHostname:hover {
         background-color: transparent;
     }
@@ -436,7 +445,14 @@
     {#if initialView === 'default'}
 
         {#if isLoading}
-            <div class='loading'> Loading information from {environment}...</div>
+            <div class="loading-wrapper">
+                <div class='loading'> 
+                    Connecting with {environment}...
+                </div>
+                <div class="svgLoading">
+                    <Loading/>
+                </div>
+            </div>
         {/if}
 
         {#if page === 'bracket'}
@@ -501,74 +517,75 @@
         {/if}
 
         {#if page === 'settings'}    
-            {#if isProphetInstalled}                
-                <div class="btns-block">
-                    <div class="textButton">Environment Settings</div>
-                    <div>
-                        <button on:click={()=>{
-                            clickBtnNewCodeversion();
-                        }} class="btn monaco-button monaco-text-button">New Code Version</button>                    
-                    </div>
-        
-                    <div>
-                        <button on:click={()=>{
-                            clickBtnDeleteCodeversion();
-                        }} class="btn monaco-button monaco-text-button">Delete Code Version</button>
-                    </div>
-                </div>        
-            
-                {#if isToShowDevBuildBtn || isToShowPrdBuildBtn}
-                    <div class="textButton">Compiler</div>
+            <div class="settings-wrapper {isLoading ? 'd-none' : ''}">
+                {#if isProphetInstalled}                
                     <div class="btns-block">
-                        {#if isToShowDevBuildBtn}
-                            <div>
-                                <button on:click={()=>{
-                                    clickBtnBuild(textCommandDevBuildBtn);
-                                }} class="btn monaco-button monaco-text-button">{textLayoutDevBuildBtn}</button>
-                            </div>
-                        {/if}
-
-                        {#if isToShowPrdBuildBtn}
-                            <div>
-                                <button on:click={()=>{
-                                    clickBtnBuild(textCommandPrdBuildBtn);
-                                }} class="btn monaco-button monaco-text-button">{textLayoutPrdBuildBtn}</button>
-                            </div>
-                        {/if}
-                    </div> 
-                {/if}           
+                        <div class="textButton">Environment Settings</div>
+                        <div>
+                            <button on:click={()=>{
+                                clickBtnNewCodeversion();
+                            }} class="btn monaco-button monaco-text-button">New Code Version</button>                    
+                        </div>
             
-                <div class="btns-block">
-                    <div class="textButton">Commands</div>
-                    <div>
-                        <button on:click={()=>{
-                            clickBtnCleanUpload();
-                        }} class="btn monaco-button monaco-text-button">Clean Project / Upload All</button>                    
-                    </div>
-        
-                    <div>
-                        <button on:click={()=>{
-                            clickBtnEnableUpload();
-                        }} class="btn monaco-button monaco-text-button">Enable Upload</button>
-                    </div>
-        
-                    <div>
-                        <button on:click={()=>{
-                            clickBtnDisableUpload();
-                        }} class="btn monaco-button monaco-text-button">Disable Upload</button>
-                    </div>
-                </div>  
+                        <div>
+                            <button on:click={()=>{
+                                clickBtnDeleteCodeversion();
+                            }} class="btn monaco-button monaco-text-button">Delete Code Version</button>
+                        </div>
+                    </div>        
+                
+                    {#if isToShowDevBuildBtn || isToShowPrdBuildBtn}
+                        <div class="textButton">Compiler</div>
+                        <div class="btns-block">
+                            {#if isToShowDevBuildBtn}
+                                <div>
+                                    <button on:click={()=>{
+                                        clickBtnBuild(textCommandDevBuildBtn);
+                                    }} class="btn monaco-button monaco-text-button">{textLayoutDevBuildBtn}</button>
+                                </div>
+                            {/if}
 
-                <div class="btns-block">
-                    <div class="textButton">Configuration</div>
-                    <div>
-                        <button on:click={()=>{
-                            clickBtnOpenSettings();
-                        }} class="btn monaco-button monaco-text-button">Extention settings</button>                    
-                    </div>
-                </div>  
+                            {#if isToShowPrdBuildBtn}
+                                <div>
+                                    <button on:click={()=>{
+                                        clickBtnBuild(textCommandPrdBuildBtn);
+                                    }} class="btn monaco-button monaco-text-button">{textLayoutPrdBuildBtn}</button>
+                                </div>
+                            {/if}
+                        </div> 
+                    {/if}           
+                
+                    <div class="btns-block">
+                        <div class="textButton">Commands</div>
+                        <div>
+                            <button on:click={()=>{
+                                clickBtnCleanUpload();
+                            }} class="btn monaco-button monaco-text-button">Clean Project / Upload All</button>                    
+                        </div>
+            
+                        <div>
+                            <button on:click={()=>{
+                                clickBtnEnableUpload();
+                            }} class="btn monaco-button monaco-text-button">Enable Upload</button>
+                        </div>
+            
+                        <div>
+                            <button on:click={()=>{
+                                clickBtnDisableUpload();
+                            }} class="btn monaco-button monaco-text-button">Disable Upload</button>
+                        </div>
+                    </div>  
 
-            {/if}
+                    <div class="btns-block">
+                        <div class="textButton">Configuration</div>
+                        <div>
+                            <button on:click={()=>{
+                                clickBtnOpenSettings();
+                            }} class="btn monaco-button monaco-text-button">Extention settings</button>                    
+                        </div>
+                    </div>                    
+                {/if}
+            </div>
         {/if}
     {/if}
 

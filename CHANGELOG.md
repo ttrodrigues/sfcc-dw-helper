@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.0.30]
+- Added new loading animation
+- Added loading when is connecting the environment to create and delete code versions
+- Fix minor layout issues
+
 ## [0.0.29]
 - Fix bug when try to open webview of extension on a window without workspace open
 - Improvements on quickpick of Code Version selection when is getting information from environment
