@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.0.31]
+- Fix minor layout issue
+
 ## [0.0.30]
 - Added new loading animation
 - Added loading when is connecting the environment to create and delete code versions

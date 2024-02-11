@@ -220,7 +220,7 @@
 
 <style>
     :global(body) {
-        font-family: Segoe WPC,Segoe UI,sans-serif;
+        font-family: var(--vscode-font-family);
         font-size: 13px;
         padding-right: 20px;
         overflow-x: hidden;
@@ -266,24 +266,28 @@
        width: 100%;
        width: 285px;
        margin-top: 10px;
+       font-family: var(--vscode-font-family);
     }
     #codeVersion {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px;
        margin-top: 10px;
+       font-family: var(--vscode-font-family);
     }
     #userName {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px; 
        margin-top: 10px;
+       font-family: var(--vscode-font-family);
     }
     #password {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px;
        margin-top: 10px;
+       font-family: var(--vscode-font-family);
     }
     
     #btnSvgPassword {
@@ -351,6 +355,7 @@
         width: 100%;
         width: 315px;
         margin-top: 10px;
+        font-family: var(--vscode-font-family);
     }
 
     .textInput, .textButton {
@@ -359,9 +364,10 @@
         white-space: nowrap;
         padding: 4px 0 0;
         margin: 0;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 400;
         font-variant-caps: small-caps;
+        font-family: var(--vscode-font-family);
     }
 
     #btnCreate, #btnFix {
