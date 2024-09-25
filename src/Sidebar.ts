@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
-import { formatJson, defaultJson, updateProperty, jsonPath, formatConfigurationCodeVersionArray, ocapiGetCodeVersions, quickPickSelectItemDelete, inputboxCreateItem, quickPickSelectItem, initialWebView, showStatusBarItem, getProphetInfo } from "./helpers/helpers";
+import { formatJson, defaultJson, updateProperty, jsonPath, formatConfigurationCodeVersionArray, ocapiGetCodeVersions, quickPickSelectItemDelete, inputboxCreateItem, quickPickSelectItem, initialWebView, showStatusBarItem, getProphetInfo, eraseTokenObj } from "./helpers/helpers";
 import { Constants } from "./helpers/constants"
 
 export class Sidebar implements vscode.WebviewViewProvider {
@@ -183,6 +183,7 @@ export class Sidebar implements vscode.WebviewViewProvider {
               if (formattedItems !== null) {
                 await quickPickSelectItem(formattedItems, Constants.QUICKPICK_TITLE_HOSTNAME, Constants.HOSTNAME, null, false, statusBar, webviewView)
                 .then(async () => {
+                  eraseTokenObj();
                   let currentJson:any = await formatJson();   
                   webviewView.webview.postMessage({command:"jsonValues", data:currentJson});           
                 });   

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Constants } from "./constants";
 import btoa = require("btoa");
 const url = require('url');
+let tokenObj:any = {};
 
 /**
  * Format the parameters of the dw.json file
@@ -140,7 +141,14 @@ export async function getToken () {
     if (authorizationHeader === undefined) {
         return result;
     }
-    
+
+    if (tokenObj.expirationTimestamp && new Date().getTime() < tokenObj.expirationTimestamp) {
+        return result = {
+            error: false,
+            response: tokenObj
+        };
+    }
+
     const endpointUrl:string = Constants.URL_PREFIX + dwFile.hostname + Constants.URL_GET_TOKEN;
     const payload:any = { client_id: clientId, grant_type: Constants.URL_GRANT_TYPE };
     const headers:any = { 'Authorization': authorizationHeader, 'Content-Type': Constants.URL_CONTENT_TYPE };
@@ -158,6 +166,7 @@ export async function getToken () {
                 error: false,
                 response: response
             };
+            saveTokenObj(response);
         })
         .catch(function (error:any) {
             result = {
@@ -541,4 +550,21 @@ export async function showStatusBarItem(sbItem:any, isConnected:boolean) {
 export function getProphetInfo () {   
     const allExtensions: readonly any[] = vscode.extensions.all;
     return allExtensions.filter(e => e.id === Constants.PROPHET_ID_NAME)[0];
+}
+
+/**
+ * Erases the actual token object
+ *
+ */
+export function eraseTokenObj () {   
+    tokenObj = {};
+}
+
+/**
+ * Saves the response to getting token
+ * @param  response Response token call
+ */
+function saveTokenObj (response:any) {   
+    tokenObj = response;
+    tokenObj.expirationTimestamp = new Date().getTime() + response.data.expires_in * 1000;
 }

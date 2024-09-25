@@ -3,9 +3,9 @@
   "displayName": "SFCC DW Helper",
   "publisher": "ttrodrigues",
   "description": "Helper for dw.json file usage to connect to an SFCC environment",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "license": "Open source",
-  "icon": "/media/icon.png",
+  "icon": "media/icon.png",
   "engines": {
     "vscode": "^1.75.0"
   },

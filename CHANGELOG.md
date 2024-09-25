@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.0.32]
+- Implemented cache to access token to improve performance
+
 ## [0.0.31]
 - Fix minor layout issue
 
