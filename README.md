@@ -146,6 +146,9 @@ None, until now.
 &nbsp;
 
 ## Release Notes
+## [0.0.33]
+- Implemented await-to-js lib for easy error handling
+
 ## [0.0.32]
 - Implemented cache to access token to improve performance
 

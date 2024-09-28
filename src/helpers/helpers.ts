@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as fs from 'fs';
 import axios from 'axios';
+import to from 'await-to-js';
 import { Constants } from "./constants";
 import btoa = require("btoa");
 const url = require('url');
@@ -154,26 +155,20 @@ export async function getToken () {
     const headers:any = { 'Authorization': authorizationHeader, 'Content-Type': Constants.URL_CONTENT_TYPE };
     const params:any = new url.URLSearchParams(payload);
     const finalUrl:string = `${endpointUrl}?${params}`;
-
     const config = {
         method: 'post',
         url: finalUrl,
         headers: headers
     }
-    await axios(config)
-        .then(function (response:any) {
-            result = {
-                error: false,
-                response: response
-            };
-            saveTokenObj(response);
-        })
-        .catch(function (error:any) {
-            result = {
-                error: true,
-                response: error
-            };
-        }); 
+
+    const [ error, response ] = await to(axios(config));
+
+    result = {
+        error: !!error,
+        response: error || response
+    };
+
+    if (response) saveTokenObj(response);
     
     return result;
 }
@@ -211,32 +206,22 @@ export async function ocapiGetCodeVersions () {
 
     let result:any = token;
 
-    //@ts-ignore
     if (token.response.status === 200) {
-        //@ts-ignore
-        const authorizationHeader:string = `${token.response.data.token_type} ${token.response.data.access_token}`
-    
+        const authorizationHeader:string = `${token.response.data.token_type} ${token.response.data.access_token}`;    
         const endpointUrl:string = Constants.URL_PREFIX + dwFile.hostname + Constants.URL_GET_CODEVERSIONS;
         const headers:any = { 'Authorization': authorizationHeader, 'x-dw-client-id': clientId};
-    
         const config = {
             method: 'get',
             url: endpointUrl,
             headers: headers
         }
-        await axios(config)
-            .then(function (response:any) {
-                result = {
-                    error: false,
-                    response: response
-                };
-            })
-            .catch(function (error:any) {
-                result = {
-                    error: true,
-                    response: error
-                };
-            });
+
+        const [ error, response ] = await to(axios(config));
+
+        result = {
+            error: !!error,
+            response: error || response
+        };
     }
 
     let returnValue:any;
@@ -304,35 +289,24 @@ export async function ocapiCreateDeleteCodeVersion (codeversion: string, method:
     const clientId:any = vscode.workspace.getConfiguration('sfcc-dw-helper').get('ocapiClientId');
     const dwFile:any = defaultJson();
     const token:any = await getToken();
-
     let result:any = token;
 
-    //@ts-ignore
     if (token.response.status === 200) {
-        //@ts-ignore
-        const authorizationHeader:string = `${token.response.data.token_type} ${token.response.data.access_token}`
-    
+        const authorizationHeader:string = `${token.response.data.token_type} ${token.response.data.access_token}`;
         const endpointUrl:string = Constants.URL_PREFIX + dwFile.hostname + Constants.URL_PUT_DELETE_CODEVERSIONS + codeversion;
         const headers:any = { 'Authorization': authorizationHeader, 'x-dw-client-id': clientId, 'Content-Type': Constants.URL_CONTENT_TYPE_UTF8 };
-    
         const config = {
             method: method,
             url: endpointUrl,
             headers: headers
         }
-        await axios(config)
-            .then(function (response:any) {
-                result = {
-                    error: false,
-                    response: response
-                };
-            })
-            .catch(function (error:any) {
-                result = {
-                    error: true,
-                    response: error
-                };
-            });
+
+        const [ error, response ] = await to(axios(config));
+
+        result = {
+            error: !!error,
+            response: error || response
+        };
     }
         
     return result;
@@ -348,17 +322,12 @@ export async function ocapiActiveCodeVersion (codeversion: string) {
     const clientId:any = vscode.workspace.getConfiguration('sfcc-dw-helper').get('ocapiClientId');
     const dwFile:any = defaultJson();
     const token:any = await getToken();
-
     let result:any = token;
 
-    //@ts-ignore
     if (token.response.status === 200) {
-        //@ts-ignore
         const authorizationHeader:string = `${token.response.data.token_type} ${token.response.data.access_token}`
-    
         const endpointUrl:string = Constants.URL_PREFIX + dwFile.hostname + Constants.URL_PUT_DELETE_CODEVERSIONS + codeversion;
         const headers:any = { 'Authorization': authorizationHeader, 'x-dw-client-id': clientId, 'Content-Type': Constants.URL_CONTENT_TYPE_UTF8 };
-    
         const config = {
             method: "patch",
             url: endpointUrl,
@@ -367,19 +336,13 @@ export async function ocapiActiveCodeVersion (codeversion: string) {
                 "active": true
             }
         }
-        await axios(config)
-            .then(function (response:any) {
-                result = {
-                    error: false,
-                    response: response
-                };
-            })
-            .catch(function (error:any) {
-                result = {
-                    error: true,
-                    response: error
-                };
-            });
+
+        const [ error, response ] = await to(axios(config));
+
+        result = {
+            error: !!error,
+            response: error || response
+        };
     }
         
     return result;

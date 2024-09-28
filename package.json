@@ -3,7 +3,7 @@
   "displayName": "SFCC DW Helper",
   "publisher": "ttrodrigues",
   "description": "Helper for dw.json file usage to connect to an SFCC environment",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "license": "Open source",
   "icon": "media/icon.png",
   "engines": {
@@ -144,6 +144,7 @@
   },
   "dependencies": {
     "@types/vscode-webview": "^1.57.1",
+    "await-to-js": "^3.0.0",
     "axios": "^1.4.0",
     "btoa": "^1.2.1",
     "date-fns": "^2.16.1",
