@@ -359,7 +359,7 @@ export async function quickPickSelectItemDelete (items:any, webviewView:any) {
         const quickPick = vscode.window.createQuickPick();
         quickPick.items = items.map((item: any) => ({ label: item.displayName, id: item.id }));
         
-        quickPick.title = Constants.QUICKPICK_TITLE_TO_DELETE;
+        quickPick.placeholder = Constants.QUICKPICK_TITLE_TO_DELETE;
                             
         quickPick.onDidAccept(async () => {
             //@ts-ignore

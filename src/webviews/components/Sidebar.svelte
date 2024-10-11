@@ -220,7 +220,7 @@
 
 <style>
     :global(body) {
-        font-family: var(--vscode-font-family);
+        font-family: var(--vscode-editor-font-family);
         font-size: 13px;
         padding-right: 20px;
         overflow-x: hidden;
@@ -266,28 +266,28 @@
        width: 100%;
        width: 285px;
        margin-top: 10px;
-       font-family: var(--vscode-font-family);
+       font-family: var(--vscode-editor-font-family);
     }
     #codeVersion {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px;
        margin-top: 10px;
-       font-family: var(--vscode-font-family);
+       font-family: var(--vscode-editor-font-family);
     }
     #userName {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px; 
        margin-top: 10px;
-       font-family: var(--vscode-font-family);
+       font-family: var(--vscode-editor-font-family);
     }
     #password {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px;
        margin-top: 10px;
-       font-family: var(--vscode-font-family);
+       font-family: var(--vscode-editor-font-family);
     }
     
     #btnSvgPassword {
@@ -355,7 +355,7 @@
         width: 100%;
         width: 315px;
         margin-top: 10px;
-        font-family: var(--vscode-font-family);
+        font-family: var(--vscode-editor-font-family);
     }
 
     .textInput, .textButton {
@@ -367,7 +367,7 @@
         font-size: 13px;
         font-weight: 400;
         font-variant-caps: small-caps;
-        font-family: var(--vscode-font-family);
+        font-family: var(--vscode-editor-font-family);
     }
 
     #btnCreate, #btnFix {

@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.0.34]
+- Minor fixes on font type of extension and minor improvement on popup to delete an Code Version
+
 ## [0.0.33]
 - Implemented await-to-js lib for easy error handling
 
