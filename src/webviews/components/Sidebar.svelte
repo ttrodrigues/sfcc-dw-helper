@@ -220,7 +220,7 @@
 
 <style>
     :global(body) {
-        font-family: var(--vscode-editor-font-family);
+        font-family: var(--vscode-font-family);
         font-size: 13px;
         padding-right: 20px;
         overflow-x: hidden;
@@ -245,7 +245,7 @@
         border: 1px solid var(--vscode-button-border,transparent);
         cursor: pointer;
         box-sizing: border-box;  
-        height: 24px;
+        height: 28px;
     }
 
     button:hover {
@@ -266,28 +266,28 @@
        width: 100%;
        width: 285px;
        margin-top: 10px;
-       font-family: var(--vscode-editor-font-family);
+       font-family: var(--vscode-font-family);
     }
     #codeVersion {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px;
        margin-top: 10px;
-       font-family: var(--vscode-editor-font-family);
+       font-family: var(--vscode-font-family);
     }
     #userName {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px; 
        margin-top: 10px;
-       font-family: var(--vscode-editor-font-family);
+       font-family: var(--vscode-font-family);
     }
     #password {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px;
        margin-top: 10px;
-       font-family: var(--vscode-editor-font-family);
+       font-family: var(--vscode-font-family);
     }
     
     #btnSvgPassword {
@@ -355,7 +355,7 @@
         width: 100%;
         width: 315px;
         margin-top: 10px;
-        font-family: var(--vscode-editor-font-family);
+        font-family: var(--vscode-font-family);
     }
 
     .textInput, .textButton {
@@ -366,8 +366,7 @@
         margin: 0;
         font-size: 13px;
         font-weight: 400;
-        font-variant-caps: small-caps;
-        font-family: var(--vscode-editor-font-family);
+        font-family: var(--vscode-font-family);
     }
 
     #btnCreate, #btnFix {
@@ -411,14 +410,12 @@
         justify-content: center;
         align-items: center;
         font-weight: 400;
-        font-variant-caps: small-caps;
         font-size: 14px;
         margin-top: 20px;
     }
 
     .message-text {
         font-weight: 400;
-        font-variant-caps: small-caps;
         font-size: 14px;
     }
 
