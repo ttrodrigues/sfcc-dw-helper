@@ -146,6 +146,9 @@ None, until now.
 &nbsp;
 
 ## Release Notes
+## [0.0.36]
+- Minor fixes on font type of extension
+
 ## [0.0.35]
 - Minor fixes on font type of extension
 
