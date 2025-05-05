@@ -223,7 +223,7 @@
         font-size: 13px;
         padding-right: 20px;
         overflow-x: hidden;
-        font-family: var(--vscode-font-family);
+        font-family: var(--vscode-font-family) !important;
     }
 
     input {
@@ -266,28 +266,28 @@
        width: 100%;
        width: 285px;
        margin-top: 10px;
-       font-family: var(--vscode-font-family);
+       font-family: var(--vscode-font-family) !important;
     }
     #codeVersion {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px;
        margin-top: 10px;
-       font-family: var(--vscode-font-family);
+       font-family: var(--vscode-font-family) !important;
     }
     #userName {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px; 
        margin-top: 10px;
-       font-family: var(--vscode-font-family);
+       font-family: var(--vscode-font-family) !important;
     }
     #password {
        margin-bottom: 10px; 
        width: 100%;
        width: 285px;
        margin-top: 10px;
-       font-family: var(--vscode-font-family);
+       font-family: var(--vscode-font-family) !important;
     }
     
     #btnSvgPassword {
@@ -355,7 +355,7 @@
         width: 100%;
         width: 315px;
         margin-top: 10px;
-        font-family: var(--vscode-font-family);
+        font-family: var(--vscode-font-family) !important;
     }
 
     .textInput, .textButton {
@@ -366,12 +366,13 @@
         margin: 0;
         font-size: 13px;
         font-weight: 400;
-        font-family: var(--vscode-font-family);
+        font-family: var(--vscode-font-family) !important;
     }
 
     #btnCreate, #btnFix {
        margin-top: 20px; 
        width: 100%;
+       font-family: var(--vscode-font-family) !important;
     }
 
     .buttons-wrapper {
@@ -417,6 +418,7 @@
     .message-text {
         font-weight: 400;
         font-size: 14px;
+        font-family: var(--vscode-font-family) !important;
     }
 
     .d-none {

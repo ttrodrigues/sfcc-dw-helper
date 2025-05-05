@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.0.38]
+- Minor fixes on font type of extension
+
 ## [0.0.37]
 - Minor fixes on font type of extension
 
