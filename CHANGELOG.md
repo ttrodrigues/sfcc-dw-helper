@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.0.39] - Unreleased
+- Converted webview from Svelte to React
+- Updated UI styling to use VSCode design system
+- Improved button and input styling with proper VSCode theming
+- Replaced Rollup build system with Webpack for webview
+
 ## [0.0.38]
 - Minor fixes on font type of extension
 
