@@ -19,7 +19,7 @@ export class ConnectionSettingsTreeProvider implements vscode.TreeDataProvider<C
   async getChildren(element?: ConnectionTreeItem): Promise<ConnectionTreeItem[]> {
     if (!element) {
       // Root level - show all connection settings
-      const json = await formatJson();
+      const json = formatJson();
       
       if (!json) {
         return [new ConnectionTreeItem("No dw.json file found", "", vscode.TreeItemCollapsibleState.None)];

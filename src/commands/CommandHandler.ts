@@ -22,7 +22,7 @@ export class CommandHandler {
   }
 
   async editField(field: string, label: string) {
-    const json = await formatJson();
+    const json = formatJson();
     if (!json) {
       vscode.window.showErrorMessage("No dw.json file found");
       return;
@@ -164,7 +164,7 @@ export class CommandHandler {
   }
 
   async executeEnvironmentAction(actionId: string) {
-    const json = await defaultJson();
+    const json = defaultJson();
     const hostname = json?.hostname || "";
 
     switch (actionId) {
@@ -222,7 +222,7 @@ export class CommandHandler {
     const result = await ocapiCreateDeleteCodeVersion(cvName, Constants.API_PUT_METHOD);
     
     if (!result.error) {
-      const json = await defaultJson();
+      const json = defaultJson();
       vscode.window.showInformationMessage(`${Constants.CODEVERSION_SUCCESS_FIRST}${cvName}${Constants.INPUTBOX_SUCCESS_SECOND}${json.hostname}`);
       this.refreshAllTreeViews();
     } else {
@@ -267,7 +267,7 @@ export class CommandHandler {
     const result = await ocapiCreateDeleteCodeVersion(cvName, Constants.API_DELETE_METHOD);
     
     if (!result.error) {
-      const json = await defaultJson();
+      const json = defaultJson();
       vscode.window.showInformationMessage(`${Constants.CODEVERSION_SUCCESS_FIRST}${cvName}${Constants.DELETE_ITEM_SUCCESS_SECOND}${json.hostname}`);
       this.refreshAllTreeViews();
     } else {

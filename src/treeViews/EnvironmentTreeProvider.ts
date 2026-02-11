@@ -17,7 +17,7 @@ export class EnvironmentTreeProvider implements vscode.TreeDataProvider<Environm
 
   async getChildren(element?: EnvironmentTreeItem): Promise<EnvironmentTreeItem[]> {
     if (!element) {
-      const json = await defaultJson();
+      const json = defaultJson();
       const hostname = json?.hostname || "";
       
       // Root level - show environment actions
