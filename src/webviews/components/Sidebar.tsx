@@ -11,21 +11,18 @@ import './Sidebar.css';
 declare const tsvscode: any;
 const vscode = tsvscode;
 
-interface WindowWithGlobals extends Window {
-  isProphetInstall?: boolean;
-  showDevBuildBtn?: boolean;
-  commandDevBuildBtn?: string;
-  showPrdBuildBtn?: boolean;
-  commandPrdBuildBtn?: string;
-  textDevBuildBtn?: string;
-  textPrdBuildBtn?: string;
-  hostname?: string;
-  codeversion?: string;
-  hostnameHistoryPropertyShort?: string;
-  codeversionHistoryPropertyShort?: string;
-}
-
-const w = window as WindowWithGlobals;
+// Declare global variables from the HTML template
+declare const isProphetInstall: boolean;
+declare const showDevBuildBtn: boolean;
+declare const commandDevBuildBtn: string;
+declare const showPrdBuildBtn: boolean;
+declare const commandPrdBuildBtn: string;
+declare const textDevBuildBtn: string;
+declare const textPrdBuildBtn: string;
+declare const hostname: string;
+declare const codeversion: string;
+declare const hostnameHistoryPropertyShort: string;
+declare const codeversionHistoryPropertyShort: string;
 
 export const Sidebar: React.FC = () => {
   const [initialView, setInitialView] = useState<string>('default');
@@ -42,17 +39,17 @@ export const Sidebar: React.FC = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const codeversionRef = useRef<HTMLInputElement>(null);
 
-  const isProphetInstalled = w.isProphetInstall || false;
-  const isToShowDevBuildBtn = w.showDevBuildBtn || false;
-  const textCommandDevBuildBtn = w.commandDevBuildBtn || '';
-  const textLayoutDevBuildBtn = w.textDevBuildBtn || '';
-  const isToShowPrdBuildBtn = w.showPrdBuildBtn || false;
-  const textCommandPrdBuildBtn = w.commandPrdBuildBtn || '';
-  const textLayoutPrdBuildBtn = w.textPrdBuildBtn || '';
-  const codeversionConstant = w.codeversion || '';
-  const hostnameConstant = w.hostname || '';
-  const codeversionPropertyShort = w.codeversionHistoryPropertyShort || '';
-  const hostnamePropertyShort = w.hostnameHistoryPropertyShort || '';
+  const isProphetInstalled = isProphetInstall || false;
+  const isToShowDevBuildBtn = showDevBuildBtn || false;
+  const textCommandDevBuildBtn = commandDevBuildBtn || '';
+  const textLayoutDevBuildBtn = textDevBuildBtn || '';
+  const isToShowPrdBuildBtn = showPrdBuildBtn || false;
+  const textCommandPrdBuildBtn = commandPrdBuildBtn || '';
+  const textLayoutPrdBuildBtn = textPrdBuildBtn || '';
+  const codeversionConstant = codeversion || '';
+  const hostnameConstant = hostname || '';
+  const codeversionPropertyShort = codeversionHistoryPropertyShort || '';
+  const hostnamePropertyShort = hostnameHistoryPropertyShort || '';
 
   useEffect(() => {
     vscode.setState({ page });
