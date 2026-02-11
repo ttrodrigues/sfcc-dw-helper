@@ -24,10 +24,17 @@ Interact with environment present on **dw.json**, to get, create, and delete **C
 &nbsp;
 
 ## Features
-### Edit the dw.json file with modern design
-Edition of **dw.json** directly on the sidebar with a refresh and simplicity design
 
-![](/media/new_desgin.gif)
+### Native VSCode Tree View Interface (NEW in v0.0.39)
+The extension now uses VSCode's native tree view components, similar to the Source Control Management (SCM) interface. This provides a cleaner, more integrated experience with better organization:
+
+- **Connection Settings**: Click to edit hostname, code version, username, and password
+- **Prophet Commands**: Execute upload and connection commands with a single click
+- **Environment**: Manage code versions and open Business Manager/StoreFront
+- **Compiler**: Run custom build commands (configurable in settings)
+
+### Edit the dw.json file
+Edition of **dw.json** directly from the sidebar tree view with validation
 
 &nbsp;
 ### New Status bar information for the connection status

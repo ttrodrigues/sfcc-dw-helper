@@ -1,5 +1,17 @@
 # Change Log
 
+## [0.0.39]
+- **MAJOR UPDATE**: Migrated from webview-based UI to VSCode native tree views
+- Replaced dual-tab interface (Bracket/Settings) with four separate tree view sections
+- New tree view structure:
+  - **Connection Settings**: Edit hostname, code version, username, and password
+  - **Prophet Commands**: Execute Clean/Upload, Enable/Disable Upload commands
+  - **Environment**: Open Business Manager/StoreFront, manage code versions
+  - **Compiler**: Execute custom build commands
+- Improved UI consistency with VSCode's native SCM-like interface
+- Click on tree items to edit fields or execute commands
+- All existing functionality preserved with better organization
+
 ## [0.0.38]
 - Minor fixes on font type of extension
 

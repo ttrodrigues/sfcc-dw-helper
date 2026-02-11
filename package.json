@@ -3,7 +3,7 @@
   "displayName": "SFCC DW Helper",
   "publisher": "ttrodrigues",
   "description": "Helper for dw.json file usage to connect to an SFCC environment",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "license": "Open source",
   "icon": "media/icon.png",
   "engines": {
@@ -13,7 +13,10 @@
     "Other"
   ],
   "activationEvents": [
-    "onView:sfcc-dw-helper-sidebar"
+    "onView:sfcc-dw-helper-connection",
+    "onView:sfcc-dw-helper-commands",
+    "onView:sfcc-dw-helper-environment",
+    "onView:sfcc-dw-helper-compiler"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -29,11 +32,24 @@
     "views": {
       "sfcc-dw-helper-sidebar-view": [
         {
-          "type": "webview",
-          "id": "sfcc-dw-helper-sidebar",
-          "name": "SFCC DW Helper",
-          "icon": "media/icon.svg",
-          "contextualTitle": "SFCC DW Helper"
+          "id": "sfcc-dw-helper-connection",
+          "name": "Connection Settings",
+          "icon": "media/icon.svg"
+        },
+        {
+          "id": "sfcc-dw-helper-commands",
+          "name": "Prophet Commands",
+          "icon": "media/icon.svg"
+        },
+        {
+          "id": "sfcc-dw-helper-environment",
+          "name": "Environment",
+          "icon": "media/icon.svg"
+        },
+        {
+          "id": "sfcc-dw-helper-compiler",
+          "name": "Compiler",
+          "icon": "media/icon.svg"
         }
       ]
     },
