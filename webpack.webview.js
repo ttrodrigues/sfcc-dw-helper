@@ -3,6 +3,7 @@
 'use strict';
 
 const path = require('path');
+const webpack = require('webpack');
 
 /** @typedef {import('webpack').Configuration} WebpackConfig **/
 
@@ -17,7 +18,10 @@ const webviewConfig = {
     libraryTarget: 'window'
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx', '.css']
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.css'],
+    fallback: {
+      "process": false
+    }
   },
   module: {
     rules: [
@@ -39,6 +43,11 @@ const webviewConfig = {
       }
     ]
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    })
+  ],
   devtool: 'nosources-source-map',
   infrastructureLogging: {
     level: "log",
