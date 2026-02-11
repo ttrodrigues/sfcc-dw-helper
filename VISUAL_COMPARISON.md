@@ -27,7 +27,6 @@ The extension used a single webview with two tabs at the top:
 │                                     │
 │ Environment Links                   │
 │ [Open Business Manager]             │
-│ [Open StoreFront]                   │
 │                                     │
 └─────────────────────────────────────┘
 
@@ -59,6 +58,7 @@ When "Settings" tab clicked:
 ```
 
 **Problems:**
+
 - Only one tab visible at a time
 - Custom UI doesn't match VSCode style
 - Tab navigation required to access all features
@@ -85,7 +85,6 @@ The extension now uses VSCode's native tree views, all visible simultaneously:
 │                                     │
 │ ▼ Environment                       │
 │   ├─ 🌐 Open Business Manager       │ <- Click to open
-│   ├─ 🌍 Open StoreFront             │ <- Click to open
 │   ├─ ➕ New Code Version            │ <- Click to create
 │   └─ 🗑 Delete Code Version         │ <- Click to delete
 │                                     │
@@ -97,6 +96,7 @@ The extension now uses VSCode's native tree views, all visible simultaneously:
 ```
 
 **Benefits:**
+
 - All sections visible at once (can be collapsed individually)
 - Native VSCode styling with icons
 - No tab switching
@@ -107,6 +107,7 @@ The extension now uses VSCode's native tree views, all visible simultaneously:
 ## Interaction Comparison
 
 ### Before (Webview)
+
 1. User sees "Bracket" tab
 2. User fills in hostname input field
 3. User fills in other fields
@@ -115,6 +116,7 @@ The extension now uses VSCode's native tree views, all visible simultaneously:
 6. User clicks button to execute command
 
 ### After (Tree View)
+
 1. User sees all sections at once
 2. User clicks on "Hostname" item
 3. Quick pick or input box appears
@@ -125,17 +127,17 @@ The extension now uses VSCode's native tree views, all visible simultaneously:
 
 ## Key Differences
 
-| Aspect | Before (Webview) | After (Tree View) |
-|--------|------------------|-------------------|
-| UI Type | Custom Svelte webview | Native VSCode tree view |
-| Navigation | Tab-based (2 screens) | Section-based (collapsible) |
-| Styling | Custom CSS | VSCode theme-aware |
-| Icons | SVG components | VSCode codicons |
-| Edit Mode | Input fields always visible | Click to edit |
-| Performance | Webview overhead | Native rendering |
-| Code Size | ~1150 lines | ~300 lines |
-| Maintenance | Complex (Svelte + TypeScript) | Simple (TypeScript only) |
-| Build Process | Webpack + Rollup | Webpack only |
+| Aspect        | Before (Webview)              | After (Tree View)           |
+| ------------- | ----------------------------- | --------------------------- |
+| UI Type       | Custom Svelte webview         | Native VSCode tree view     |
+| Navigation    | Tab-based (2 screens)         | Section-based (collapsible) |
+| Styling       | Custom CSS                    | VSCode theme-aware          |
+| Icons         | SVG components                | VSCode codicons             |
+| Edit Mode     | Input fields always visible   | Click to edit               |
+| Performance   | Webview overhead              | Native rendering            |
+| Code Size     | ~1150 lines                   | ~300 lines                  |
+| Maintenance   | Complex (Svelte + TypeScript) | Simple (TypeScript only)    |
+| Build Process | Webpack + Rollup              | Webpack only                |
 
 ## User Experience Improvements
 

@@ -3,6 +3,7 @@
 This document describes the new tree view structure for SFCC DW Helper extension.
 
 ## Before (v0.0.38)
+
 ```
 SFCC DW Helper (Single Webview)
 ├── [Bracket Tab] (Selected)
@@ -10,8 +11,7 @@ SFCC DW Helper (Single Webview)
 │   ├── Code Version input field
 │   ├── Username input field
 │   ├── Password input field
-│   ├── Open Business Manager button
-│   └── Open StoreFront button
+│   └── Open Business Manager button
 └── [Settings Tab]
     ├── New Code Version button
     ├── Delete Code Version button
@@ -23,6 +23,7 @@ SFCC DW Helper (Single Webview)
 ```
 
 ## After (v0.0.39)
+
 ```
 SFCC DW Helper (Activity Bar Icon)
 ├── Connection Settings (Tree View)
@@ -38,7 +39,6 @@ SFCC DW Helper (Activity Bar Icon)
 │
 ├── Environment (Tree View)
 │   ├── Open Business Manager (click to open in browser)
-│   ├── Open StoreFront (click to open in browser)
 │   ├── New Code Version (click to create)
 │   └── Delete Code Version (click to delete)
 │
