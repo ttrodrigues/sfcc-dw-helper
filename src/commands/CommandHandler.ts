@@ -77,9 +77,10 @@ export class CommandHandler {
         });
         
         if (selected) {
-          await this.updateJsonField(field, selected.label, propertyShort);
+          const cvName = (selected as any).label || selected;
+          await this.updateJsonField(field, cvName, propertyShort);
           // Also activate the code version
-          await ocapiActiveCodeVersion(selected.label);
+          await ocapiActiveCodeVersion(cvName);
           return;
         }
       } else {
@@ -251,8 +252,10 @@ export class CommandHandler {
       return;
     }
 
+    const cvName = (selected as any).label || selected;
+
     const confirm = await vscode.window.showWarningMessage(
-      `Are you sure you want to delete code version "${selected.label}"?`,
+      `Are you sure you want to delete code version "${cvName}"?`,
       { modal: true },
       "Delete"
     );
@@ -261,14 +264,14 @@ export class CommandHandler {
       return;
     }
 
-    const result = await ocapiCreateDeleteCodeVersion(selected.label, Constants.API_DELETE_METHOD);
+    const result = await ocapiCreateDeleteCodeVersion(cvName, Constants.API_DELETE_METHOD);
     
     if (!result.error) {
       const json = await defaultJson();
-      vscode.window.showInformationMessage(`${Constants.CODEVERSION_SUCCESS_FIRST}${selected.label}${Constants.DELETE_ITEM_SUCCESS_SECOND}${json.hostname}`);
+      vscode.window.showInformationMessage(`${Constants.CODEVERSION_SUCCESS_FIRST}${cvName}${Constants.DELETE_ITEM_SUCCESS_SECOND}${json.hostname}`);
       this.refreshAllTreeViews();
     } else {
-      vscode.window.showErrorMessage(`${Constants.DELETE_ITEM_ERROR}${selected.label}`);
+      vscode.window.showErrorMessage(`${Constants.DELETE_ITEM_ERROR}${cvName}`);
     }
   }
 
