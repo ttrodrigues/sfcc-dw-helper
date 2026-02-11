@@ -7,8 +7,9 @@ import { SettingsMenu } from './SettingsMenu';
 import { Loading } from './Loading';
 import './Sidebar.css';
 
-declare const acquireVsCodeApi: any;
-const vscode = acquireVsCodeApi();
+// Use the already acquired VSCode API from the global scope
+declare const tsvscode: any;
+const vscode = tsvscode;
 
 interface WindowWithGlobals extends Window {
   isProphetInstall?: boolean;
