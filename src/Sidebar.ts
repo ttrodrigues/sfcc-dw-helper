@@ -387,24 +387,24 @@ export class Sidebar implements vscode.WebviewViewProvider {
     webview.cspSource
   }; script-src 'nonce-${nonce}';">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <script nonce="${nonce}">
-      const tsvscode = acquireVsCodeApi();
-      const isProphetInstall = ${isProphetInstall};
-      const showDevBuildBtn = ${showDevBuildBtn};
-      const commandDevBuildBtn = "${commandDevBuildBtn}";
-      const showPrdBuildBtn = ${showPrdBuildBtn};
-      const commandPrdBuildBtn = "${commandPrdBuildBtn}";
-      const textDevBuildBtn = "${textDevBuildBtn}";
-      const textPrdBuildBtn = "${textPrdBuildBtn}";
-      const hostname = "${hostname}";
-      const codeversion = "${codeversion}";
-      const hostnameHistoryPropertyShort = "${hostnameHistoryPropertyShort}";
-      const codeversionHistoryPropertyShort = "${codeversionHistoryPropertyShort}"; 
-    </script>
-    <body>
-      <script nonce="${nonce}" src="${scriptUri}">
+      <script nonce="${nonce}">
+        const tsvscode = acquireVsCodeApi();
+        const isProphetInstall = ${isProphetInstall};
+        const showDevBuildBtn = ${showDevBuildBtn};
+        const commandDevBuildBtn = "${commandDevBuildBtn}";
+        const showPrdBuildBtn = ${showPrdBuildBtn};
+        const commandPrdBuildBtn = "${commandPrdBuildBtn}";
+        const textDevBuildBtn = "${textDevBuildBtn}";
+        const textPrdBuildBtn = "${textPrdBuildBtn}";
+        const hostname = "${hostname}";
+        const codeversion = "${codeversion}";
+        const hostnameHistoryPropertyShort = "${hostnameHistoryPropertyShort}";
+        const codeversionHistoryPropertyShort = "${codeversionHistoryPropertyShort}"; 
       </script>
+    </head>
+    <body>
+      <div id="root"></div>
+      <script nonce="${nonce}" src="${scriptUri}"></script>
     </body>
     </html>`;
 
