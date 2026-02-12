@@ -170,6 +170,10 @@ None, until now.
 
 ## Release Notes
 
+## [0.0.40]
+
+- **SECURITY UPDATE**: Fix the Axios and other dependencies version
+
 ## [0.0.39]
 
 - **MAJOR UPDATE**: Migrated from webview-based UI to VSCode native tree views
